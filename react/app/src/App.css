@@ -1,38 +1,39 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
+/* App.css */
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  padding: 20px;
   font-size: calc(10px + 2vmin);
   color: white;
+  position: relative;
 }
 
-.App-link {
-  color: #61dafb;
+/* Adjust the logo size and position */
+.App-logo {
+  height: 120px; /* Set the height of the logo to 100px */
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Adjust the button styling */
+.integrate-git-button {
+  background-color: #2ea44f;
+  color: #ffffff;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s;
+}
+
+.integrate-git-button:hover {
+  background-color: #22863a;
 }
