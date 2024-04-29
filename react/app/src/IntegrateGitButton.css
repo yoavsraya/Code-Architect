@@ -1,0 +1,21 @@
+/* IntegrateGitButton.css */
+.integrate-git-button {
+    position: absolute; /* Set the button to absolute position */
+    top: 20px; /* Adjust the top position */
+    left: 20px; /* Adjust the left position */
+    background-color: #2ea44f;
+    color: #ffffff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.3s;
+  }
+  
+  .integrate-git-button:hover {
+    background-color: #22863a;
+  }
+  
