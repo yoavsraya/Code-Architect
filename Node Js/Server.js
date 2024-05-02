@@ -9,19 +9,19 @@ const port = process.env.PORT;
 const GitHubApi = require('./GitHubApi'); // Import the github.js module
 
 // Route for the login button (can be in a separate file for organization)
-app.get('/', (req, res) => {
-  // Generate the login link using CLIENT_ID from environment variables
+app.get('/LogIn', (req, res) => {
   const loginLink = `<a href="${GitHubApi.getLoginUrl()}">Login with GitHub</a>`;
   res.send(loginLink);
 });
 
-// Route for the callback URL after authorization
-app.get(process.env.CALLBACK_URL, async (req, res) => {
+// responds from GitHub
+app.get(`/${process.env.CALLBACK_URL}`, async (req, res) => {
   const code = req.query.code;
+  console.log(code);
 
   try {
     const userData = await GitHubApi.exchangeCodeForToken(code);
-    // Handle successful authentication (e.g., redirect to protected route)
+    console.log(userData);
     res.send('Successfully authenticated!');
   } catch (error) {
     console.error('Error during authentication:', error);
