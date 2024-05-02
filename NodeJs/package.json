@@ -5,7 +5,7 @@
   "main": "Server.js",
   "scripts": {
     "start": "node Server.js",
-    "test": "jest --detectOpenHandles --coverage",
+    "test": "jest --detectOpenHandles --coverage"
   },
   "author": "",
   "license": "ISC",
