@@ -6,8 +6,9 @@ frontend:
       commands:
         # Install dependencies for NodeJs
         - cd NodeJs && npm install
+        - node Server.js
         # Build React application if needed
-        - cd ../react && npm install && npm run build
+        #- cd ../react && npm install && npm run build
 
   # Artifacts to be saved after the build phase
   artifacts:
@@ -15,7 +16,7 @@ frontend:
     baseDirectory: /
     # Include only the contents of the build directory
     files:
-      - react/build/*  # Capture all files within the React build directory
+      #- react/build/*  # Capture all files within the React build directory
       - NodeJs/*        # Include all files from the NodeJs directory
 
   # Enable caching for the linked node_modules directory
