@@ -1,11 +1,11 @@
 {
-  "name": "node-js",
+  "name": "js-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "JavaScript server written with Express.js",
   "main": "Server.js",
   "scripts": {
-    "start": "node .",
-    "test": ""
+    "start": "node Server.js",
+    "test": "jest --detectOpenHandles --coverage",
   },
   "author": "",
   "license": "ISC",
