@@ -4,8 +4,10 @@ frontend:
     # Build phase with commands for React build
     build:
       commands:
-        - npm install  # Install dependencies
-        - npm run build  # Build React application
+        # Install dependencies for NodeJs
+        - cd NodeJs && npm install
+        # Build React application if needed
+        - cd ../react && npm install && npm run build
 
   # Artifacts to be saved after the build phase
   artifacts:
@@ -13,9 +15,11 @@ frontend:
     baseDirectory: /
     # Include only the contents of the build directory
     files:
-      - build/*  # Capture all files within the build directory
+      - react/build/*  # Capture all files within the React build directory
+      - NodeJs/*        # Include all files from the NodeJs directory
 
-  # Enable caching for node_modules to potentially speed up builds
+  # Enable caching for the linked node_modules directory
   cache:
     paths:
-      - node_modules  # Cache node_modules directory
+      - NodeJs/node_modules  # Cache the linked node_modules directory
+      - react/node_modules    # Cache the linked node_modules directory for React
