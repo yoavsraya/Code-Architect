@@ -4,8 +4,7 @@
   "description": "JavaScript server written with Express.js",
   "main": "Server.js",
   "scripts": {
-    "start": "node Server.js",
-    "test": "jest --detectOpenHandles --coverage"
+    "start": "node Server.js"
   },
   "author": "",
   "license": "ISC",
@@ -15,5 +14,8 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }
