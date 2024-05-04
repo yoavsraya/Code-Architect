@@ -10,6 +10,8 @@ const port = process.env.PORT || 3000;
 
 const GitHubApi = require('./GitHubApi'); // Import the github.js module
 
+app.get('/', (req, res) => res.send('Hello World!'));
+
 // Route for the login button (can be in a separate file for organization)
 app.get('/LogIn', (req, res) => {
   const loginLink = `<a href="${GitHubApi.getLoginUrl()}">Login with gitHub</a>`;
