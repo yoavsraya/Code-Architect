@@ -1,16 +1,18 @@
 const express = require('express');
 const app = express();
 
-const dotenv = require('dotenv');
-dotenv.config();
-
-const port = process.env.PORT;
+const dotenv = require('dotenv').config();
+if (dotenv.error)
+{
+  throw dotenv.error;
+}
+const port = process.env.PORT || 3000;
 
 const GitHubApi = require('./GitHubApi'); // Import the github.js module
 
 // Route for the login button (can be in a separate file for organization)
 app.get('/LogIn', (req, res) => {
-  const loginLink = `<a href="${GitHubApi.getLoginUrl()}">Login with GitHub</a>`;
+  const loginLink = `<a href="${GitHubApi.getLoginUrl()}">Login with gitHub</a>`;
   res.send(loginLink);
 });
 

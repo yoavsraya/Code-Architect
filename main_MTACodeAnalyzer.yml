@@ -1,26 +1,32 @@
-version: 1
-frontend:
-  phases:
-    # Build phase with commands for React build
-    build:
-      commands:
-        # Install dependencies for NodeJs
-        - cd NodeJs && npm install
-        - node Server.js
-        # Build React application if needed
-        #- cd ../react && npm install && npm run build
+name: Build and Deploy to Azure
 
-  # Artifacts to be saved after the build phase
-  artifacts:
-    # Base directory remains the root of your project
-    baseDirectory: /
-    # Include only the contents of the build directory
-    files:
-      #- react/build/*  # Capture all files within the React build directory
-      - NodeJs/*        # Include all files from the NodeJs directory
+on:
+  push:
+    branches:
+      - main  # replace with your branch name
 
-  # Enable caching for the linked node_modules directory
-  cache:
-    paths:
-      - NodeJs/node_modules  # Cache the linked node_modules directory
-      - react/node_modules    # Cache the linked node_modules directory for React
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+
+    - name: Install dependencies and build
+      run: |
+        cd NodeJs
+        npm install
+        # add any other build steps here
+
+    - name: 'Deploy to Azure WebApp'
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'MTACodeAnalyzer' # replace with your app name
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }} # set this secret in your repository settings
+        package: ./NodeJs
