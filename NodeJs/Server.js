@@ -33,4 +33,4 @@ app.get(`/${process.env.CALLBACK_URL}`, async (req, res) => {
   }
 });
 
-app.listen(port, () => console.log(`Server listening on port ${port}`));
+app.listen(port, () => console.log(`Server listening on port ${port}!`));
