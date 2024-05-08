@@ -4,7 +4,7 @@
   "description": "JavaScript server written with Express.js",
   "main": "Server.js",
   "scripts": {
-    "start": "node Server.js" 
+    "start": "node NodeJs/Server.js"
   },
   "author": "",
   "license": "ISC",
