@@ -6,7 +6,7 @@ if (dotenv.error)
 {
   throw dotenv.error;
 }
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 80;
 
 const GitHubApi = require('./GitHubApi'); // Import the github.js module
 
