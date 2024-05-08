@@ -17,7 +17,7 @@ jobs:
       - name: npm install, build, and test
         run: |
             npm install
-            npm start
+            npm run build
 
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
