@@ -30,7 +30,7 @@ jobs:
       
       - name: Deploy with rsync
         run: |
-              sudo rsync -avz -n -e "ssh -i ~/.ssh/mykey" . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/code-analyzer
+              rsync -avz -n -e "ssh -i ~/.ssh/mykey" . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/code-analyzer
       
       - name: Set up Node.js version
         uses: actions/setup-node@v3
