@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
       - name: npm install, build, and test
         run: |
             cd ./Code-analazer/NodeJs
