@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: npm install, build, and test
-        working-directory: ./Code-analazer/NodeJs
+        working-directory: /NodeJs
         run: |
             npm install
             npm start
