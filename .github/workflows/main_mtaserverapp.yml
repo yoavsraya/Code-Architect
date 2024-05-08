@@ -22,7 +22,7 @@ jobs:
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       
       - name: Deploy with rsync
-        run: rsync -avz . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/code-analyzer  
+        run: sudo rsync -avz . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/code-analyzer  
 
       - name: Set up Node.js version
         uses: actions/setup-node@v3
