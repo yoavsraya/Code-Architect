@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 
-const dotenv = require('dotenv').config({ path: './Code-Analyzer/NodeJs/.env' });
+const dotenv = require('dotenv').config({ path: './NodeJs/.env' });
 if (dotenv.error)
 {
   throw dotenv.error;
