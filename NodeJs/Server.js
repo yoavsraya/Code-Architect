@@ -23,6 +23,10 @@ app.get(`/${process.env.CALLBACK_URL}`, async (req, res) => {
   const code = req.query.code;
   console.log(code);
 
+app.get(`/webhook`, async (req, res) => {
+  const code = req.query.code;
+  console.log(code);
+
   try {
     const userData = await GitHubApi.exchangeCodeForToken(code);
     console.log(userData);
