@@ -19,7 +19,7 @@ app.get('/LogIn', (req, res) => {
 });
 
 // responds from GitHub
-app.get(`/wehook`, async (req, res) => {
+app.get(`/webhook`, async (req, res) => {
   const code = req.query.code;
   console.log(code);
 }); // This was missing
