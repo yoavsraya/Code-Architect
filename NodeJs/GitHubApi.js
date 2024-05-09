@@ -1,6 +1,6 @@
 const clientId = 'Iv1.9131546c6e351853';
 const clientSecret = 'edb93e0f1ece919b8ace161b951509843b3001e7';
-const redirectUri = 'http://localhost:3000/callback'; // Replace with your callback URL
+const redirectUri = 'http://18.234.196.68:3000/Login:3000/callback'; // Replace with your callback URL
 const appId = '887581';
 
 const axios = require('axios');
