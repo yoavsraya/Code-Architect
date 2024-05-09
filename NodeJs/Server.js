@@ -22,6 +22,7 @@ app.get('/LogIn', (req, res) => {
 app.get(`/${process.env.CALLBACK_URL}`, async (req, res) => {
   const code = req.query.code;
   console.log(code);
+}); // This was missing
 
 app.get(`/webhook`, async (req, res) => {
   const code = req.query.code;
