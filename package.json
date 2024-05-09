@@ -4,7 +4,6 @@
   "description": "JavaScript server written with Express.js",
   "main": "Server.js",
   "scripts": {
-    "start": "concurrently \"npm run start-react\" \"npm run start-server\"",
     "start-server": "node NodeJs/Server.js",
     "start-react": "cd react && npm start"
   },
