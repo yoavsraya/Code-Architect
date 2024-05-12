@@ -3,7 +3,7 @@ name: Build and deploy Node.js app to AWS Web App - MTAserverApp
 on:
   push:
     branches:
-      - main
+      - main1
   workflow_dispatch:
 
 jobs:

@@ -1,5 +1,10 @@
+const fs = require('fs');
+const path = require('path');
+
 const express = require('express');
 const app = express();
+app.use(express.json());
+
 const { Octokit } = require("@octokit/rest");
 
 let octokit;
@@ -46,7 +51,6 @@ app.get(`/${process.env.CALLBACK_URL}`, async (req, res) => {
 
   try {
     const userData = await GitHubApi.exchangeCodeForToken(code);
-    console.log(userData);
     res.send('Successfully authenticated!');
     
     octokit = new Octokit({
@@ -55,7 +59,7 @@ app.get(`/${process.env.CALLBACK_URL}`, async (req, res) => {
     
     const { data } = await octokit.rest.users.getAuthenticated();
     const username = data.login;
-
+    console.log(username);
     octokit.rest.repos.listForAuthenticatedUser()
     .then(({ data }) => {
       user = new User(userData.access_token,username,data);
@@ -73,28 +77,36 @@ app.get(`/${process.env.CALLBACK_URL}`, async (req, res) => {
   }
 });
 
-app.post('/getRepoFiles', (req, res) => {
+app.post('/getRepoFiles', async (req, res) => {
   const repoName = req.body.repoName;
 
-  const octokit = new Octokit({
-    auth: user.accessToken, // Use the user's access token here
-  });
+  try {
+    const { data } = await octokit.rest.repos.getContent({
+      owner: user.userName, // Use the user's GitHub username here
+      repo: repoName,
+      path: '', // Use an empty string to get the root directory
+    });
 
-  octokit.rest.repos.getContent({
-    owner: user.username, // Use the user's GitHub username here
-    repo: repoName,
-    path: '', // Use an empty string to get the root directory
-  })
-  .then(({ data }) => {
-    const fileNames = data.map(file => file.name);
-    console.log(fileNames); // This will log an array of file names
-    res.send(fileNames);
-  })
-  .catch(error => {
-    console.error('Error getting files:', error);
+    const fileContents = await Promise.all(data.map(async file => {
+      if (file.type === 'file') {
+        const contentResponse = await octokit.rest.repos.getContent({
+          owner: user.userName,
+          repo: repoName,
+          path: file.path,
+        });
+
+        // The file content is base64 encoded, so it needs to be decoded
+        const content = Buffer.from(contentResponse.data.content, 'base64').toString('utf8');
+        console.log(content);
+        fs.writeFileSync(path.join(__dirname, 'fileContent.txt'), content, 'utf8');
+      }
+    }));
+
+    res.send(fileContents);
+  } catch (error) {
+    console.log(error);
     res.status(500).send('Error getting files');
-  });
+  }
 });
-
 
 app.listen(port, () => console.log(`Server listening on port ${port}!`));
