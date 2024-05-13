@@ -34,11 +34,11 @@ jobs:
               pm2 restart Server
             fi
             cd react && npm install && export PORT=5000
-            if pm2 describe React | grep -q 'stopped'
+            if pm2 describe React | grep -q 'online\|stopped'
             then
-              pm2 start npm --name "React" -- run start
-            else
               pm2 restart React
+            else
+              pm2 start npm --name "React" -- run start
             fi
 
 
