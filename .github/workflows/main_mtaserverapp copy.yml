@@ -23,6 +23,8 @@ jobs:
           port: 22  # If different from default 22
           script: |
             cd code-analyzer
+            git reset --hard
+            git clean -fd
             git pull
             npm install
             if pm2 describe Server | grep -q 'stopped'
