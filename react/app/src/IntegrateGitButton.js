@@ -1,4 +1,4 @@
-// IntegrateGitButton.js
+// IntegrateGitButton
 import axios from 'axios';
 import React from 'react';
 import './IntegrateGitButton.css';
