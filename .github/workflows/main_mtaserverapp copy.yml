@@ -33,7 +33,7 @@ jobs:
             else
               pm2 restart Server
             fi
-            cd .. && cd react && npm install && export PORT=5000
+            cd .. && cd .. && cd react && npm install && export PORT=5000
             if pm2 describe React | grep -q 'stopped'
             then
               pm2 start npm -- start
