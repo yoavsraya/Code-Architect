@@ -6,7 +6,7 @@ import './IntegrateGitButton.css';
 const IntegrateGitButton = () => {
   const handleClick = () => {
     console.log('Integrating Git...');
-    window.open('http://localhost:3000/Login');   
+    window.open('http://52.3.185.39:3000/Login');   
   };
 
   return (
