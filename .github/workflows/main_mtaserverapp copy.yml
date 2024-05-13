@@ -27,11 +27,11 @@ jobs:
             git clean -fd
             git pull
             npm install
-            if pm2 describe Server | grep -q 'stopped'
+            if pm2 describe Server | grep -q 'online\|stopped'
             then
-              pm2 start NodeJs/Server.js
-            else
               pm2 restart Server
+            else
+              pm2 start npm --name "Server" -- run start
             fi
             cd react/app && npm install && export PORT=3001
             if pm2 describe React | grep -q 'online\|stopped'
