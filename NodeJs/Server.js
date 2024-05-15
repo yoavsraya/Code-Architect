@@ -1,24 +1,15 @@
 const fs = require('fs');
 const path = require('path');
+const GitHubApi = require('./GitHubApi'); // Import the github.js module
 
 const express = require('express');
 const app = express();
 app.use(express.json());
 
-const { Octokit } = require("@octokit/rest");
-
 let octokit;
 let user;
-class User {
-  constructor(accessToken, userName, repositories) {
-    this.accessToken = accessToken;
-    this.userName = userName;
-    this.repositories = repositories;
-    this.selectedRepo = null;
-  }
-}
 
-const dotenv = require('dotenv').config({ path: './NodeJs/.env' });
+const dotenv = require('dotenv').config({ path: '../.env' });
 if (dotenv.error)
 {
   const dotenv = require('dotenv').config();
@@ -27,11 +18,9 @@ if (dotenv.error)
       throw dotenv.error;
     }
 }
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
-const GitHubApi = require('./GitHubApi'); // Import the github.js module
-
-app.get('/', (req, res) => res.send('Hello World!'));
+app.get('/', (req, res) => res.send('Hello World!')); //TODO: Change to the main page
 
 // Route for the login button (can be in a separate file for organization)
 app.get('/LogIn', (req, res) => {
@@ -43,38 +32,24 @@ app.get('/LogIn', (req, res) => {
 app.get(`/webhook`, async (req, res) => {
   const code = req.query.code;
   console.log(code);
-}); // This was missing
+}); 
 
 app.get(`/${process.env.CALLBACK_URL}`, async (req, res) => {
   const code = req.query.code;
   console.log(code);
-
   try {
-    const userData = await GitHubApi.exchangeCodeForToken(code);
-    res.send('Successfully authenticated!');
-    
-    octokit = new Octokit({
-      auth: `${userData.access_token}`,
-    });
-    
-    const { data } = await octokit.rest.users.getAuthenticated();
-    const username = data.login;
-    console.log(username);
-    octokit.rest.repos.listForAuthenticatedUser()
-    .then(({ data }) => {
-      user = new User(userData.access_token,username,data);
-      const repoNames = data.map(repo => repo.name);
+      GitHubApi.GetUserData(code);
+      const repoNames = await GitHubApi.getRepositories();
       console.log(repoNames); // This will log an array of repository names
-      user.selectedRepo = data[0];
-    })
-    .catch(error => {
-      console.error('Error getting repositories:', error);
-    });
+      
+      // Select the first repository in the list //TODO: Change to choose button in the future
+      GitHubApi.PullSelectedRepo();
   }
   catch (error) {
     console.error('Error during authentication:', error);
     res.status(500).send('Authentication failed');
   }
+  res.send('Successfully authenticated!');
 });
 
 app.post('/getRepoFiles', async (req, res) => {
@@ -97,6 +72,7 @@ app.post('/getRepoFiles', async (req, res) => {
 
         // The file content is base64 encoded, so it needs to be decoded
         const content = Buffer.from(contentResponse.data.content, 'base64').toString('utf8');
+        
         console.log(content);
         fs.writeFileSync(path.join(__dirname, 'fileContent.txt'), content, 'utf8');
       }
