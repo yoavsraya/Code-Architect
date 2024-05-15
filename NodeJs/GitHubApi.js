@@ -1,5 +1,4 @@
 const axios = require('axios');
-const dotenv = require('dotenv');
 const path = require('path');
 const { Octokit } = require("@octokit/rest");
 const fs = require('fs');
@@ -19,9 +18,7 @@ if (dotenv.error)
       }
   }
 
-  octokit = new Octokit({
-    auth: `${userData.access_token}`,
-  });
+  
 
   class User {
     constructor(accessToken, userName, repositories) {
@@ -43,6 +40,9 @@ async function GetUserData(code)
       UserAuto = await exchangeCodeForToken(code);
       const {user} = await octokit.rest.users.getAuthenticated();
       UserData = user;
+      octokit = new Octokit({
+        auth: `${userData.access_token}`,
+      });
     }
     catch (error) {
       console.error('Error getting user data:', error);
@@ -132,7 +132,6 @@ async function getRepositories() {
 module.exports = {
   getLoginUrl,
   exchangeCodeForToken,
-  GetOctokit,
   PullSelectedRepo,
   getRepositories,
   GetUserData,

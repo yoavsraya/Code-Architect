@@ -18,7 +18,7 @@ if (dotenv.error)
       throw dotenv.error;
     }
 }
-const port = process.env.PORT;
+const port = process.env.Server_PORT;
 
 app.get('/', (req, res) => res.send('Hello World!')); //TODO: Change to the main page
 
