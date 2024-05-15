@@ -4,18 +4,9 @@ import React from 'react';
 import './IntegrateGitButton.css';
 
 const path = require('path');
-const dotenv = require('dotenv').config({ path: '../../../.env' });
-if (dotenv.error)
-{
-  const dotenv = require('dotenv').config();
-  if (dotenv.error)
-    {
-      throw dotenv.error;
-    }
-}
 
-const LoginURL = process.env.AppURL;
-const port = process.env.Server_PORT;
+const LoginURL = secrets.SSH_HOST;
+const port = secrets.SERVER_PORT;
 
 const IntegrateGitButton = () => {
   const handleClick = () => {

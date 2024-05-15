@@ -5,20 +5,8 @@ const fs = require('fs');
 
 let UserData;
 let UserAuto;
-const CLIENT_ID = process.env.Git_Hub_CLIENT_ID;
-const CLIENT_SECRET = process.env.Git_Hub_CLIENT_SECRET;
-
-const dotenv = require('dotenv').config({ path: '../.env' });
-if (dotenv.error)
-  {
-    const dotenv = require('dotenv').config();
-    if (dotenv.error)
-      {
-        throw dotenv.error;
-      }
-  }
-
-  
+const CLIENT_ID = secrets.Git_Hub_CLIENT_ID;
+const CLIENT_SECRET = secrets.Git_Hub_CLIENT_SECRET;
 
   class User {
     constructor(accessToken, userName, repositories) {

@@ -6,19 +6,7 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
-let octokit;
-let user;
-
-const dotenv = require('dotenv').config({ path: '../.env' });
-if (dotenv.error)
-{
-  const dotenv = require('dotenv').config();
-  if (dotenv.error)
-    {
-      throw dotenv.error;
-    }
-}
-const port = process.env.Server_PORT;
+const port = secrets.SERVER_PORT;
 
 app.get('/', (req, res) => res.send('Hello World!')); //TODO: Change to the main page
 
@@ -34,7 +22,7 @@ app.get(`/webhook`, async (req, res) => {
   console.log(code);
 }); 
 
-app.get(`/${process.env.CALLBACK_URL}`, async (req, res) => {
+app.get(`/${secrets.CALLBACK_URL}`, async (req, res) => {
   const code = req.query.code;
   console.log(code);
   try {
@@ -51,7 +39,6 @@ app.get(`/${process.env.CALLBACK_URL}`, async (req, res) => {
   }
   res.send('Successfully authenticated!');
 });
-
 
 
 app.listen(port, () => console.log(`Server listening on port ${port}!`));
