@@ -22,7 +22,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22 # Default port
           script: |
-            cd code-analyzer
+            cd Code-Analyzer
             git reset --hard
             git clean -fd
             git pull
