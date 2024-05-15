@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const GitHubApi = require('./GitHubApi'); // Import the github.js module
+const GitHubApi = require('./GitHubApi');
 
 const express = require('express');
 const app = express();
