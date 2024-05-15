@@ -52,37 +52,6 @@ app.get(`/${process.env.CALLBACK_URL}`, async (req, res) => {
   res.send('Successfully authenticated!');
 });
 
-app.post('/getRepoFiles', async (req, res) => {
-  const repoName = req.body.repoName;
 
-  try {
-    const { data } = await octokit.rest.repos.getContent({
-      owner: user.userName, // Use the user's GitHub username here
-      repo: repoName,
-      path: '', // Use an empty string to get the root directory
-    });
-
-    const fileContents = await Promise.all(data.map(async file => {
-      if (file.type === 'file') {
-        const contentResponse = await octokit.rest.repos.getContent({
-          owner: user.userName,
-          repo: repoName,
-          path: file.path,
-        });
-
-        // The file content is base64 encoded, so it needs to be decoded
-        const content = Buffer.from(contentResponse.data.content, 'base64').toString('utf8');
-        
-        console.log(content);
-        fs.writeFileSync(path.join(__dirname, 'fileContent.txt'), content, 'utf8');
-      }
-    }));
-
-    res.send(fileContents);
-  } catch (error) {
-    console.log(error);
-    res.status(500).send('Error getting files');
-  }
-});
 
 app.listen(port, () => console.log(`Server listening on port ${port}!`));
