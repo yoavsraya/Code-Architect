@@ -22,7 +22,7 @@ const port = process.env.Server_PORT;
 
 app.get('/', (req, res) => res.send('Hello World!')); //TODO: Change to the main page
 
-// Route for the login button (can be in a separate file for organization)
+// Route for the login button
 app.get('/LogIn', (req, res) => {
   const loginLink = `<a href="${GitHubApi.getLoginUrl()}">Login with gitHub</a>`;
   res.send(loginLink);
