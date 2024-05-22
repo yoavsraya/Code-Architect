@@ -1,5 +1,6 @@
 const OpenAI = require("openai");
-require('dotenv').config({ path: '../.env' });
+const dotenvPath = path.join(__dirname, '../.env');
+require('dotenv').config({ path: dotenvPath });
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 

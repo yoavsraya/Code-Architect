@@ -1,12 +1,22 @@
 const fs = require('fs');
 const path = require('path');
 const GitHubApi = require('./GitHubApi');
-require('dotenv').config({ path: '../.env' });
+try
+{
+  const dotenvPath = path.join(__dirname, '../.env');
+  require('dotenv').config({ path: dotenvPath });
+}
+catch (error)
+{
+  console.error('Error loading .env file:', error);
+}
+
 const express = require('express');
 const app = express();
 app.use(express.json());
 
 const port = process.env.SERVER_PORT;
+console.log(port);
 
 app.get('/', (req, res) => res.send('Hello World!')); //TODO: Change to the main page
 
