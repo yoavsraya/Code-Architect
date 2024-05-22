@@ -48,17 +48,3 @@ jobs:
               pm2 start npm --name "React" -- run start
             fi
 
-      - name: Create .env file
-        run: |
-              
-    
-      - name: Copy .env file to server
-        uses: appleboy/scp-action@v0.1.1
-        with:
-              host: ${{ secrets.SSH_HOST }}
-              username: ${{ secrets.SSH_USER }}
-              key: ${{ secrets.SSH_PRIVATE_KEY }}
-              source: ".env"
-              target: "/Code-Analyzer/.env"
-
-
