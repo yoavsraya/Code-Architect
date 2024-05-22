@@ -24,12 +24,12 @@ jobs:
           script: |
             cd Code-Analyzer
             rm .env
-            echo 'CALLBACK_URL = "${{ secrets.CALLBACK_URL }}"' >> .env
-            echo 'GIT_HUB_CLIENT_ID = "${{ secrets.GIT_HUB_CLIENT_ID }}"' >> .env
-            echo 'IT_HUB_CLIENT_SECRET = "${{ secrets.GIT_HUB_CLIENT_SECRET }}"' >> .env
-            echo 'OPENAI_API_KEY = ${{ secrets.OPENAI_API_KEY }}"'' >> .env
-            echo 'REACT_PORT = ${{ secrets.REACT_PORT }}"'' >> .env
-            echo 'SERVER_PORT = "${{ secrets.SERVER_PORT }}"'' >> .env
+            echo 'CALLBACK_URL="${{ secrets.CALLBACK_URL }}"' >> .env
+            echo 'GIT_HUB_CLIENT_ID="${{ secrets.GIT_HUB_CLIENT_ID }}"' >> .env
+            echo 'GIT_HUB_CLIENT_SECRET="${{ secrets.GIT_HUB_CLIENT_SECRET }}"' >> .env
+            echo 'OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}"' >> .env
+            echo 'REACT_PORT="${{ secrets.REACT_PORT }}"' >> .env
+            echo 'SERVER_PORT="${{ secrets.SERVER_PORT }}"' >> .env
             git reset --hard
             git clean -fd
             git pull
