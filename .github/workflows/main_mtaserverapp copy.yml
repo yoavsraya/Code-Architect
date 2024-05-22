@@ -25,6 +25,7 @@ jobs:
             cd Code-Analyzer
             rm .env
             echo 'CALLBACK_URL = ${{ secrets.CALLBACK_URL }}' >> .env
+            echo 'SSH_HOST = ${{ secrets.SSH_HOST }}' >> .env
             echo 'GIT_HUB_CLIENT_ID = "${{ secrets.GIT_HUB_CLIENT_ID }}"' >> .env
             echo 'GIT_HUB_CLIENT_SECRET = "${{ secrets.GIT_HUB_CLIENT_SECRET }}"' >> .env
             echo 'OPENAI_API_KEY = "${{ secrets.OPENAI_API_KEY }}"' >> .env

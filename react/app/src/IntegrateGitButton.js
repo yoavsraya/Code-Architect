@@ -2,11 +2,20 @@
 import axios from 'axios';
 import React from 'react';
 import './IntegrateGitButton.css';
+try
+{
+  const dotenvPath = path.join(__dirname, '../../../.env');
+  require('dotenv').config({ path: dotenvPath });
+}
+catch (error)
+{
+  console.error('Error loading .env file:', error);
+}
 
 const path = require('path');
 
-const LoginURL = secrets.SSH_HOST;
-const port = secrets.SERVER_PORT;
+const LoginURL = process.env.SSH_HOST;
+const port = process.env.REACT_PORT;
 
 const IntegrateGitButton = () => {
   const handleClick = () => {
