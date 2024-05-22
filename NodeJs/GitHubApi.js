@@ -2,11 +2,12 @@ const axios = require('axios');
 const path = require('path');
 const { Octokit } = require("@octokit/rest");
 const fs = require('fs');
+require('dotenv').config({ path: '../.env' });
 
 let UserData;
 let UserAuto;
-const CLIENT_ID = secrets.Git_Hub_CLIENT_ID;
-const CLIENT_SECRET = secrets.Git_Hub_CLIENT_SECRET;
+const CLIENT_ID = process.env.Git_Hub_CLIENT_ID;
+const CLIENT_SECRET = process.env.Git_Hub_CLIENT_SECRET;
 
   class User {
     constructor(accessToken, userName, repositories) {

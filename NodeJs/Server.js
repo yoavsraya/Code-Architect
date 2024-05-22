@@ -1,12 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 const GitHubApi = require('./GitHubApi');
-
+require('dotenv').config({ path: '../.env' });
 const express = require('express');
 const app = express();
 app.use(express.json());
 
-const port = secrets.SERVER_PORT;
+const port = process.env.SERVER_PORT;
 
 app.get('/', (req, res) => res.send('Hello World!')); //TODO: Change to the main page
 
@@ -22,7 +22,7 @@ app.get(`/webhook`, async (req, res) => {
   console.log(code);
 }); 
 
-app.get(`/${secrets.CALLBACK_URL}`, async (req, res) => {
+app.get(`/${process.env.CALLBACK_URL}`, async (req, res) => {
   const code = req.query.code;
   console.log(code);
   try {
