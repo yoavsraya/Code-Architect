@@ -110,7 +110,7 @@ async function getRepositories() {
     .then(({ UserData }) => {
       user = new User(userData.access_token,username,UserData);
       const repoNames = data.map(repo => repo.name);
-      console.log(repoNames); // This will log an array of repository names
+      console.log(repoNames); 
     })  
       .catch(error => {
         console.error('Error getting repositories:', error);
