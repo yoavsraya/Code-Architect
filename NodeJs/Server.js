@@ -34,7 +34,6 @@ app.get(`/webhook`, async (req, res) => {
 
 app.get(`/callback`, async (req, res) => {
   const code = req.query.code;
-  console.log(code);
   try {
       GitHubApi.GetUserData(code);
       const repoNames = await GitHubApi.getRepositories();
