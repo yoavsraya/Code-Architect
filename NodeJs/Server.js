@@ -20,7 +20,7 @@ console.log(port);
 
 app.get('/', (req, res) => res.send('Hello World!')); //TODO: Change to the main page
 
-// Route for the login butto
+// Route for the login button
 app.get('/LogIn', (req, res) => {
   const loginLink = `<a href="${GitHubApi.getLoginUrl()}">Login with gitHub</a>`;
   res.send(loginLink);
