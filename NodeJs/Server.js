@@ -32,7 +32,7 @@ app.get(`/webhook`, async (req, res) => {
   console.log(code);
 }); 
 
-app.get(`/${process.env.CALLBACK_URL}`, async (req, res) => {
+app.get(`/callback`, async (req, res) => {
   const code = req.query.code;
   console.log(code);
   try {
