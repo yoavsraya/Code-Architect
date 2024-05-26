@@ -26,18 +26,18 @@ function getLoginUrl() {
 
 async function GetUserData(code)
 {
-    try { 
-      UserAuto = await exchangeCodeForToken(code);
-      const {user} = await octokit.rest.users.getAuthenticated();
-      UserData = user;
-      octokit = new Octokit({
-        auth: `${userData.access_token}`,
-      });
-    }
-    catch (error) {
-      console.error('Error getting user data:', error);
-      throw error; // Re-throw for handling in server.js
-    }
+  try { 
+    UserAuto = await exchangeCodeForToken(code);
+    octokit = new Octokit({
+    auth: `${UserAuto.access_token}`,
+    });
+    const {data : user} = await octokit.rest.users.getAuthenticated();
+    UserData = user;  
+  }
+  catch (error) {
+    console.error('Error getting user data:', error);
+    throw error; // Re-throw for handling in server.js
+  }
 }
 
 async function exchangeCodeForToken(code) {
