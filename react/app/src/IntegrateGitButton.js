@@ -1,26 +1,14 @@
 // IntegrateGitButton
-import axios from 'axios';
 import React from 'react';
 import './IntegrateGitButton.css';
-try
-{
-  const dotenvPath = path.join(__dirname, '../../../.env');
-  require('dotenv').config({ path: dotenvPath });
-}
-catch (error)
-{
-  console.error('Error loading .env file:', error);
-}
 
-const path = require('path');
 
-const LoginURL = process.env.SSH_HOST;
-const port = process.env.REACT_PORT;
+//const path = require('path');
 
 const IntegrateGitButton = () => {
   const handleClick = () => {
     console.log('Integrating Git...');
-    window.open(`http://${LoginURL}:${port}/Login`);   
+    window.open(`http://54.243.195.75:3000/Login`);   
   };
 
   return (
