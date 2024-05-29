@@ -55,7 +55,7 @@ app.get(`/callback`, async (req, res) => {
       console.log("csRun function")
       await CsUtiles.csRun("/Users/yoavsraya/Desktop/study/סדנא/GIT/Code-Analyzer/UserFiles");
       console.log("runAI function")
-      await OpenAIApi.runAI();
+      await OpenAIApi.RunAI();
 
 
   }

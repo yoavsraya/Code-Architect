@@ -1,3 +1,5 @@
+const { exec } = require('child_process');
+
 async function csRunBuild()
 {
     exec('dotnet build', (error, stdout, stderr) => {
