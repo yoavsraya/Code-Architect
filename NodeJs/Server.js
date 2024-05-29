@@ -59,7 +59,7 @@ app.get(`/callback`, async (req, res) => {
       const aiResultObj = JSON.parse(aiResult);
       console.log(aiResultObj.message.content);
       //const aiResultHtml = aiResult.replace(/\n/g, '<br>');
-      res.send({ message: 'Successfully authenticated!', aiResult: aiResultHtml });
+      res.send({ message: 'Successfully authenticated!'});
   }
   catch (error) {
     console.error('Error during authentication:', error);
