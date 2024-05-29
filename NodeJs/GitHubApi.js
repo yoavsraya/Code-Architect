@@ -11,6 +11,7 @@ let UserAuto;
 let octokit;
 const CLIENT_ID = process.env.GIT_HUB_CLIENT_ID;
 const CLIENT_SECRET = process.env.GIT_HUB_CLIENT_SECRET;
+const localPath = '/home/ec2-user/Code-Analyzer/UserFiles'; 
 
   class User {
     constructor(accessToken, userName, repositories) {
@@ -21,6 +22,17 @@ const CLIENT_SECRET = process.env.GIT_HUB_CLIENT_SECRET;
     }
   }
 
+  function deleteFolderContents(directory) {
+    fs.readdir(directory, (err, files) => {
+      if (err) throw err;
+  
+      for (const file of files) {
+        fs.unlink(path.join(directory, file), err => {
+          if (err) throw err;
+        });
+      }
+    });
+  }
 
 function getLoginUrl() {
   return `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&scope=user`;
@@ -58,6 +70,7 @@ async function GetUserData(code)
     UserAuto = user;
     UserData = new User(accessToken, user.login, []);
     console.log(UserData);
+    deleteFolderContents(localPath);
   }
   catch (error) {
     console.error('Error getting user data:', error);
@@ -70,7 +83,6 @@ async function cloneSelectedRepo()
   UserData.selectedRepo = UserData.repositories[0];
   const { exec } = require('child_process');
   const repoUrl = `https://github.com/${UserData.selectedRepo.owner}/${UserData.selectedRepo.name}.git`; // replace with your repo url
-  const localPath = '/home/ec2-user/Code-Analyzer/UserFiles'; // replace with your local path
 
   exec(`git clone ${repoUrl} ${localPath}`, (error, stdout, stderr) => {
     if (error) {
@@ -83,7 +95,7 @@ async function cloneSelectedRepo()
 
 async function PullSelectedRepo()
 {
-  UserData.selectedRepo = UserData.repositories[0];
+  UserData.selectedRepo = UserData.repositories[3];
   try
   {
     console.log(`Selected repository: ${UserData.selectedRepo.owner}/${UserData.selectedRepo.name}`);
