@@ -277,7 +277,7 @@ async function RunAI() {
       model: "gpt-4o",
     });
   
-    return (completion.choices[0]);
+    return JSON.stringify(completion.choices[0]);
   }
   
   module.exports = {
