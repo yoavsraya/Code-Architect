@@ -53,8 +53,8 @@ async function GetUserData(code)
     const accessToken = await exchangeCodeForToken(code);
     const octokit = new Octokit({ auth: accessToken });
     const { data: user } = await octokit.rest.users.getAuthenticated();
-     UserAuto = user;
-     UserData = new User(accessToken, user.login, []);
+    UserAuto = user;
+    UserData = new User(accessToken, user.login, []);
   
   }
   catch (error) {
@@ -66,7 +66,8 @@ async function GetUserData(code)
 
 async function PullSelectedRepo()
 {
-  UserData.selectedRepo = repositories[0];
+  UserData.selectedRepo = UserData.repositories[0];
+  console.log(`Selected repository: ${UserData.selectedRepo}`);
   try
   {
     const { data: content } = await this.octokit.rest.repos.getContent({
@@ -102,12 +103,14 @@ async function PullSelectedRepo()
       })
       .catch(error => {
         console.error(`Error getting content of ${file.path}:`, error);
+        throw error;
       });
     });
   }
   catch(error)
   {
     console.error('Error pulling selected repository:', error);
+    throw error;
   }
   // data is an array of objects, each representing a file or directory in the repository
 
@@ -118,6 +121,7 @@ async function getRepositories() {
   {
     const { data: repos } = await this.octokit.rest.repos.listForAuthenticatedUser();
     const repoNames = repos.map(repo => repo.name);
+    console.log(repoNames);
     userData.repositories = repoNames;
   }
   catch(error)
