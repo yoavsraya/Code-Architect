@@ -35,12 +35,15 @@ app.get(`/webhook`, async (req, res) => {
 app.get(`/callback`, async (req, res) => {
   const code = req.query.code;
   try {
-      GitHubApi.GetUserData(code);
-      const repoNames = await GitHubApi.getRepositories();
-      console.log(repoNames); // This will log an array of repository names
-      
+      console.log("GetUserData fuction")
+      await GitHubApi.GetUserData(code);
+      console.log("getRepositories fuction")
+      await GitHubApi.getRepositories();
       // Select the first repository in the list //TODO: Change to choose button in the future
-      GitHubApi.PullSelectedRepo();
+      //console.log("PullSelectedRepo fuction")
+      //await GitHubApi.PullSelectedRepo();
+      console.log("cloneSelectedRepo fuction")
+      await GitHubApi.cloneSelectedRepo();
   }
   catch (error) {
     console.error('Error during authentication:', error);
