@@ -55,14 +55,13 @@ app.get(`/callback`, async (req, res) => {
       console.log("csRun function")
       await CsUtiles.csRun("/home/ec2-user/Code-Analyzer/UserFiles");
       console.log("runAI function")
-      await OpenAIApi.RunAI();
-
+      const aiResult = await OpenAIApi.RunAI();
+      res.send({ message: 'Successfully authenticated!', aiResult });
   }
   catch (error) {
     console.error('Error during authentication:', error);
     res.status(500).send('Authentication failed');
   }
-  res.send('Successfully authenticated!');
 });
 
 
