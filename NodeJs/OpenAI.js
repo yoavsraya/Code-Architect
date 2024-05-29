@@ -278,4 +278,5 @@ async function RunAI() {
   
     console.log(completion.choices[0]);
   }
+  
   Module.exports = RunAI;
