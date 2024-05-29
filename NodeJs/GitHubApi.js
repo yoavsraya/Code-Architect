@@ -31,7 +31,8 @@ const localPath = '/home/ec2-user/Code-Analyzer/UserFiles';
       }
       console.log(`Directory deleted successfully: ${stdout}`);
     });
-
+  }
+  async function createFolder(directory) {
     await exec(`mkdir -p ${directory}`, (error, stdout, stderr) => {
       if (error) {
         console.error(`Error creating directory: ${error}`);
@@ -78,6 +79,7 @@ async function GetUserData(code)
     UserData = new User(accessToken, user.login, []);
     console.log(UserData);
     await deleteFolder(localPath);
+    await createFolder(localPath);
   }
   catch (error) {
     console.error('Error getting user data:', error);
