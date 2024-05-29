@@ -23,8 +23,8 @@ const localPath = '/home/ec2-user/Code-Analyzer/UserFiles';
     }
   }
 
-  function deleteFolder(directory) {
-    exec(`rm -rf ${directory}`, (error, stdout, stderr) => {
+  async function deleteFolder(directory) {
+    await exec(`rm -rf ${directory}`, (error, stdout, stderr) => {
       if (error) {
         console.error(`Error deleting directory: ${error}`);
         return;
@@ -32,7 +32,7 @@ const localPath = '/home/ec2-user/Code-Analyzer/UserFiles';
       console.log(`Directory deleted successfully: ${stdout}`);
     });
 
-    exec(`mkdir -p ${directory}`, (error, stdout, stderr) => {
+    await exec(`mkdir -p ${directory}`, (error, stdout, stderr) => {
       if (error) {
         console.error(`Error creating directory: ${error}`);
         return;
@@ -77,7 +77,7 @@ async function GetUserData(code)
     UserAuto = user;
     UserData = new User(accessToken, user.login, []);
     console.log(UserData);
-    deleteFolder(localPath);
+    await deleteFolder(localPath);
   }
   catch (error) {
     console.error('Error getting user data:', error);
