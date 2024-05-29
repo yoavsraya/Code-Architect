@@ -57,7 +57,7 @@ app.get(`/callback`, async (req, res) => {
       console.log("runAI function")
       const aiResult = await OpenAIApi.RunAI();
       const aiResultObj = JSON.parse(aiResult);
-      const aiResultHtml = `<pre>${aiResultObj.message.content.replace(/\n/g, '<br>')}</pre>`;
+      console.log(aiResultObj.message.content);
       //const aiResultHtml = aiResult.replace(/\n/g, '<br>');
       res.send({ message: 'Successfully authenticated!', aiResult: aiResultHtml });
   }
