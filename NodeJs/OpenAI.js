@@ -1,8 +1,16 @@
 const OpenAI = require("openai");
-const dotenvPath = path.join(__dirname, '../.env');
-require('dotenv').config({ path: dotenvPath });
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+try
+{
+  const dotenvPath = path.join(__dirname, '../.env');
+  require('dotenv').config({ path: dotenvPath });
+}
+catch (error)
+{
+  console.error('Error loading .env file:', error);
+}
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY});
 
 const fs = require('fs');
 const { Module } = require("module");
