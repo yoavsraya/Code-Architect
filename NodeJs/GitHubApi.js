@@ -24,15 +24,38 @@ function getLoginUrl() {
   return `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&scope=user`;
 }
 
+async function exchangeCodeForToken(code) {
+  const response = await axios.post(
+    'https://github.com/login/oauth/access_token',
+    {
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET,
+      code,
+    },
+    {
+      headers: {
+        accept: 'application/json',
+      },
+    },
+  );
+
+  const { data } = response;
+  if (data.error) {
+    throw new Error(`Failed to exchange code for token: ${data.error}`);
+  }
+
+  return data.access_token;
+}
+
 async function GetUserData(code)
 {
   try { 
-    UserAuto = await exchangeCodeForToken(code);
-    octokit = new Octokit({
-    auth: `${UserAuto.access_token}`,
-    });
-    const {data : user} = await octokit.rest.users.getAuthenticated();
-    UserData = user;  
+    const accessToken = await exchangeCodeForToken(code);
+    const octokit = new Octokit({ auth: accessToken });
+    const { data: user } = await octokit.rest.users.getAuthenticated();
+     UserAuto = user;
+     UserData = new User(accessToken, user.login, []);
+  
   }
   catch (error) {
     console.error('Error getting user data:', error);
@@ -40,81 +63,67 @@ async function GetUserData(code)
   }
 }
 
-async function exchangeCodeForToken(code) {
-  const params = {
-    client_id: CLIENT_ID,
-    client_secret: CLIENT_SECRET,
-    code,
-    grant_type: 'authorization_code',
-  };
-
-  try {
-    const response = await axios.post('https://github.com/login/oauth/access_token', params, {
-      headers: {
-        Accept: 'application/json',
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Error exchanging code for token:', error);
-    throw error; // Re-throw for handling in server.js
-  }
-}
 
 async function PullSelectedRepo()
 {
-  user.selectedRepo = userData[0];
-  octokit.rest.repos.getContent({
-    owner: username,
-    repo: user.selectedRepo.name,
-    path: '/', // get the content of the root directory
-  })
-  .then(({ data }) => {
-  // data is an array of objects, each representing a file or directory in the repository
-  const csFiles = data
-    .filter(file => file.type === 'file' && file.path.endsWith('.cs'));
-
-  // Get the content of each .cs file
-  csFiles.forEach(file => {
-    octokit.rest.repos.getContent({
-      owner: username,
-      repo: user.selectedRepo.name,
-      path: file.path,
-    })
-    .then(({ data }) => {
-      // data.content holds the content of the file, encoded in base64
-      const fileContent = Buffer.from(data.content, 'base64').toString('utf8');
-
-      // Save the content of the file to a local file
-      fs.writeFile(`../UserFiles/${file.name}`, fileContent, 'utf8', (err) => {
-        if (err) {
-          console.error(`Error writing file ${file.name}:`, err);
-        } else {
-          console.log(`File ${file.name} has been saved.`);
-        }
-      });
-    })
-    .catch(error => {
-      console.error(`Error getting content of ${file.path}:`, error);
+  UserData.selectedRepo = repositories[0];
+  try
+  {
+    const { data: content } = await this.octokit.rest.repos.getContent({
+      owner: this.userName,
+      repo: this.selectedRepo,
+      path: '', // Get the root directory
     });
-  });
-})
-.catch(error => {
-  console.error('Error getting repository content:', error);
-});
+    const csFiles = content.filter(file => file.type === 'file' && file.path.endsWith('.cs'));
+    // Get the content of each .cs file
+    csFiles.forEach(file => {
+      octokit.rest.repos.getContent
+      ({
+        owner: username,
+        repo: user.selectedRepo.name,
+        path: file.path,
+      })
+      .then(({ data }) => 
+      {
+        // data.content holds the content of the file, encoded in base64
+        const fileContent = Buffer.from(data.content, 'base64').toString('utf8');
+  
+        // Save the content of the file to a local file
+        fs.writeFile(`../UserFiles/${file.name}`, fileContent, 'utf8', (err) => {
+          if (err)
+          {
+            console.error(`Error writing file ${file.name}:`, err);
+          }
+          else
+          {
+            console.log(`File ${file.name} has been saved.`);
+          }
+        });
+      })
+      .catch(error => {
+        console.error(`Error getting content of ${file.path}:`, error);
+      });
+    });
+  }
+  catch(error)
+  {
+    console.error('Error pulling selected repository:', error);
+  }
+  // data is an array of objects, each representing a file or directory in the repository
+
 }
 
 async function getRepositories() {
-  const username = UserData.login;
-  octokit.rest.repos.listForAuthenticatedUser()
-    .then(({ UserData }) => {
-      user = new User(userData.access_token,username,UserData);
-      const repoNames = data.map(repo => repo.name);
-      console.log(repoNames); 
-    })  
-      .catch(error => {
-        console.error('Error getting repositories:', error);
-    });
+  try
+  {
+    const { data: repos } = await this.octokit.rest.repos.listForAuthenticatedUser();
+    const repoNames = repos.map(repo => repo.name);
+    userData.repositories = repoNames;
+  }
+  catch(error)
+  {
+    console.error('Error getting repositories:', error);
+  }
   
 }
 
