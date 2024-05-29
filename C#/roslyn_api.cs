@@ -19,6 +19,9 @@ class Program
             return;
         }
 
+        string projectName = new DirectoryInfo(directoryPath).Name;
+        Console.WriteLine($"Project: {projectName}");
+
         var files = Directory.GetFiles(directoryPath, "*.cs", SearchOption.AllDirectories);
 
         foreach (var file in files)
@@ -146,8 +149,8 @@ class Program
     }
 
     static bool IsSystemNamespaceOrEnum(ITypeSymbol typeSymbol)
-{
-    if (typeSymbol == null || typeSymbol.ContainingNamespace == null) return false;
-    return typeSymbol.ContainingNamespace.ToString().StartsWith("System") || typeSymbol.TypeKind == TypeKind.Enum;
-}
+    {
+        if (typeSymbol == null || typeSymbol.ContainingNamespace == null) return false;
+        return typeSymbol.ContainingNamespace.ToString().StartsWith("System") || typeSymbol.TypeKind == TypeKind.Enum;
+    }
 }
