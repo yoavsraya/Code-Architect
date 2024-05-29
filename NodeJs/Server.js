@@ -1,6 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 const GitHubApi = require('./GitHubApi');
+const OpenAIApi = require('./OpenAI');
+const CsUtiles = require('../C#/utils');
+const { exec } = require('child_process');
+
+
 try
 {
   const dotenvPath = path.join(__dirname, '../.env');
@@ -44,6 +49,12 @@ app.get(`/callback`, async (req, res) => {
       //await GitHubApi.PullSelectedRepo();
       console.log("cloneSelectedRepo fuction")
       await GitHubApi.cloneSelectedRepo();
+
+      CsUtiles.csRunBuild();
+      CsUtiles.csRun("/Users/yoavsraya/Desktop/study/סדנא/GIT/Code-Analyzer/UserFiles");
+      OpenAIApi.runAI();
+
+
   }
   catch (error) {
     console.error('Error during authentication:', error);

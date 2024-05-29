@@ -12,6 +12,7 @@ class Program
     static void Main(string[] args)
     {
         string directoryPath = args.Length > 0 ? args[0] : "path/to/cloned_repos";
+        string outputPath = "Parser Output.txt";
 
         if (!Directory.Exists(directoryPath))
         {
@@ -19,18 +20,21 @@ class Program
             return;
         }
 
-        string projectName = new DirectoryInfo(directoryPath).Name;
-        Console.WriteLine($"Project: {projectName}");
-
-        var files = Directory.GetFiles(directoryPath, "*.cs", SearchOption.AllDirectories);
-
-        foreach (var file in files)
+        using (StreamWriter streamWriter = new StreamWriter(outputPath))
         {
-            AnalyzeFile(file);
+            string projectName = new DirectoryInfo(directoryPath).Name;
+            streamWriter.WriteLine($"Project: {projectName}");
+
+            var files = Directory.GetFiles(directoryPath, "*.cs", SearchOption.AllDirectories);
+
+            foreach (var file in files)
+            {
+                AnalyzeFile(file, streamWriter);
+            }
         }
     }
 
-    static void AnalyzeFile(string filePath)
+    static void AnalyzeFile(string filePath, StreamWriter streamWriter)
     {
         string code = File.ReadAllText(filePath);
 
@@ -48,13 +52,13 @@ class Program
         {
             var classSymbol = semanticModel.GetDeclaredSymbol(classNode) as INamedTypeSymbol;
 
-            Console.WriteLine($"Class: {classSymbol.Name}");
+            streamWriter.WriteLine($"Class: {classSymbol.Name}");
 
             // Inheritance
             var baseType = classSymbol.BaseType;
             if (baseType != null && baseType.Name != "Object")
             {
-                Console.WriteLine($"  Inherits from: {baseType}");
+                streamWriter.WriteLine($"  Inherits from: {baseType}");
             }
 
             // Composition (fields and properties)
@@ -76,10 +80,10 @@ class Program
 
             if (componentTypes.Any())
             {
-                Console.WriteLine("  Composition (components):");
+                streamWriter.WriteLine("  Composition (components):");
                 foreach (var type in componentTypes)
                 {
-                    Console.WriteLine($"    {type}");
+                    streamWriter.WriteLine($"    {type}");
                 }
             }
 
@@ -87,10 +91,10 @@ class Program
             var methods = classSymbol.GetMembers().OfType<IMethodSymbol>().Where(m => m.MethodKind == MethodKind.Ordinary);
             if (methods.Any())
             {
-                Console.WriteLine("  Methods:");
+                streamWriter.WriteLine("  Methods:");
                 foreach (var method in methods)
                 {
-                    Console.WriteLine($"    {GetAccessModifier(method)} {method.Name}()");
+                    streamWriter.WriteLine($"    {GetAccessModifier(method)} {method.Name}()");
                 }
             }
 
@@ -109,42 +113,33 @@ class Program
 
             if (referenceTypes.Any())
             {
-                Console.WriteLine("  References:");
+                streamWriter.WriteLine("  References:");
                 foreach (var type in referenceTypes)
                 {
-                    Console.WriteLine($"    {type}");
+                    streamWriter.WriteLine($"    {type}");
                 }
             }
 
-            Console.WriteLine();
+            streamWriter.WriteLine();
         }
     }
 
     static string GetAccessModifier(IMethodSymbol methodSymbol)
     {
-        if (methodSymbol.DeclaredAccessibility == Accessibility.Public)
+        switch (methodSymbol.DeclaredAccessibility)
         {
-            return "public";
-        }
-        else if (methodSymbol.DeclaredAccessibility == Accessibility.Private)
-        {
-            return "private";
-        }
-        else if (methodSymbol.DeclaredAccessibility == Accessibility.Protected)
-        {
-            return "protected";
-        }
-        else if (methodSymbol.DeclaredAccessibility == Accessibility.Internal)
-        {
-            return "internal";
-        }
-        else if (methodSymbol.DeclaredAccessibility == Accessibility.ProtectedOrInternal)
-        {
-            return "protected internal";
-        }
-        else
-        {
-            return "private"; // Default to private if none of the above
+            case Accessibility.Public:
+                return "public";
+            case Accessibility.Private:
+                return "private";
+            case Accessibility.Protected:
+                return "protected";
+            case Accessibility.Internal:
+                return "internal";
+            case Accessibility.ProtectedOrInternal:
+                return "protected internal";
+            default:
+                return "private"; // Default to private if none of the above
         }
     }
 
@@ -154,3 +149,4 @@ class Program
         return typeSymbol.ContainingNamespace.ToString().StartsWith("System") || typeSymbol.TypeKind == TypeKind.Enum;
     }
 }
+
