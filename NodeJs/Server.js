@@ -40,19 +40,22 @@ app.get(`/webhook`, async (req, res) => {
 app.get(`/callback`, async (req, res) => {
   const code = req.query.code;
   try {
-      console.log("GetUserData fuction")
+      console.log("GetUserData function")
       await GitHubApi.GetUserData(code);
-      console.log("getRepositories fuction")
+      console.log("getRepositories function")
       await GitHubApi.getRepositories();
       // Select the first repository in the list //TODO: Change to choose button in the future
       //console.log("PullSelectedRepo fuction")
       //await GitHubApi.PullSelectedRepo();
-      console.log("cloneSelectedRepo fuction")
+      console.log("cloneSelectedRepo function")
       await GitHubApi.cloneSelectedRepo();
 
-      CsUtiles.csRunBuild();
-      CsUtiles.csRun("/Users/yoavsraya/Desktop/study/סדנא/GIT/Code-Analyzer/UserFiles");
-      OpenAIApi.runAI();
+      console.log("csRunBuild function")
+      await CsUtiles.csRunBuild();
+      console.log("csRun function")
+      await CsUtiles.csRun("/Users/yoavsraya/Desktop/study/סדנא/GIT/Code-Analyzer/UserFiles");
+      console.log("runAI function")
+      await OpenAIApi.runAI();
 
 
   }
