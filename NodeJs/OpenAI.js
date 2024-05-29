@@ -4,9 +4,12 @@ require('dotenv').config({ path: dotenvPath });
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-let str = 
+const fs = require('fs');
+const { Module } = require("module");
+const filePath = '/home/ec2-user/Code-Analyzer/C#/Parser Output';
+const UserProjectStructure = fs.readFileSync(filePath, 'utf-8');
 
-async function main() {
+async function RunAI() {
     const completion = await openai.chat.completions.create({
       messages: [{"role": "user", "content": "you are a code designer"},
 
@@ -259,10 +262,12 @@ async function main() {
          
           {"role": "user", "content": "thanks! ready for more code?"},
 
-          {"role": "assistant", "content": "Absolutely! Please share the next portion of your code or provide details about its structure, and I'll continue with the analysis and feedback."}],
+          {"role": "assistant", "content": "Absolutely! Please share the next portion of your code or provide details about its structure, and I'll continue with the analysis and feedback."},
+        
+          {role: "user", content: UserProjectStructure}],
       model: "gpt-4o",
     });
   
     console.log(completion.choices[0]);
   }
-  main();
+  Module.exports = RunAI;
