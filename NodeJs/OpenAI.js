@@ -1,4 +1,5 @@
 const OpenAI = require("openai");
+const path = require('path');
 
 try
 {
@@ -14,7 +15,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY});
 
 const fs = require('fs');
 const { Module } = require("module");
-const filePath = '/home/ec2-user/Code-Analyzer/C#/Parser Output';
+const filePath = '/home/ec2-user/Code-Analyzer/C#/Parser Output.txt';
 const UserProjectStructure = fs.readFileSync(filePath, 'utf-8');
 
 async function RunAI() {
@@ -279,6 +280,6 @@ async function RunAI() {
     console.log(completion.choices[0]);
   }
   
-  Module.exports = {
-    RunAI
+  module.exports = {
+    RunAI,
   };

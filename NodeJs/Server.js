@@ -53,10 +53,9 @@ app.get(`/callback`, async (req, res) => {
       console.log("csRunBuild function")
       await CsUtiles.csRunBuild();
       console.log("csRun function")
-      await CsUtiles.csRun("/Users/yoavsraya/Desktop/study/סדנא/GIT/Code-Analyzer/UserFiles");
+      await CsUtiles.csRun("/home/ec2-user/Code-Analyzer/UserFiles");
       console.log("runAI function")
       await OpenAIApi.RunAI();
-
 
   }
   catch (error) {
