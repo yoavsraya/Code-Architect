@@ -87,7 +87,7 @@ async function GetUserData(code)
 
 async function cloneSelectedRepo()
 {
-  UserData.selectedRepo = UserData.repositories[0];
+  UserData.selectedRepo = UserData.repositories[3];
   const repoUrl = `https://github.com/${UserData.selectedRepo.owner}/${UserData.selectedRepo.name}.git`; // replace with your repo url
 
   exec(`git clone ${repoUrl} ${localPath}`, (error, stdout, stderr) => {
