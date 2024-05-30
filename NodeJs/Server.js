@@ -52,7 +52,7 @@ app.get(`/callback`, async (req, res) => {
 
       console.log("csRunBuild function")
       await CsUtiles.csRunBuild();
-      console.log("csRun function")
+      console.log("csRun functions")
       await CsUtiles.csRun("/home/ec2-user/Code-Analyzer/UserFiles");
       console.log("runAI function")
       const aiResult = await OpenAIApi.RunAI();
