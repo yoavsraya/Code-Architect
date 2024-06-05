@@ -1,0 +1,33 @@
+export const graphData = {
+    vertices: [
+      { id: 'Program', file: 'Program.cs' },
+      { id: 'TUI', file: 'TUI.cs' },
+      { id: 'Car', file: 'Car.cs' },
+      { id: 'CarExistException', file: 'CarExistException.cs' },
+      { id: 'ClientInfo', file: 'ClientInfo.cs' },
+      { id: 'CreatingObject', file: 'CreatingObject.cs' },
+      { id: 'ElectricMotor', file: 'ElectricMotor.cs' },
+      { id: 'fillEnergyToMaxException', file: 'fillEnergyToMaxException.cs' },
+      { id: 'GarageManager', file: 'GarageManager.cs' },
+      { id: 'GasMotor', file: 'GasMotor.cs' },
+      { id: 'MotorBike', file: 'MotorBike.cs' },
+      { id: 'MotorType', file: 'MotorType.cs' },
+      { id: 'Track', file: 'Track.cs' },
+      { id: 'ValueOutOfRangeException', file: 'ValueOutOfRangeException.cs' },
+      { id: 'Vehicle', file: 'Vehicle.cs' },
+      { id: 'Wheels', file: 'Wheels.cs' },
+    ],
+    edges: [
+      { from: 'Vehicle', to: 'Wheels', type: 'composition' },
+      { from: 'Car', to: 'Vehicle', type: 'inheritance' },
+      { from: 'MotorBike', to: 'Vehicle', type: 'inheritance' },
+      { from: 'Track', to: 'Vehicle', type: 'inheritance' },
+      { from: 'ClientInfo', to: 'Vehicle', type: 'composition' },
+      { from: 'CreatingObject', to: 'Vehicle', type: 'composition' },
+      { from: 'GarageManager', to: 'ClientInfo', type: 'reference' },
+      { from: 'GarageManager', to: 'Vehicle', type: 'reference' },
+      { from: 'ElectricMotor', to: 'MotorType', type: 'inheritance' },
+      { from: 'GasMotor', to: 'MotorType', type: 'inheritance' },
+    ],
+  };
+  

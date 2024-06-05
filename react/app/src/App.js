@@ -1,7 +1,8 @@
+import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import React from 'react';
 import IntegrateGitButton from './IntegrateGitButton';
+import GraphComponent from './GraphComponent';
 
 function App() {
   return (
@@ -12,6 +13,10 @@ function App() {
           <IntegrateGitButton />
         </div>
       </header>
+      <div style={{ height: '100vh' }}>
+        <h1>3D Graph Visualization</h1>
+        <GraphComponent />
+      </div>
     </div>
   );
 }
