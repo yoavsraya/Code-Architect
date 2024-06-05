@@ -1,12 +1,21 @@
 const OpenAI = require("openai");
-const dotenvPath = path.join(__dirname, '../.env');
-require('dotenv').config({ path: dotenvPath });
+const path = require('path');
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+try
+{
+  const dotenvPath = path.join(__dirname, '../.env');
+  require('dotenv').config({ path: dotenvPath });
+}
+catch (error)
+{
+  console.error('Error loading .env file:', error);
+}
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY});
 
 const fs = require('fs');
 const { Module } = require("module");
-const filePath = '/home/ec2-user/Code-Analyzer/C#/Parser Output';
+const filePath = '/home/ec2-user/Code-Analyzer/C#/Parser Output.txt';
 const UserProjectStructure = fs.readFileSync(filePath, 'utf-8');
 
 async function RunAI() {
@@ -268,7 +277,9 @@ async function RunAI() {
       model: "gpt-4o",
     });
   
-    console.log(completion.choices[0]);
+    return JSON.stringify(completion.choices[0]);
   }
   
-  Module.exports = RunAI;
+  module.exports = {
+    RunAI,
+  };

@@ -1,0 +1,143 @@
+Project: UserFiles
+Class: Program
+  Methods:
+    public Main()
+
+Class: TUI
+  Composition (components):
+    GarageManager
+    CreatingObject
+  Methods:
+    public RunGarage()
+    private getFullDetailsOnVehicle()
+    private fillElectric()
+    private fillGas()
+    private fillAirToMax()
+    private changeVehicleCondition()
+    private getListOfVehiclesByFilter()
+    private getUserChoiceFromMenu()
+    private welcoming()
+    private putVehicleInGarage()
+    private putDetailsOfVehicleAndClient()
+    private putFlatVehicleInGarage()
+    private userInputForClientInfoRequirements()
+    private userInputForVehicleRequirements()
+    private printListOfString()
+
+Class: Car
+  Inherits from: Vehicle
+  Methods:
+    public RequirementsList()
+    public BuildVehicle()
+    public VehicleDetails()
+    protected UpdateEnergyDetails()
+    protected UpdateFuelType()
+
+Class: CarExistException
+  Inherits from: System.Exception
+
+Class: ClientInfo
+  Composition (components):
+    Vehicle
+  Methods:
+    public GetVehiclePlateNumber()
+    public FillWheelsAirToMax()
+    public FillEnergyInVehicle()
+    public GetInfo()
+  References:
+    MotorType.eEnergyType
+
+Class: CreatingObject
+  Composition (components):
+    Vehicle
+  Methods:
+    public CreateNewVehicle()
+    public MyVehicleRequirements()
+    public MyClientInfoRequirements()
+    public CreateMyClientInfoCard()
+    public IsGarageEmpty()
+  References:
+    GarageManager
+
+Class: ElectricMotor
+  Inherits from: MotorType
+  Methods:
+    public ReFill()
+    public ToString()
+  References:
+    eEnergyType
+
+Class: GarageManager
+  Methods:
+    public IsVehicleExist()
+    private findClientByPlateNumber()
+    public ReturnListOfPlatesByFilter()
+    public UpdateClientStatus()
+    private updateListOfClients()
+    public FillWheelsToMax()
+    public FillEnergyInVehicle()
+    public GetVehicleInfo()
+    public GetVehicleRequirement()
+    public GetClientRequirement()
+    public DetailsToAddClient()
+    public GetGasTypeList()
+    public GetVehicleOptions()
+    public IsGasType()
+  References:
+    ClientInfo
+    Vehicle
+
+Class: GasMotor
+  Inherits from: MotorType
+  Methods:
+    public ReFill()
+    public ToString()
+  References:
+    eEnergyType
+
+Class: MotorBike
+  Inherits from: Vehicle
+  Methods:
+    public RequirementsList()
+    public BuildVehicle()
+    public VehicleDetails()
+    protected UpdateEnergyDetails()
+    protected UpdateFuelType()
+
+Class: MotorType
+  Methods:
+    public ReFill()
+    public CalculateMeterPercent()
+
+Class: Track
+  Inherits from: Vehicle
+  Methods:
+    public RequirementsList()
+    public BuildVehicle()
+    public VehicleDetails()
+    protected UpdateEnergyDetails()
+    protected UpdateFuelType()
+
+Class: ValueOutOfRangeException
+  Inherits from: System.Exception
+
+Class: Wheels
+  Methods:
+    internal UpdateWheelDetails()
+
+Class: Vehicle
+  Composition (components):
+    MotorType
+    Wheels
+  Methods:
+    public ReFillVehicle()
+    public FillWheelsAirToMax()
+    public RequirementsList()
+    public BuildVehicle()
+    protected CreateEngine()
+    public VehicleDetails()
+    protected UpdateEnergyDetails()
+    protected UpdateFuelType()
+  References:
+    MotorType.eEnergyType
+

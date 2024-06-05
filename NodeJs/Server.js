@@ -53,17 +53,18 @@ app.get(`/callback`, async (req, res) => {
       console.log("csRunBuild function")
       await CsUtiles.csRunBuild();
       console.log("csRun function")
-      await CsUtiles.csRun("/Users/yoavsraya/Desktop/study/סדנא/GIT/Code-Analyzer/UserFiles");
+      await CsUtiles.csRun("/home/ec2-user/Code-Analyzer/UserFiles");
       console.log("runAI function")
-      await OpenAIApi.runAI();
-
-
+      const aiResult = await OpenAIApi.RunAI();
+      const aiResultObj = JSON.parse(aiResult);
+      console.log(aiResultObj.message.content);
+      //const aiResultHtml = aiResult.replace(/\n/g, '<br>');
+      res.send({ message: 'Successfully authenticated!'});
   }
   catch (error) {
     console.error('Error during authentication:', error);
     res.status(500).send('Authentication failed');
   }
-  res.send('Successfully authenticated!');
 });
 
 

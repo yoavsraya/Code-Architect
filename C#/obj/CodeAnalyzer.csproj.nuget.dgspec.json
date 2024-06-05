@@ -1,31 +1,30 @@
 {
   "format": 1,
   "restore": {
-    "/Users/yoavsraya/Desktop/study/סדנא/GIT/Code-Analyzer/C#/CodeAnalyzer.csproj": {}
+    "/home/ec2-user/Code-Analyzer/C#/CodeAnalyzer.csproj": {}
   },
   "projects": {
-    "/Users/yoavsraya/Desktop/study/סדנא/GIT/Code-Analyzer/C#/CodeAnalyzer.csproj": {
+    "/home/ec2-user/Code-Analyzer/C#/CodeAnalyzer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/yoavsraya/Desktop/study/סדנא/GIT/Code-Analyzer/C#/CodeAnalyzer.csproj",
+        "projectUniqueName": "/home/ec2-user/Code-Analyzer/C#/CodeAnalyzer.csproj",
         "projectName": "CodeAnalyzer",
-        "projectPath": "/Users/yoavsraya/Desktop/study/סדנא/GIT/Code-Analyzer/C#/CodeAnalyzer.csproj",
-        "packagesPath": "/Users/yoavsraya/.nuget/packages/",
-        "outputPath": "/Users/yoavsraya/Desktop/study/סדנא/GIT/Code-Analyzer/C#/obj/",
+        "projectPath": "/home/ec2-user/Code-Analyzer/C#/CodeAnalyzer.csproj",
+        "packagesPath": "/home/ec2-user/.nuget/packages/",
+        "outputPath": "/home/ec2-user/Code-Analyzer/C#/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/yoavsraya/.nuget/NuGet/NuGet.Config"
+          "/home/ec2-user/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
-          "net7.0"
+          "net6.0"
         ],
         "sources": {
-          "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net7.0": {
-            "targetAlias": "net7.0",
+          "net6.0": {
+            "targetAlias": "net6.0",
             "projectReferences": {}
           }
         },
@@ -36,8 +35,8 @@
         }
       },
       "frameworks": {
-        "net7.0": {
-          "targetAlias": "net7.0",
+        "net6.0": {
+          "targetAlias": "net6.0",
           "dependencies": {
             "Microsoft.CodeAnalysis.CSharp": {
               "target": "Package",
@@ -54,8 +53,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -64,7 +62,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.307/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/6.0.129/RuntimeIdentifierGraph.json"
         }
       }
     }
