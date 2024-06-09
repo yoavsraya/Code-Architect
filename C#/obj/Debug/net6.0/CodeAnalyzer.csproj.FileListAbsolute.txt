@@ -265,6 +265,7 @@
 /home/ec2-user/Code-Analyzer/C#/obj/Debug/net6.0/ref/CodeAnalyzer.dll
 /home/ec2-user/Code-Analyzer/C#/obj/Debug/net6.0/CodeAnalyzer.pdb
 /home/ec2-user/Code-Analyzer/C#/obj/Debug/net6.0/CodeAnalyzer.genruntimeconfig.cache
+<<<<<<< HEAD
 C:\Users\yonat\Documents\Code-Analyzer\C#\bin\Debug\net6.0\BuildHost-net472\Humanizer.dll
 C:\Users\yonat\Documents\Code-Analyzer\C#\bin\Debug\net6.0\BuildHost-net472\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\yonat\Documents\Code-Analyzer\C#\bin\Debug\net6.0\BuildHost-net472\Microsoft.Build.Locator.dll
@@ -533,3 +534,5 @@ C:\Users\yonat\Documents\Code-Analyzer\C#\obj\Debug\net6.0\refint\CodeAnalyzer.d
 C:\Users\yonat\Documents\Code-Analyzer\C#\obj\Debug\net6.0\CodeAnalyzer.pdb
 C:\Users\yonat\Documents\Code-Analyzer\C#\obj\Debug\net6.0\CodeAnalyzer.genruntimeconfig.cache
 C:\Users\yonat\Documents\Code-Analyzer\C#\obj\Debug\net6.0\ref\CodeAnalyzer.dll
+=======
+>>>>>>> origin/HEAD
