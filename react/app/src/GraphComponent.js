@@ -43,9 +43,16 @@ const GraphComponent = () => {
     return graphData.edges.map((edge) => {
       const fromVertex = vertices.find((v) => v.id === edge.from);
       const toVertex = vertices.find((v) => v.id === edge.to);
+      const midpoint = [
+        (fromVertex.position[0] + toVertex.position[0]) / 2,
+        (fromVertex.position[1] + toVertex.position[1]) / 2,
+        (fromVertex.position[2] + toVertex.position[2]) / 2,
+      ];
       return {
         from: fromVertex.position,
         to: toVertex.position,
+        midpoint,
+        label: edge.label,
       };
     });
   }, [vertices]);
@@ -82,19 +89,32 @@ const GraphComponent = () => {
           lineGeometry.setPositions(points);
 
           return (
-            <primitive
-              key={index}
-              object={
-                new Line2(
-                  lineGeometry,
-                  new LineMaterial({
-                    color: 0xffffff,
-                    linewidth: 2.0, // Adjust the linewidth as needed
-                    resolution: [window.innerWidth, window.innerHeight], // Add resolution for proper scaling
-                  })
-                )
-              }
-            />
+            <React.Fragment key={index}>
+              <primitive
+                object={
+                  new Line2(
+                    lineGeometry,
+                    new LineMaterial({
+                      color: 0xffffff,
+                      linewidth: 2.0, // Adjust the linewidth as needed
+                      resolution: [window.innerWidth, window.innerHeight], // Add resolution for proper scaling
+                    })
+                  )
+                }
+              />
+              <Html position={edge.midpoint} distanceFactor={10}>
+                <div
+                  style={{
+                    color: '#e5c100',
+                    fontSize: '18px',
+                    textAlign: 'center',
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                >
+                  {edge.label}
+                </div>
+              </Html>
+            </React.Fragment>
           );
         })}
       </SpinningGroup>
