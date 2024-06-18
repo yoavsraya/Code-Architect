@@ -15,7 +15,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY});
 
 const fs = require('fs');
 const { Module } = require("module");
-const filePath = '/home/ec2-user/Code-Analyzer/C#/Parser Output.txt';
+const filePath = '/home/ec2-user/Code-Analyzer/C#/ProjectParse.txt';
 const UserProjectStructure = fs.readFileSync(filePath, 'utf-8');
 
 async function RunAI() {

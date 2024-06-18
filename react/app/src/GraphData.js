@@ -17,6 +17,11 @@ function SetLabel(name)
     
     return name;
 }
+
+function findLabelVertexIndex(name) {
+  return Vertices.findIndex(vertex => vertex.Label === name);
+}
+
 function GetFolderIndex(folderName)
 {
   let newItem;
@@ -37,16 +42,14 @@ function GetFolderIndex(folderName)
 
 async function createGraphFromData()
 {
- 
+  const verticesLookup = [];
   jsonData.forEach(vertex =>{
     Vertices.push({Label: vertex.ClassName, FolderIndex: GetFolderIndex(vertex.FolderName) , degree: 0, methods : vertex.Methods})
-  })
-  console.log(Vertices);
-  
-  const verticesLookup = [];
-  Vertices.forEach((vertex) => {
     verticesLookup.push(vertex.Label)
-  });
+  })
+  console.log("Vertices");
+  console.log(Vertices);
+  console.log("verticesLookup");
   console.log(verticesLookup);
 
   jsonData.forEach(vertex => {
@@ -68,31 +71,49 @@ async function createGraphFromData()
 
         if(verticesLookup.includes(Composition))
           {
-            Edges.push({From : vertex.ClassName, To : Composition , Label: "Composition"})
+            Edges.push({From : vertex.ClassName, To : Composition , Label: SetLabel("Composition")})
           }
       })
       
+      isContiener = false;
       vertex.CreationObjects.forEach(CreationObject => {
+        if(CreationObject.startsWith("System.Collections.Generic."))
+        {
+          isContiener = true;
+          CreationObject = CreationObject.match(/<(.*)>/)[1];
+        }
+
         if(verticesLookup.includes(CreationObject))
         {
-          Edges.push({From : vertex.ClassName, To : CreationObject , Label: "Creating"})
+          Edges.push({From : vertex.ClassName, To : CreationObject , Label: SetLabel("Creating")})
         }
       })
-      
+      isContiener = false;
       vertex.NestedClasses.forEach(NestedClasse => {
+        if(NestedClasse.startsWith("System.Collections.Generic."))
+          {
+            isContiener = true;
+            NestedClasse = NestedClasse.match(/<(.*)>/)[1];
+          }
+
         if(verticesLookup.includes(NestedClasse))
           {
-            Edges.push({From : vertex.ClassName, To : NestedClasse , Label: "Nested"})
+            Edges.push({From : vertex.ClassName, To : NestedClasse , Label: SetLabel("Nested")})
           }
       })
 
   }); 
-  console.log(Edges);
 
   Edges.forEach(edge => {
-      Vertices[edge.From].degree++;
-      Vertices[edge.To].degree++;
-  })
+    const fromIndex = findLabelVertexIndex(edge.From);
+    const toIndex = findLabelVertexIndex(edge.To);
+    if (fromIndex !== -1) {
+      Vertices[fromIndex].degree++;
+    }
+    if (toIndex !== -1) {
+      Vertices[toIndex].degree++;
+    }
+  });
 
   console.log(Vertices);
   console.log(Edges);

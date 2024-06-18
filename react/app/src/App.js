@@ -10,10 +10,10 @@ function App() {
   // Fetch the message from the server when the component mounts
   useEffect(() => {
     fetch('/api/message') // Replace '/api/message' with the path to your server's endpoint
-      .then(response => response.json()) // Parse the response as JSON
-      .then(data => setMessage(data.message)); // Store the message in state
-  }, []); // Empty dependency array means this effect runs once on mount
-
+      //.then(response => response.json()) // Parse the response as JSON
+      .then(data => setMessage(data.message)) // Store the message in state
+      .catch(error => console.error('Fetch error:', error)); // Log any fetch errors
+  }, []);
   return (
     <div className="App">
       <header className="App-header" style={{ position: 'relative', padding: '20px' }}>
@@ -26,7 +26,7 @@ function App() {
         {isOpen && (
           <div className="panel">
             <div className="message">
-              <p>{message}</p>
+              <p>{message.display}</p>
             </div>
             {/* Add more messages as needed */}
           </div>

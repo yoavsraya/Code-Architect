@@ -40,6 +40,7 @@ app.get(`/webhook`, async (req, res) => {
 app.get(`/callback`, async (req, res) => {
   const code = req.query.code;
   try {
+      let parsedResult;
       console.log("GetUserData function")
       await GitHubApi.GetUserData(code);
       console.log("getRepositories function")
@@ -56,9 +57,15 @@ app.get(`/callback`, async (req, res) => {
       await CsUtiles.csRun("/home/ec2-user/Code-Analyzer/UserFiles");
       console.log("runAI function")
       const aiResult = await OpenAIApi.RunAI();
-      const aiResultObj = JSON.parse(aiResult);
+      try {
+        parsedResult = JSON.parse(aiResult);
+    } catch (error) {
+        console.error('Failed to parse aiResult:', aiResult);
+        console.error('Error:', error);
+    }
       app.get('/api/message', (req, res) => {
-        res.send(aiResultObj);
+        console.log("GET /api/message");
+        res.send(parsedResult);
       });
       //const aiResultHtml = aiResult.replace(/\n/g, '<br>');
       res.send({ message: 'Successfully authenticated!'});
