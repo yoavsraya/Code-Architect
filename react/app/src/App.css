@@ -12,13 +12,7 @@
   position: relative;
 }
 
-/* Adjust the logo size and position */
-.App-logo {
-  height: 120px; /* Set the height of the logo to 100px */
-  position: absolute;
-  top: 20px;
-  right: 20px;
-}
+
 
 /* Adjust the button styling */
 .integrate-git-button {
@@ -36,4 +30,44 @@
 
 .integrate-git-button:hover {
   background-color: #22863a;
+}
+
+.hamburger-button {
+  position: absolute;
+  top: 10px;
+  right: 10px; /* Adjust this value to move the button next to the integrated button */
+  background-color: #1a1a1a; /* Black metal color */
+  width: 50px; /* Adjust this value to change the size of the button */
+  height: 50px; /* Adjust this value to change the size of the button */
+}
+
+.panel {
+  background-color: #1a1a1a; /* Lighter gray background */
+  border-radius: 10px; /* Rounded corners */
+  padding: 20px; /* Space around messages */
+  width: 300px;
+  height: 600px;
+  overflow-y: scroll;
+  position: absolute;
+  top: 60px;
+  right: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Subtle 3D effect */
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.message {
+  background-color: #333333; /* Light dark background */
+  color: #ffffff; /* White text */
+  font-size: 12px; /* Smaller text */
+  border-radius: 5px; /* Rounded corners */
+  padding: 10px; /* Space around text */
+  margin-bottom: 10px; /* Space between messages */
 }
