@@ -5,15 +5,18 @@ import React, { useState, useEffect } from 'react';
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
-  const [message, setMessage] = useState(''); // State variable to store the message
+  const [data, setData] = useState(null); // State variable to store the entire JSON response
 
   // Fetch the message from the server when the component mounts
   useEffect(() => {
-    fetch('/api/message') // Replace '/api/message' with the path to your server's endpoint
-      //.then(response => response.json()) // Parse the response as JSON
-      .then(data => setMessage(data.message)) // Store the message in state
-      .catch(error => console.error('Fetch error:', error)); // Log any fetch errors
+    fetch('/api/message')
+      .then(response => response.json())
+      .then(aiResult => {
+        setData(aiResult); // Set the data state to the entire JSON response
+      })
+      .catch(error => console.error('Error:', error));
   }, []);
+
   return (
     <div className="App">
       <header className="App-header" style={{ position: 'relative', padding: '20px' }}>
@@ -23,12 +26,11 @@ function App() {
         <button className="hamburger-button" onClick={() => setIsOpen(!isOpen)}>
           ☰
         </button>
-        {isOpen && (
+        {isOpen && data && (
           <div className="panel">
             <div className="message">
-              <p>{message.display}</p>
+              <pre>{JSON.stringify(data, null, 2)}</pre>
             </div>
-            {/* Add more messages as needed */}
           </div>
         )}
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '100px' }}>

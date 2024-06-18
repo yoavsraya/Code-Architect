@@ -6,7 +6,6 @@ let Edges = [];
 let FolderCounter = 0;
 let folderNames = [];
 let isContiener = false;
-let label;
 
 function SetLabel(name)
 {
@@ -45,7 +44,7 @@ async function createGraphFromData()
   const verticesLookup = [];
   jsonData.forEach(vertex =>{
     Vertices.push({Label: vertex.ClassName, FolderIndex: GetFolderIndex(vertex.FolderName) , degree: 0, methods : vertex.Methods})
-    verticesLookup.push(vertex.Label)
+    verticesLookup.push(vertex.ClassName)
   })
   console.log("Vertices");
   console.log(Vertices);
@@ -121,41 +120,3 @@ async function createGraphFromData()
 }
 
 export default createGraphFromData;
-/*
-export const graphData = {
-  vertices: [
-    { id: 'Program' },
-    { id: 'TUI' },
-    { id: 'Car' },
-    { id: 'CarExistException' },
-    { id: 'ClientInfo' },
-    { id: 'CreatingObject' },
-    { id: 'ElectricMotor' },
-    { id: 'fillEnergyToMaxException' },
-    { id: 'GarageManager' },
-    { id: 'GasMotor' },
-    { id: 'MotorBike' },
-    { id: 'MotorType' },
-    { id: 'Track' },
-    { id: 'ValueOutOfRangeException' },
-    { id: 'Vehicle' },
-    { id: 'Wheels' },
-  ],
-  edges: [
-    { from: 'TUI', to: 'GarageManager', label: 'Inherits' },
-    { from: 'TUI', to: 'CreatingObject', label: 'Inherits' },
-    { from: 'Car', to: 'Vehicle', label: 'Inherits' },
-    { from: 'ClientInfo', to: 'Vehicle', label: 'Inherits' },
-    { from: 'CreatingObject', to: 'Vehicle', label: 'Inherits' },
-    { from: 'CreatingObject', to: 'GarageManager', label: 'Inherits' },
-    { from: 'ElectricMotor', to: 'MotorType', label: 'Inherits' },
-    { from: 'GarageManager', to: 'ClientInfo', label: 'Inherits' },
-    { from: 'GarageManager', to: 'Vehicle', label: 'Inherits' },
-    { from: 'GasMotor', to: 'MotorType', label: 'Inherits' },
-    { from: 'MotorBike', to: 'Vehicle', label: 'Inherits' },
-    { from: 'Track', to: 'Vehicle', label: 'Inherits' },
-    { from: 'Vehicle', to: 'MotorType', label: 'Inherits' },
-    { from: 'Vehicle', to: 'Wheels', label: 'Inherits' },
-  ],
-};
-*/

@@ -1,12 +1,11 @@
-// src/GraphComponent.js
-
 import React, { useMemo, useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Html } from '@react-three/drei';
-import  createGraphFromData from './GraphData';
+import createGraphFromData from './GraphData';
 import { Line2 } from 'three/examples/jsm/lines/Line2';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
+import './GraphComponent.css'; // Ensure this file is created and styles are included
 
 const SpinningGroup = ({ children }) => {
   const groupRef = useRef();
@@ -41,7 +40,7 @@ const GraphComponent = () => {
     fetchData();
   }, []);
 
-  const radius = 5; // Radius of the sphere
+  const radius = 7; // Radius of the sphere
   const center = [0, 0, 0]; // Center point of the sphere
 
   const vertices = useMemo(() => {
@@ -87,8 +86,8 @@ const GraphComponent = () => {
   }
 
   return (
-    <div>
-      <Canvas style={{ background: 'transparent' }}>
+    <div className="graph-container">
+      <Canvas className="canvas-container">
         <OrbitControls />
         <ambientLight />
         <pointLight position={[10, 10, 10]} />
@@ -102,7 +101,7 @@ const GraphComponent = () => {
                 <div
                   style={{
                     color: 'white',
-                    fontSize: '14px',
+                    fontSize: '10px',
                     textAlign: 'center',
                     transform: 'translate(-50%, -50%)',
                   }}
@@ -136,7 +135,7 @@ const GraphComponent = () => {
                   <div
                     style={{
                       color: '#e5c100',
-                      fontSize: '18px',
+                      fontSize: '10px',
                       textAlign: 'center',
                       transform: 'translate(-50%, -50%)',
                     }}
