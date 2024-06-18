@@ -20,8 +20,8 @@ class Program
         }
 
         string projectName = new DirectoryInfo(directoryPath).Name;
-        string outputPath = $"{projectName} Parse.txt";
-        string jsonOutputPath = $"{projectName} Classes.json";
+        string outputPath = $"ProjectParse.txt";
+        string jsonOutputPath = "Code-Analyzer/react/app/src/GraphData.jason";
 
         var classInfos = new List<ClassInfo>();
 
