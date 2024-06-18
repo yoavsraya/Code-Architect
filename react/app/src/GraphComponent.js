@@ -3,7 +3,7 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Html } from '@react-three/drei';
-import { createGraphFromData } from './GraphData';
+import  createGraphFromData from './GraphData';
 import { Line2 } from 'three/examples/jsm/lines/Line2';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
@@ -29,6 +29,7 @@ const GraphComponent = () => {
     const fetchData = async () => {
       try {
         const data = await createGraphFromData();
+        console.log("END createGraphFromData function")
         setGraphData(data);
       } catch (err) {
         setError(err);

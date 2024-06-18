@@ -1,10 +1,22 @@
 // src/GraphData.js
+import jsonData from './GraphData.json';
 
 let Vertices = [];
 let Edges = [];
 let FolderCounter = 0;
 let folderNames = [];
+let isContiener = false;
+let label;
 
+function SetLabel(name)
+{
+  if(isContiener == true)
+    {
+      return name + "(continer)"
+    }
+    
+    return name;
+}
 function GetFolderIndex(folderName)
 {
   let newItem;
@@ -22,35 +34,60 @@ function GetFolderIndex(folderName)
   return newItem.Index;
 }
 
-async function loadGraphDataFromFile(filePath) {
-  const response = await fetch(filePath);
-  const data = await response.json();
-  return data;
-}
 
 async function createGraphFromData()
 {
-  const GraphObjects = await loadGraphDataFromFile('./GraphData.json');
-  GraphObjects.forEach(vertex => {
-    if(vertex.InheritsFrom != null)
+ 
+  jsonData.forEach(vertex =>{
+    Vertices.push({Label: vertex.ClassName, FolderIndex: GetFolderIndex(vertex.FolderName) , degree: 0, methods : vertex.Methods})
+  })
+  console.log(Vertices);
+  
+  const verticesLookup = [];
+  Vertices.forEach((vertex) => {
+    verticesLookup.push(vertex.Label)
+  });
+  console.log(verticesLookup);
+
+  jsonData.forEach(vertex => {
+    const inhertageName = vertex.InheritsFrom;
+    if(inhertageName != null)
       {
-        Edges.push({From : vertex.ClassName, To : vertex.InheritsFrom, Label: "heritage"});
+        if(verticesLookup.includes(inhertageName))
+        {
+          Edges.push({From : vertex.ClassName, To : vertex.InheritsFrom, Label: "heritage"});
+        }
       }
       
       vertex.Compositions.forEach(Composition => {
-        Edges.push({From : vertex.ClassName, To : Composition , Label: "Composition"})
+        if(Composition.startsWith("System.Collections.Generic."))
+          {
+            isContiener = true;
+            Composition = Composition.match(/<(.*)>/)[1];
+          }
+
+        if(verticesLookup.includes(Composition))
+          {
+            Edges.push({From : vertex.ClassName, To : Composition , Label: "Composition"})
+          }
       })
       
       vertex.CreationObjects.forEach(CreationObject => {
-        Edges.push({From : vertex.ClassName, To : CreationObject , Label: "Creating"})
+        if(verticesLookup.includes(CreationObject))
+        {
+          Edges.push({From : vertex.ClassName, To : CreationObject , Label: "Creating"})
+        }
       })
       
       vertex.NestedClasses.forEach(NestedClasse => {
-        Edges.push({From : vertex.ClassName, To : NestedClasse , Label: "Nested"})
+        if(verticesLookup.includes(NestedClasse))
+          {
+            Edges.push({From : vertex.ClassName, To : NestedClasse , Label: "Nested"})
+          }
       })
 
-      Vertices.push({Label: vertex.ClassName, FolderIndex: GetFolderIndex(vertex.FolderName) , degree: 0, methods : vertex.Methods})
   }); 
+  console.log(Edges);
 
   Edges.forEach(edge => {
       Vertices[edge.From].degree++;
@@ -62,6 +99,7 @@ async function createGraphFromData()
   return {Vertices, Edges}
 }
 
+export default createGraphFromData;
 /*
 export const graphData = {
   vertices: [
@@ -100,7 +138,3 @@ export const graphData = {
   ],
 };
 */
-
-module.exports = {
-  createGraphFromData,
-};
