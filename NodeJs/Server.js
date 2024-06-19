@@ -67,7 +67,6 @@ app.get(`/callback`, async (req, res) => {
         console.log("GET /api/message");
         res.send(parsedResult);
       });
-      //const aiResultHtml = aiResult.replace(/\n/g, '<br>');
       res.send({ message: 'Successfully authenticated!'});
   }
   catch (error) {
