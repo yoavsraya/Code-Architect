@@ -1,4 +1,3 @@
-/* App.css */
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -10,9 +9,8 @@
   font-size: calc(10px + 2vmin);
   color: white;
   position: relative;
+  z-index: 1;
 }
-
-
 
 /* Adjust the button styling */
 .integrate-git-button {
@@ -39,28 +37,40 @@
   background-color: #1a1a1a; /* Black metal color */
   width: 50px; /* Adjust this value to change the size of the button */
   height: 50px; /* Adjust this value to change the size of the button */
+  z-index: 2; /* Ensure it's above other content */
 }
 
 .panel {
   background-color: #1a1a1a; /* Lighter gray background */
   border-radius: 10px; /* Rounded corners */
   padding: 20px; /* Space around messages */
-  width: 300px;
-  height: 600px;
-  overflow-y: scroll;
+  max-width: 300px; /* Maximum width of the panel */
+  max-height: 600px; /* Maximum height of the panel */
+  overflow-y: auto; /* Enable vertical scrolling */
   position: absolute;
   top: 60px;
   right: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Subtle 3D effect */
+  z-index: 3; /* Ensure it's above other content */
 
   /* Hide scrollbar for Chrome, Safari and Opera */
   ::-webkit-scrollbar {
-    display: none;
+    width: 6px; /* Set width of the scrollbar */
   }
 
-  /* Hide scrollbar for IE, Edge and Firefox */
+  ::-webkit-scrollbar-thumb {
+    background-color: #888; /* Color of the scrollbar thumb */
+    border-radius: 10px; /* Rounded corners for the scrollbar thumb */
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* Color when hovered */
+  }
+
+  /* Custom scrollbar for IE, Edge, and Firefox */
   -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  scrollbar-width: thin;  /* Firefox */
+  scrollbar-color: #888 #1a1a1a;  /* Firefox */
 }
 
 .message {
@@ -70,4 +80,13 @@
   border-radius: 5px; /* Rounded corners */
   padding: 10px; /* Space around text */
   margin-bottom: 10px; /* Space between messages */
+  white-space: pre-wrap; /* Preserve formatting but allow wrapping */
+  word-wrap: break-word; /* Break long words */
+}
+
+.graph-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 0; /* Ensure it's behind other content */
 }

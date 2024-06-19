@@ -9,7 +9,7 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header" style={{ position: 'relative', padding: '20px' }}>
+      <header className="App-header">
         <div style={{ position: 'absolute', top: '10px', left: '10px' }}>
           <IntegrateGitButton setData={setData} />
         </div>
@@ -19,14 +19,12 @@ function App() {
         {isOpen && data && (
           <div className="panel">
             <div className="message">
-              <pre>{JSON.stringify(data, null, 2)}</pre>
+              {data.message.content}
             </div>
           </div>
         )}
-        <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '100px' }}>
-          <div style={{ width: '100%', height: '650px', background: '#282c34' }}>
-            <GraphComponent />
-          </div>
+        <div className="graph-container">
+          <GraphComponent />
         </div>
       </header>
     </div>
