@@ -45,8 +45,8 @@ app.get('/', (req, res) => res.send('Hello World!'));
 
 // Route for the login button
 app.get('/LogIn', (req, res) => {
-  const loginLink = `<a href="${GitHubApi.getLoginUrl()}">Login with gitHub</a>`;
-  res.send(loginLink);
+  const loginUrl = GitHubApi.getLoginUrl();
+  res.redirect(loginUrl);
 });
 
 // responds from GitHub

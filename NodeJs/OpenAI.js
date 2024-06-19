@@ -218,8 +218,8 @@ async function RunAI() {
 
             `},
 
-          {"role": "assistant", "content": `
-          <!DOCTYPE html>
+          {"role": "assistant", "content": 
+          `<!DOCTYPE html>
           <html lang="en">
           <head>
               <meta charset="UTF-8">
@@ -289,91 +289,41 @@ async function RunAI() {
 
           This HTML code provides a structured and readable analysis of your high-level code. It highlights the strengths of your design and suggests improvements, particularly focusing on design patterns and OOP principles. Feel free to adjust the content as needed for your website.`},
          
-          {"role": "user", "content": `This HTML code provides a structured and readable analysis of your high-level code. It highlights the strengths of your design and suggests improvements, particularly focusing on design patterns and OOP principles. Feel free to adjust the content as needed for your website."
-          this paragraph is useless
+          {"role": "user", "content": ` for next time: 3 fixes:
+                1. dont sumarry like this anymore: This HTML code provides a structured and readable analysis of your high-level code. It highlights the strengths of your design and suggests improvements, particularly focusing on design patterns and OOP principles. Feel free to adjust the content as needed for your website.
 
-          please make these lines more beautiful with the HTML: 
-          1. <p>Below is the analysis of your high-level code structure for the Garage Manager project. The feedback is split into multiple sections for better readability.</p>
+                2.please dont put background at all
 
-          2.<p>Overall, your code demonstrates a solid understanding of OOP principles and good practices. By incorporating some design patterns and refining object creation and exception handling, you can further enhance the maintainability and scalability of your project.</p>`},
+                3. this is the style for you to use :  <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        h2 {
+            color: #e74c3c;
+            margin: 0;
+            padding: 10px; /* Adjust padding to ensure alignment */
+        }
+        p {
+            margin: 0;
+            padding: 10px; /* Adjust padding to ensure alignment */
+        }
+        .highlight {
+            border-left: 5px solid #3498db;
+            padding: 10px;
+            margin: 0; /* Remove margin */
+        }
+        .intro, .conclusion {
+            border-left: 5px solid #1abc9c;
+            padding: 10px;
+            margin: 0; /* Remove margin */
+        }
+    </style>
 
-          {"role": "assistant", "content": `<!DOCTYPE html>
-          <html lang="en">
-          <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Garage Manager Code Analysis</title>
-              <style>
-                  body {
-                      font-family: Arial, sans-serif;
-                      line-height: 1.6;
-                      margin: 20px;
-                  }
-                  h2 {
-                      color: #2c3e50;
-                  }
-                  p {
-                      margin: 10px 0;
-                  }
-                  .highlight {
-                      background-color: #f9f9f9;
-                      border-left: 5px solid #3498db;
-                      padding: 10px;
-                      margin: 10px 0;
-                  }
-                  .intro, .conclusion {
-                      background-color: #e8f4f8;
-                      border-left: 5px solid #1abc9c;
-                      padding: 10px;
-                      margin: 10px 0;
-                  }
-              </style>
-          </head>
-          <body>
-              <h2>Garage Manager Code Analysis</h2>
-              <div class="intro">
-                  <p>Below is the analysis of your high-level code structure for the Garage Manager project. The feedback is split into multiple sections for better readability.</p>
-              </div>
-
-              <div class="highlight">
-                  <h3>1. Overall Structure and Organization</h3>
-                  <p>Your project is well-organized into different folders and files, which helps in maintaining a clear separation of concerns. The use of namespaces and internal accessibility for certain classes ensures encapsulation and limits the scope of these classes to within the assembly.</p>
-              </div>
-
-              <div class="highlight">
-                  <h3>2. Adherence to OOP Principles</h3>
-                  <p>Most of your classes adhere to OOP principles such as encapsulation, inheritance, and composition. For example, the <code>Car</code> class inherits from <code>Vehicle</code>, and the <code>ElectricMotor</code> and <code>GasMotor</code> classes inherit from <code>MotorType</code>. This demonstrates a good use of inheritance to promote code reuse and polymorphism.</p>
-              </div>
-
-              <div class="highlight">
-                  <h3>3. Use of Design Patterns</h3>
-                  <p>There are opportunities to leverage design patterns to improve your code structure:</p>
-                  <ul>
-                      <li><strong>Factory Pattern:</strong> The <code>CreatingObject</code> class is responsible for creating instances of various vehicle types. This can be refactored to use the Factory Pattern, which will encapsulate the object creation logic and make it easier to manage and extend.</li>
-                      <li><strong>Singleton Pattern:</strong> If the <code>GarageManager</code> class is intended to manage a single instance of the garage, consider using the Singleton Pattern to ensure only one instance of this class exists throughout the application.</li>
-                      <li><strong>Strategy Pattern:</strong> The different motor types (ElectricMotor, GasMotor) can benefit from the Strategy Pattern to encapsulate the varying behaviors related to energy management.</li>
-                  </ul>
-              </div>
-
-              <div class="highlight">
-                  <h3>4. Exception Handling</h3>
-                  <p>Your code includes custom exceptions such as <code>CarExistException</code> and <code>fillEnergyToMaxException</code>. This is a good practice as it provides more meaningful error messages and helps in debugging. Ensure that these exceptions are used consistently across your application to handle specific error scenarios.</p>
-              </div>
-
-              <div class="highlight">
-                  <h3>5. Composition and Object Creation</h3>
-                  <p>The use of composition in classes like <code>Vehicle</code> and <code>GarageManager</code> is effective in building complex objects from simpler ones. However, consider using dependency injection to manage object creation, which will make your code more testable and flexible.</p>
-              </div>
-
-              <div class="highlight">
-                  <h3>6. Well-Designed Parts</h3>
-                  <p>The <code>Vehicle</code> class is well-designed with a clear composition of components like <code>MotorType</code> and <code>Wheels</code>. This modular approach makes it easier to extend and maintain the code. Additionally, the use of enums for properties like <code>eNumOfDoors</code> and <code>eCarColor</code> in the <code>Car</code> class enhances code readability and type safety.</p>
-              </div>
-
-              <div class="conclusion">
-                  <p>Overall, your code demonstrates a solid understanding of OOP principles and good practices. By incorporating some design patterns and refining object creation and exception handling, you can further enhance the maintainability and scalability of your project.</p>
-              </div>
-          </body>`},
+                4. no title needed.
+                `},
 
           {"role": "user", "content": "good! ready for more code?"},
 

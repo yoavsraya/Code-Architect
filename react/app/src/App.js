@@ -2,6 +2,7 @@ import './App.css';
 import IntegrateGitButton from './IntegrateGitButton'; // Correct import
 import GraphComponent from './GraphComponent'; // Assuming GraphComponent is defined correctly
 import React, { useState } from 'react';
+import chatButton from './chatButton';
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,7 +15,7 @@ function App() {
           <IntegrateGitButton setData={setData} />
         </div>
         <button className="hamburger-button" onClick={() => setIsOpen(!isOpen)}>
-          ☰
+        ☰
         </button>
         {isOpen && data && (
           <div className="panel">

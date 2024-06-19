@@ -1,14 +1,14 @@
 .App {
-  background-color: #282c34; 
+  background-color: #282c34;
 }
 
 .App-header {
-  /* Other styles remain unchanged */
   min-height: 90vh; /* Adjust as needed to give more space */
   display: flex;
   flex-direction: column; /* Change to column to allow more vertical space */
   align-items: center;
   justify-content: center; /* Center content vertically and horizontally */
+  position: relative; /* Ensure children elements are positioned correctly */
 }
 
 /* Adjust the button styling */
@@ -43,7 +43,7 @@
 .panel {
   background-color: #1a1a1a; /* Lighter gray background */
   border-radius: 10px; /* Rounded corners */
-  padding: 20px; /* Space around messages */
+  padding: 0; /* Remove padding */
   max-width: 300px; /* Maximum width of the panel */
   max-height: 600px; /* Maximum height of the panel */
   overflow-y: auto; /* Enable vertical scrolling */
@@ -74,14 +74,19 @@
 }
 
 .message {
-  background-color: #333333; /* Light dark background */
+  background-color: #1a1a1a; /* Match panel background */
   color: #ffffff; /* White text */
-  font-size: 12px; /* Smaller text */
-  border-radius: 5px; /* Rounded corners */
-  padding: 10px; /* Space around text */
-  margin-bottom: 10px; /* Space between messages */
+  font-size: 15px; /* Smaller text */
+  border-radius: 0; /* Remove border-radius */
+  padding: 10px; /* Remove padding */
+  margin: 0; /* Remove margin */
   white-space: pre-wrap; /* Preserve formatting but allow wrapping */
   word-wrap: break-word; /* Break long words */
+  overflow: auto;
+}
+
+.message p {
+  margin: 0.5em 0; /* Adjust as needed */
 }
 
 .graph-container {
