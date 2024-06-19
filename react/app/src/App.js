@@ -18,10 +18,11 @@ function App() {
         </button>
         {isOpen && data && (
           <div className="panel">
-            <div className="message">
-              {data.message.content}
+            <div className="message"
+            dangerouslySetInnerHTML={{ __html: data.message.content }}
+            />
             </div>
-          </div>
+          
         )}
         <div className="graph-container">
           <GraphComponent />
