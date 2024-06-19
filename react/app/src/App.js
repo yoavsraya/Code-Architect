@@ -1,27 +1,17 @@
 import './App.css';
-import IntegrateGitButton from './IntegrateGitButton';
-import GraphComponent from './GraphComponent';
-import React, { useState, useEffect } from 'react';
+import IntegrateGitButton from './IntegrateGitButton'; // Correct import
+import GraphComponent from './GraphComponent'; // Assuming GraphComponent is defined correctly
+import React, { useState } from 'react';
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState(null); // State variable to store the entire JSON response
 
-  // Fetch the message from the server when the component mounts
-  useEffect(() => {
-    fetch('/api/message')
-      .then(response => response.json())
-      .then(aiResult => {
-        setData(aiResult); // Set the data state to the entire JSON response
-      })
-      .catch(error => console.error('Error:', error));
-  }, []);
-
   return (
     <div className="App">
       <header className="App-header" style={{ position: 'relative', padding: '20px' }}>
         <div style={{ position: 'absolute', top: '10px', left: '10px' }}>
-          <IntegrateGitButton />
+          <IntegrateGitButton setData={setData} />
         </div>
         <button className="hamburger-button" onClick={() => setIsOpen(!isOpen)}>
           ☰

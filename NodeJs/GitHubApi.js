@@ -77,7 +77,6 @@ async function GetUserData(code)
     const { data: user } = await octokit.rest.users.getAuthenticated();
     UserAuto = user;
     UserData = new User(accessToken, user.login, []);
-    console.log(UserData);
     await deleteFolder(localPath);
     await createFolder(localPath);
   }
@@ -171,7 +170,7 @@ async function getRepositories() {
   {
     const { data: repos } = await octokit.rest.repos.listForAuthenticatedUser();
     UserData.repositories = repos.map(repo => ({ owner: repo.owner.login, name: repo.name }));
-    console.log(UserData.repositories);
+    //console.log(UserData.repositories);
   }
   catch(error)
   {

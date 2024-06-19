@@ -1,0 +1,188 @@
+Project: Garage-Manager
+
+Folder: Ex03.ConsoleUI
+File: Program.cs
+Class: Program
+  Accessibility: internal
+  Belongs to: EXE
+  Object Creation:
+    System.Collections.Generic.List<string>
+    System.IO.StreamWriter
+
+Folder: Ex03.ConsoleUI
+File: TUI.cs
+Class: TUI
+  Accessibility: public
+  Belongs to: EXE
+  Composition (components):
+    GarageManager
+    CreatingObject
+  Object Creation:
+    GarageManager
+    CreatingObject
+    System.Collections.Generic.List<string>
+
+Folder: Ex03.GarageLogic
+File: Car.cs
+Class: Car
+  Accessibility: internal
+  Belongs to: DLL
+  Inherits from: Vehicle
+  Composition (components):
+    Ex03.GarageLogic.Car.eNumOfDoors
+    Ex03.GarageLogic.Car.eCarColor
+  Object Creation:
+    Wheels
+    Track
+    System.Collections.Generic.List<string>
+    System.ArgumentException
+    System.FormatException
+    System.NullReferenceException
+
+Folder: Ex03.GarageLogic
+File: CarExistException.cs
+Class: CarExistException
+  Accessibility: public
+  Belongs to: DLL
+  Inherits from: Exception
+
+Folder: Ex03.GarageLogic
+File: ClientInfo.cs
+Class: ClientInfo
+  Accessibility: internal
+  Belongs to: DLL
+  Composition (components):
+    Vehicle
+    Ex03.GarageLogic.ClientInfo.eClientStatus
+
+Folder: Ex03.GarageLogic
+File: CreatingObject.cs
+Class: CreatingObject
+  Accessibility: public
+  Belongs to: DLL
+  Composition (components):
+    Vehicle
+  Object Creation:
+    CarExistException
+    System.FormatException
+    Car
+    MotorBike
+    Track
+
+Folder: Ex03.GarageLogic
+File: ElectricMotor.cs
+Class: ElectricMotor
+  Accessibility: internal
+  Belongs to: DLL
+  Inherits from: MotorType
+  Object Creation:
+    System.ArgumentException
+    fillEnergyToMaxException
+
+Folder: Ex03.GarageLogic
+File: fillEnergyToMaxException.cs
+Class: fillEnergyToMaxException
+  Accessibility: public
+  Belongs to: DLL
+  Inherits from: Exception
+
+Folder: Ex03.GarageLogic
+File: GarageManeger.cs
+Class: GarageManager
+  Accessibility: public
+  Belongs to: DLL
+  Composition (components):
+    System.Collections.Generic.Dictionary<ClientInfo.eClientStatus, System.Collections.Generic.List<ClientInfo>>
+    ClientInfo.eClientStatus
+    System.Collections.Generic.List<ClientInfo>
+  Object Creation:
+    System.Collections.Generic.Dictionary<ClientInfo.eClientStatus, System.Collections.Generic.List<ClientInfo>>
+    System.ArgumentException
+    System.Collections.Generic.List<string>
+    System.FormatException
+    System.Collections.Generic.List<ClientInfo>
+    System.ArgumentNullException
+    ClientInfo
+
+Folder: Ex03.GarageLogic
+File: GasMotor.cs
+Class: GasMotor
+  Accessibility: internal
+  Belongs to: DLL
+  Inherits from: MotorType
+  Object Creation:
+    System.ArgumentException
+    fillEnergyToMaxException
+
+Folder: Ex03.GarageLogic
+File: MotorBike.cs
+Class: MotorBike
+  Accessibility: internal
+  Belongs to: DLL
+  Inherits from: Vehicle
+  Composition (components):
+    Ex03.GarageLogic.MotorBike.eLicenseType
+  Object Creation:
+    Wheels
+    System.Collections.Generic.List<string>
+    System.ArgumentException
+    System.FormatException
+    System.NullReferenceException
+
+Folder: Ex03.GarageLogic
+File: MotorType.cs
+Class: MotorType
+  Accessibility: public
+  Belongs to: DLL
+  Composition (components):
+    Ex03.GarageLogic.MotorType.eEnergyType
+  Object Creation:
+    System.AggregateException
+
+Folder: Ex03.GarageLogic
+File: Track.cs
+Class: Track
+  Accessibility: internal
+  Belongs to: DLL
+  Inherits from: Vehicle
+  Object Creation:
+    Wheels
+    System.Collections.Generic.List<string>
+    System.AggregateException
+    System.FormatException
+    GasMotor
+    System.NullReferenceException
+
+Folder: Ex03.GarageLogic
+File: ValueOutOfRangeException.cs
+Class: ValueOutOfRangeException
+  Accessibility: public
+  Belongs to: DLL
+  Inherits from: Exception
+
+Folder: Ex03.GarageLogic
+File: vehicle.cs
+Class: Vehicle
+  Accessibility: public
+  Belongs to: DLL
+  Composition (components):
+    MotorType
+    Wheels
+    System.Collections.Generic.List<Car>
+    Car
+  Object Creation:
+    System.Collections.Generic.List<Car>
+    System.ArgumentException
+    System.ArgumentNullException
+    System.NullReferenceException
+    ElectricMotor
+    GasMotor
+    System.Collections.Generic.List<string>
+
+Folder: Ex03.GarageLogic
+File: Wheels.cs
+Class: Wheels
+  Accessibility: public
+  Belongs to: DLL
+  Object Creation:
+    System.ArgumentException
