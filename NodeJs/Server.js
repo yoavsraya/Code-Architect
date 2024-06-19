@@ -7,6 +7,7 @@ const GitHubApi = require('./GitHubApi');
 const OpenAIApi = require('./OpenAI');
 const CsUtiles = require('../C#/utils');
 const cors = require('cors'); 
+const gulp = require('gulp');
 //const { exec } = require('child_process');
 
 const app = express();
@@ -74,9 +75,17 @@ app.get(`/callback`, async (req, res) => {
       
       // C# rosln
       console.log("csRunBuild function")
-      await CsUtiles.csRunBuild();
+      //await CsUtiles.csRunBuild();
+      gulp.task('build', function() {
+        // Your build tasks here
+        console.log('Building project...');
+    });
       console.log("csRun function")
-      await CsUtiles.csRun("/home/ec2-user/Code-Analyzer/UserFiles");
+      //await CsUtiles.csRun("/home/ec2-user/Code-Analyzer/UserFiles");
+      gulp.task('run', function() {
+        // Your run tasks here
+        console.log('Running project...');
+    });
       
       
       ///chat GTP

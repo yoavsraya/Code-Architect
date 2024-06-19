@@ -4,7 +4,9 @@
   "description": "JavaScript server written with Express.js",
   "main": "Server.js",
   "scripts": {
-    "start": "node NodeJs/Server.js"
+    "start": "node NodeJs/Server.js",
+    "csBuild": "cs build",
+    "csRun": "cs run"
   },
   "author": "",
   "license": "ISC",
@@ -23,6 +25,7 @@
     "ws": "^8.17.1"
   },
   "devDependencies": {
-    "concurrently": "^7.0.0"
+    "concurrently": "^7.0.0",
+    "gulp": "^5.0.0"
   }
 }

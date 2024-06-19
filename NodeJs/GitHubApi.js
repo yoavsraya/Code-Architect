@@ -84,6 +84,8 @@ async function GetUserData(code)
     console.error('Error getting user data:', error);
     throw error; // Re-throw for handling in server.js
   }
+  console.log("END GetUserData function")
+
 }
 
 async function cloneSelectedRepo()
@@ -98,6 +100,8 @@ async function cloneSelectedRepo()
     }
   console.log(`Repository cloned successfully: ${stdout}`);
 });
+console.log("END cloneSelectedRepo function")
+
 }
 
 async function PullSelectedRepo()
@@ -177,7 +181,8 @@ async function getRepositories() {
     console.error('Error getting repositories:', error);
     throw error;
   }
-  
+  console.log("END getRepositories function")
+
 }
 
 
