@@ -84,7 +84,6 @@ app.get(`/callback`, async (req, res) => {
       const aiResult = await OpenAIApi.RunAI();
       try {
         parsedResult = JSON.parse(aiResult);
-        console.log(parsedResult);
     } catch (error) {
         console.error('Failed to parse aiResult:', aiResult);
         console.error('Error:', error);
