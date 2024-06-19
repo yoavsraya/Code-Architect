@@ -1,15 +1,10 @@
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  /* Other styles remain unchanged */
+  min-height: 90vh; /* Adjust as needed to give more space */
   display: flex;
-  flex-direction: row;
+  flex-direction: column; /* Change to column to allow more vertical space */
   align-items: center;
-  justify-content: space-between;
-  padding: 20px;
-  font-size: calc(10px + 2vmin);
-  color: white;
-  position: relative;
-  z-index: 1;
+  justify-content: center; /* Center content vertically and horizontally */
 }
 
 /* Adjust the button styling */
