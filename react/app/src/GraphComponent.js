@@ -5,14 +5,14 @@ import createGraphFromData from './GraphData';
 import { Line2 } from 'three/examples/jsm/lines/Line2';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
-import './GraphComponent.css'; // Ensure this file is created and styles are included
+import './GraphComponent.css';
 
 const SpinningGroup = ({ children }) => {
   const groupRef = useRef();
 
   useFrame(() => {
     if (groupRef.current) {
-      groupRef.current.rotation.y += 0.0015; // Adjust the rotation speed as needed
+      groupRef.current.rotation.y += 0.0015;
     }
   });
 
@@ -25,19 +25,41 @@ const GraphComponent = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await createGraphFromData();
-        console.log("END createGraphFromData function")
-        setGraphData(data);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
+    const socket = new WebSocket('ws://54.243.195.75:3000');
+
+    socket.onopen = () => {
+      console.log('WebSocket connection established for GraphComponent');
+    };
+
+    socket.onmessage = async (event) => {
+      console.log('WebSocket message received:', event.data);
+      const message = JSON.parse(event.data);
+      if (message.loggedIn) {
+        console.log("Login finished, starting graph creation");
+        try {
+          const data = await createGraphFromData();
+          console.log("Graph data fetched");
+          setGraphData(data);
+          setLoading(false);
+        } catch (err) {
+          setError(err);
+          setLoading(false);
+        }
       }
     };
 
-    fetchData();
+    socket.onclose = () => {
+      console.log('WebSocket connection closed for GraphComponent');
+    };
+
+    socket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    // Clean up function to close the WebSocket connection when the component unmounts
+    return () => {
+      socket.close();
+    };
   }, []);
 
   const radius = 7; // Radius of the sphere
@@ -78,11 +100,27 @@ const GraphComponent = () => {
   }, [vertices]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        flexDirection: 'column',
+        fontSize: '24px',
+      }}>
+        <div className="spinner"></div>
+        <div style={{marginTop: '20px', color: 'white'}}>Waiting for login...</div>
+      </div>
+    );
   }
 
   if (error) {
     return <div>Error loading data: {error.message}</div>;
+  }
+
+  if (vertices.length === 0 || edges.length === 0) {
+    return <div>No graph data available.</div>;
   }
 
   return (
