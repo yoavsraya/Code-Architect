@@ -47,7 +47,7 @@
   border-radius: 10px; /* Rounded corners */
   padding: 0; /* Remove padding */
   max-width: 300px; /* Maximum width of the panel */
-  max-height: 600px; /* Maximum height of the panel */
+  max-height: 800px; /* Maximum height of the panel */
   overflow-y: auto; /* Enable vertical scrolling */
   position: absolute;
   top: 60px;

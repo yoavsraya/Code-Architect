@@ -139,7 +139,7 @@ const GraphComponent = () => {
                 <div
                   style={{
                     color: 'white',
-                    fontSize: '10px',
+                    fontSize: '18px',
                     textAlign: 'center',
                     transform: 'translate(-50%, -50%)',
                   }}
@@ -163,7 +163,7 @@ const GraphComponent = () => {
                       lineGeometry,
                       new LineMaterial({
                         color: 0xffffff,
-                        linewidth: 2.0, // Adjust the linewidth as needed
+                        linewidth: 2.4, // Adjust the linewidth as needed
                         resolution: [window.innerWidth, window.innerHeight], // Add resolution for proper scaling
                       })
                     )
@@ -173,7 +173,7 @@ const GraphComponent = () => {
                   <div
                     style={{
                       color: '#e5c100',
-                      fontSize: '10px',
+                      fontSize: '20px',
                       textAlign: 'center',
                       transform: 'translate(-50%, -50%)',
                     }}

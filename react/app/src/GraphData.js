@@ -62,6 +62,7 @@ async function createGraphFromData()
       }
       
       vertex.Compositions.forEach(Composition => {
+        isContiener = false;
         if(Composition.startsWith("System.Collections.Generic."))
           {
             isContiener = true;
@@ -74,8 +75,8 @@ async function createGraphFromData()
           }
       })
       
-      isContiener = false;
       vertex.CreationObjects.forEach(CreationObject => {
+        isContiener = false;
         if(CreationObject.startsWith("System.Collections.Generic."))
         {
           isContiener = true;
@@ -87,8 +88,8 @@ async function createGraphFromData()
           Edges.push({From : vertex.ClassName, To : CreationObject , Label: SetLabel("Creating")})
         }
       })
-      isContiener = false;
       vertex.NestedClasses.forEach(NestedClasse => {
+        isContiener = false;
         if(NestedClasse.startsWith("System.Collections.Generic."))
           {
             isContiener = true;
