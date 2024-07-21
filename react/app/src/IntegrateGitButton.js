@@ -20,26 +20,41 @@ const IntegrateGitButton = ({ setData, onSuccess, onFail }) => {
       const message = JSON.parse(event.data);
       if (message.loggedIn) {
         console.log("Login finished, fetching repo list");
-        fetch('http://54.243.195.75:3000/api/repoList')
-          .then(response => response.json())
-          .then(data => {
-            console.log('Response received from /api/repoList', data);
-            onSuccess(data); // Trigger the onSuccess callback with the data
-            if (loginWindow) {
-              loginWindow.close();
+
+        // Fetch the repo list and user picture
+        Promise.all([
+          fetch('http://54.243.195.75:3000/api/repoList').then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
             }
-            console.log("Socket closing");
-            socket.close(); // Close the WebSocket connection after receiving the message
+            return response.json();
+          }),
+          fetch('http://54.243.195.75:3000/api/getUserPic').then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
           })
-          .catch(error => {
-            console.error('Fetch error:', error);
-            onFail('Fetch error');
-            if (loginWindow) {
-              loginWindow.close();
-            }
-            console.log("Socket closing");
-            socket.close(); // Close the WebSocket connection after receiving the message
-          });
+        ])
+        .then(([datarepo, dataurl]) => {
+          console.log('Response received from /api/repoList', datarepo);
+          console.log('Response received from /api/getUserPic', dataurl);
+          onSuccess(datarepo, dataurl); // Notify the parent component with the repo list and user picture
+          if (loginWindow) {
+            loginWindow.close();
+          }
+          console.log("Socket closing");
+          socket.close(); // Close the WebSocket connection after receiving the message
+        })
+        .catch(error => {
+          console.error('Fetch error:', error);
+          onFail('Fetch error');
+          if (loginWindow) {
+            loginWindow.close();
+          }
+          console.log("Socket closing");
+          socket.close(); // Close the WebSocket connection after receiving the message
+        });
       } else {
         console.log("Login failed, callback ended");
         onFail("Login failed");

@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import IntegrateGitButton from './IntegrateGitButton';
+import CustomSelect from './CustomSelect';
 import './LoginPage.css';
 import loginImage from './login-bg.png';
+import Header from './Header';
 
 const LoginPage = ({ onLogin, setData }) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [repoList, setRepoList] = useState([]);
   const [selectedRepo, setSelectedRepo] = useState('');
+  const [userProfile, setUserProfile] = useState(null);
 
-  const handleLoginSuccess = (data) => {
-    console.log('Login successful. Data:', data);
-    setRepoList(data); // Assuming the response is a list of repo names
+  const handleLoginSuccess = (datarepo, dataurl) => {
+    console.log('Login successful. Repo Data:', datarepo, 'User Profile:', dataurl);
+    setRepoList(datarepo); // Assuming the response is a list of repo names
+    setUserProfile(dataurl); // Store the user profile data
   };
 
   const handleLoginFail = (error) => {
@@ -18,16 +22,17 @@ const LoginPage = ({ onLogin, setData }) => {
     alert(error); // For demonstration, showing an alert. You can replace this with your error handling UI.
   };
 
-  const handleRepoSelect = (event) => {
-    setSelectedRepo(event.target.value);
+  const handleRepoSelect = (selectedOption) => {
+    setSelectedRepo(selectedOption ? selectedOption.value : '');
   };
 
   const handleConfirmSelection = () => {
     if (selectedRepo) {
       onLogin(selectedRepo); // Notify the parent component with the selected repository
       setData({ repo: selectedRepo }); // Set the selected repository data
+      setErrorMessage(''); // Clear any previous error message
     } else {
-      setErrorMessage('Please select a repository.');
+      setErrorMessage('Please select a repository from the list.'); // Set custom error message
     }
   };
 
@@ -36,24 +41,30 @@ const LoginPage = ({ onLogin, setData }) => {
     console.log('Updated repo list:', repoList);
   }, [repoList]);
 
+  // Convert repoList to options for the CustomSelect component
+  const repoOptions = repoList.map(repo => ({ value: repo, label: repo }));
+
   return (
     <div className="login-page">
-      <img src={loginImage} alt="Login Background" className="login-image" />
+      <Header /> {/* Include the Header component */}
+      <img
+        src={userProfile ? userProfile.avatar_url : loginImage}
+        alt="Login Background"
+        className="login-image"
+      />
       {errorMessage && <div className="error-message">{errorMessage}</div>}
       <div className="login-content">
-        <IntegrateGitButton setData={setData} onSuccess={handleLoginSuccess} onFail={handleLoginFail} />
+        {!userProfile && (
+          <IntegrateGitButton setData={setData} onSuccess={handleLoginSuccess} onFail={handleLoginFail} />
+        )}
       </div>
       {repoList.length > 0 && (
         <div className="repo-list">
-          <label htmlFor="repo-select">Choose a repository:</label>
-          <select id="repo-select" value={selectedRepo} onChange={handleRepoSelect}>
-            <option value="" disabled>Select a repository</option>
-            {repoList.map((repo, index) => (
-              <option key={index} value={repo}>
-                {repo}
-              </option>
-            ))}
-          </select>
+          <CustomSelect
+            options={repoOptions}
+            value={repoOptions.find(option => option.value === selectedRepo)}
+            onChange={handleRepoSelect}
+          />
           <button onClick={handleConfirmSelection}>Confirm Selection</button>
         </div>
       )}

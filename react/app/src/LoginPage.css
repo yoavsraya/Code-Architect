@@ -1,3 +1,11 @@
+.error-message {
+  color: #ffffff;
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+}
+
 .login-page {
     display: flex;
     flex-direction: column;
@@ -42,34 +50,27 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 15px;
     margin-top: 20px;
-  }
-  
-  /* Style the label */
-  .repo-list label {
-    font-size: 16px;
-    font-weight: bold;
-    color: #ffffff;
   }
   
   /* Style the select dropdown */
   .repo-list select {
-    padding: 10px;
+    padding: 9px;
     font-size: 16px;
     border: 2px solid #ccc;
     border-radius: 4px;
     background-color: #f9f9f9;
     color: #333;
     appearance: none; /* Remove default arrow */
-    -webkit-appearance: none; /* Remove default arrow for Safari */
+    /*-webkit-appearance: none; /* Remove default arrow for Safari */
     -moz-appearance: none; /* Remove default arrow for Firefox */
   }
   
   /* Style the select options */
   .repo-list option {
-    padding: 10px;
-    font-size: 16px;
+    padding: 9px;
+    font-size: 14px;
     background-color: #fff;
     color: #333;
   }
@@ -78,9 +79,9 @@
   .repo-list button {
     background-color: #2ea44f;
     color: #ffffff;
-    padding: 20px 40px;
+    padding: 13px 20px;
     border: none;
-    border-radius: 10px;
+    border-radius: 9px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;

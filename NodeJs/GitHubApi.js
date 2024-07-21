@@ -15,11 +15,12 @@ const CLIENT_SECRET = process.env.GIT_HUB_CLIENT_SECRET;
 const localPath = '/home/ec2-user/Code-Analyzer/UserFiles'; 
 
   class User {
-    constructor(accessToken, userName, repositories) {
+    constructor(accessToken, userName, repositories, userPicture) {
       this.accessToken = accessToken;
       this.userName = userName;
       this.repositories = repositories;
       this.selectedRepo = null;
+      this.userPic = userPicture;
     }
   }
 
@@ -76,7 +77,7 @@ async function GetUserData(code)
     octokit = await new Octokit({ auth: accessToken });
     const { data: user } = await octokit.rest.users.getAuthenticated();
     UserAuto = user;
-    UserData = new User(accessToken, user.login, []);
+    UserData = new User(accessToken, user.login, [],user.avatar_url);
     await deleteFolder(localPath);
     await createFolder(localPath);
   }
@@ -186,6 +187,21 @@ async function getRepositories() {
 
 }
 
+async function GetUserPic()
+{
+  if(UserData.userPic)
+  {
+    console.log("UserData.userPic");
+    console.log(UserData.userPic);
+    return UserData.userPic;
+  }
+  else
+  {
+    return null;
+  }
+
+}
+
 
 module.exports = {
   getLoginUrl,
@@ -194,4 +210,5 @@ module.exports = {
   PullSelectedRepo,
   getRepositories,
   GetUserData,
+  GetUserPic,
 };

@@ -85,6 +85,12 @@ app.get('/api/repoList', (req, res) => {
   res.send(repoList);
 });
 
+app.get('/api/getUserPic', async (req, res) => {
+  console.log("GET /api/getUserPic");
+  url = await GitHubApi.GetUserPic();
+  res.json({ avatar_url: url });
+});
+
 app.get('/api/fetchSelectedRepo', async (req, res) => {
   const selectedRepo = req.query.selectedRepo;
   console.log("GET /api/fetchSelectedRepo");
