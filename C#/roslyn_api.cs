@@ -21,7 +21,7 @@ class Program
 
         string projectName = new DirectoryInfo(directoryPath).Name;
         string outputPath = $"ProjectParse.txt";
-        string jsonOutputPath = "C:/Users/yonat/Documents/Code-Analyzer/react/app/src/GraphData.json";
+        string jsonOutputPath = "Code-Analyzer/react/app/src/GraphData.jason";
 
         var classInfos = new List<ClassInfo>();
 
@@ -326,7 +326,7 @@ class Program
             var nonPrimitiveComponents = classInfo.Composition.Where(c => !IsPrimitiveType(c)).ToList();
             if (nonPrimitiveComponents.Any())
             {
-                streamWriter.WriteLine("  Composition (components):");
+                streamWriter.WriteLine("  Composition:");
                 foreach (var component in nonPrimitiveComponents)
                 {
                     streamWriter.WriteLine($"    {component}");
