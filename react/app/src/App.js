@@ -9,9 +9,10 @@ function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState(null); // State variable to store the entire JSON response
 
-  const handleLogin = (response) => {
+  const handleLogin = (selectedRepo) => {
     // Logic to handle login, e.g., saving the token
     setIsAuthenticated(true);
+    setData({ repo: selectedRepo }); // Store the selected repository name in the data state
   };
 
   return (
@@ -39,7 +40,7 @@ function App() {
                     </button>
                     {isOpen && data && (
                       <div className="panel">
-                        <div className="message" dangerouslySetInnerHTML={{ __html: data.message.content }} />
+                        <div className="message" dangerouslySetInnerHTML={{ __html: data.message?.content || '' }} />
                       </div>
                     )}
                     <div className="graph-container">

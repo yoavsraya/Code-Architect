@@ -174,7 +174,8 @@ async function getRepositories() {
   {
     const { data: repos } = await octokit.rest.repos.listForAuthenticatedUser();
     UserData.repositories = repos.map(repo => ({ owner: repo.owner.login, name: repo.name }));
-    //console.log(UserData.repositories);
+    console.log(UserData.repositories);
+    return UserData.repositories.map(repo => repo.name);
   }
   catch(error)
   {

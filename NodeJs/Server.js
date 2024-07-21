@@ -17,6 +17,7 @@ const wss = new WebSocket.Server({ server });
 
 let isLoggedIn = false;
 let parsedResult;
+let repoList;
 
 const port = process.env.SERVER_PORT;
 
@@ -63,14 +64,15 @@ app.get(`/callback`, async (req, res) => {
       console.log("GetUserData function")
       await GitHubApi.GetUserData(code);
       console.log("getRepositories function")
-      await GitHubApi.getRepositories();
+      repoList = await GitHubApi.getRepositories();
+      console.log("repo names:");
+      console.log(repoList);
       wss.clients.forEach(client => {
         if (client.readyState === WebSocket.OPEN) {
           console.log("let the react know that the login is done")
           client.send(JSON.stringify({ loggedIn: true }));
         }
       });
-      res.send({ message: 'Successfully authenticated!'});
     }
     catch (error) {
       console.error('Error during authentication:', error);
@@ -78,9 +80,9 @@ app.get(`/callback`, async (req, res) => {
       }
 });
       
-app.get('/api/message', (req, res) => {
-  console.log("GET /api/message");
-  res.send(parsedResult);
+app.get('/api/repoList', (req, res) => {
+  console.log("GET /api/repoList");
+  res.send(repoList);
 });
 
 app.get('/api/fetchSelectedRepo', async (req, res) => {
