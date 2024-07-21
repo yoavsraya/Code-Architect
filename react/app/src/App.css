@@ -11,24 +11,6 @@
   position: relative; /* Ensure children elements are positioned correctly */
 }
 
-/* Adjust the button styling */
-.integrate-git-button {
-  background-color: #2ea44f;
-  color: #ffffff;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  outline: none;
-  transition: background-color 0.3s;
-}
-
-.integrate-git-button:hover {
-  background-color: #22863a;
-}
-
 .hamburger-button {
   position: absolute;
   outline: none;

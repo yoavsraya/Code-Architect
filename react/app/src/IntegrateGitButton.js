@@ -1,12 +1,12 @@
 import React from 'react';
 import './IntegrateGitButton.css';
 
-const IntegrateGitButton = ({ setData }) => {
+const IntegrateGitButton = ({ setData, onSuccess, onFail }) => {
   const handleClick = () => {
     console.log('Integrating Git...');
 
     // Open the login URL in a new window
-    const loginWindow = window.open('http://54.243.195.75:3000/Login', '_blank');
+    const loginWindow = window.open('/Login/integrartion', '_blank');
 
     // Connect to the WebSocket server
     const socket = new WebSocket('ws://54.243.195.75:3000');
@@ -18,29 +18,35 @@ const IntegrateGitButton = ({ setData }) => {
     socket.onmessage = (event) => {
       console.log('WebSocket message received:', event.data);
       const message = JSON.parse(event.data);
-      if (message.loggedIn) {
+      if (message.loggedIn)
+      {
         console.log("login finished, call back ended")
         fetch('http://54.243.195.75:3000/api/message')
         .then(response => {
           console.log('Response received from /api/message');
           return response.json();
         })
-        .then(aiResult => {
-          console.log("Parsed aiResult:", aiResult);
-          setData(aiResult); // Set the data state to the entire JSON response
-          if (loginWindow)
-          {
-            loginWindow.close();
-          }
-            console.log("socket close")
-            socket.close(); // Close the WebSocket connection after receiving the message
-          })
-          .catch(error => console.error('Error:', error));
+        .then(data => {
+          setData(data); // Assuming you want to set some data on successful login
+          onSuccess(data); // Trigger the onSuccess callback
+        });
       }
+      else
+      {
+        console.log("login finished, call back ended");
+        onFail("login faild");
+      }
+
+      if (loginWindow)
+      {
+        loginWindow.close();
+      }
+      console.log("socket close")
+      socket.close(); // Close the WebSocket connection after receiving the message     
     };
 
     socket.onclose = () => {
-      console.log('WebSocket connection closed');
+    console.log('WebSocket connection closed');
     };
 
     socket.onerror = (error) => {
