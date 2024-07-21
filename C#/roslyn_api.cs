@@ -21,7 +21,7 @@ class Program
 
         string projectName = new DirectoryInfo(directoryPath).Name;
         string outputPath = $"ProjectParse.txt";
-        string jsonOutputPath = "/home/ec2-user/Code-Analyzer/react/app/src/GraphData.json";
+        string jsonOutputPath = "C:/Users/yonat/Documents/Code-Analyzer/react/app/src/GraphData.json";
 
         var classInfos = new List<ClassInfo>();
 
@@ -87,40 +87,63 @@ class Program
             classInfo.InheritsFrom = baseType.Name;
         }
 
-        // Composition (fields and properties)
+        // Composition and Aggregation (fields and properties)
+        var compositionCandidates = new HashSet<string>();
+        var aggregationCandidates = new HashSet<string>();
+
         foreach (var member in classSymbol.GetMembers().OfType<IFieldSymbol>())
         {
             if (member.Type != null && !IsPrimitiveType(member.Type.Name))
             {
-                AddComponentTypes(classInfo.Composition, member.Type);
+                var typeName = GetElementTypeName(member.Type);
+                if (IsCompositionField(member))
+                {
+                    compositionCandidates.Add(typeName);
+                    Console.WriteLine($"Field {member.Name} ({typeName}) is classified as Composition.");
+                }
+                else
+                {
+                    aggregationCandidates.Add(typeName);
+                    Console.WriteLine($"Field {member.Name} ({typeName}) is classified as Aggregation.");
+                }
             }
         }
+
         foreach (var member in classSymbol.GetMembers().OfType<IPropertySymbol>())
         {
             if (member.Type != null && !IsPrimitiveType(member.Type.Name))
             {
-                AddComponentTypes(classInfo.Composition, member.Type);
+                var typeName = GetElementTypeName(member.Type);
+                if (IsCompositionProperty(member))
+                {
+                    compositionCandidates.Add(typeName);
+                    Console.WriteLine($"Property {member.Name} ({typeName}) is classified as Composition.");
+                }
+                else if (IsAggregationProperty(member, semanticModel))
+                {
+                    aggregationCandidates.Add(typeName);
+                    Console.WriteLine($"Property {member.Name} ({typeName}) is classified as Aggregation.");
+                }
             }
         }
 
-        // Object Creation
-        var objectCreationExpressions = classNode.DescendantNodes().OfType<ObjectCreationExpressionSyntax>();
-        foreach (var creationExpression in objectCreationExpressions)
+        // Finalize classification: if a type is in both composition and aggregation candidates, it is classified as aggregation.
+        foreach (var type in compositionCandidates)
         {
-            var typeInfo = semanticModel.GetTypeInfo(creationExpression).Type;
-            if (typeInfo != null && !IsPrimitiveType(typeInfo.Name))
+            if (aggregationCandidates.Contains(type))
             {
-                classInfo.CreationObjects.Add(typeInfo.ToString());
+                classInfo.Aggregations.Add(type);
+            }
+            else
+            {
+                classInfo.Composition.Add(type);
             }
         }
 
-        // Methods
-        var methods = classSymbol.GetMembers().OfType<IMethodSymbol>()
-            .Where(m => m.MethodKind == MethodKind.Ordinary)
-            .Select(m => m.Name)
-            .Distinct()
-            .ToList();
-        classInfo.Methods.AddRange(methods);
+        foreach (var type in aggregationCandidates)
+        {
+            classInfo.Aggregations.Add(type);
+        }
 
         // Nested Classes
         var nestedClasses = classNode.Members.OfType<ClassDeclarationSyntax>();
@@ -136,31 +159,71 @@ class Program
             AnalyzeClass(nestedClass, semanticModel, nestedClassInfo, nestedPrefix + classSymbol.Name + ".");
             classInfo.NestedClasses.Add(nestedClassInfo);
         }
+
+        // Clean up associations
+        classInfo.Associations.RemoveWhere(a => IsPrimitiveType(a) || IsMethodParameterOrReturnType(a));
+    }
+
+    static bool IsCompositionField(IFieldSymbol fieldSymbol)
+    {
+        return fieldSymbol.DeclaredAccessibility == Accessibility.Private || fieldSymbol.DeclaredAccessibility == Accessibility.Protected || fieldSymbol.IsReadOnly;
+    }
+
+    static bool IsCompositionProperty(IPropertySymbol propertySymbol)
+    {
+        return propertySymbol.SetMethod == null;
+    }
+
+    static bool IsAggregationProperty(IPropertySymbol propertySymbol, SemanticModel semanticModel)
+    {
+        if (propertySymbol.SetMethod == null || propertySymbol.SetMethod.DeclaredAccessibility != Accessibility.Public)
+        {
+            return false;
+        }
+
+        // Check if the setter contains a 'new' keyword
+        var setterMethod = propertySymbol.SetMethod.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() as AccessorDeclarationSyntax;
+        if (setterMethod != null)
+        {
+            var containsNew = setterMethod.DescendantNodes().OfType<ObjectCreationExpressionSyntax>().Any();
+            return !containsNew;
+        }
+
+        return true;
+    }
+
+    static string GetElementTypeName(ITypeSymbol typeSymbol)
+    {
+        if (typeSymbol is INamedTypeSymbol namedTypeSymbol && namedTypeSymbol.IsGenericType)
+        {
+            var typeName = namedTypeSymbol.TypeArguments.FirstOrDefault()?.Name;
+            return typeName ?? namedTypeSymbol.Name;
+        }
+        return typeSymbol.Name;
     }
 
     static void AddComponentTypes(HashSet<string> componentTypes, ITypeSymbol typeSymbol)
     {
         if (typeSymbol is INamedTypeSymbol namedTypeSymbol && namedTypeSymbol.IsGenericType)
         {
-            componentTypes.Add(namedTypeSymbol.ToString());
             foreach (var typeArg in namedTypeSymbol.TypeArguments)
             {
                 if (!IsPrimitiveType(typeArg.Name))
                 {
-                    componentTypes.Add(typeArg.ToString());
+                    componentTypes.Add(typeArg.Name);
                 }
             }
         }
         else if (typeSymbol is IArrayTypeSymbol arrayTypeSymbol)
         {
-            componentTypes.Add($"Array<{arrayTypeSymbol.ElementType}>");
             AddComponentTypes(componentTypes, arrayTypeSymbol.ElementType);
         }
         else
         {
-            if (!IsPrimitiveType(typeSymbol.Name))
+            var typeName = typeSymbol.Name;
+            if (!componentTypes.Contains(typeName))
             {
-                componentTypes.Add(typeSymbol.ToString());
+                componentTypes.Add(typeName);
             }
         }
     }
@@ -182,9 +245,29 @@ class Program
     {
         var primitiveTypes = new HashSet<string>
         {
-            "bool", "byte", "sbyte", "char", "decimal", "double", "float", "int", "uint", "long", "ulong", "short", "ushort", "string"
+            "bool", "byte", "sbyte", "char", "decimal", "double", "float", "int",
+            "uint", "long", "ulong", "short", "ushort", "string",
+            "void", "boolean", "byte", "sbyte", "char", "decimal", "double",
+            "single", "int32", "uint32", "int64", "uint64", "int16",
+            "uint16", "string", "datetime"
         };
-        return primitiveTypes.Contains(typeName);
+        return primitiveTypes.Contains(typeName.ToLower());
+    }
+
+    static string GetFullTypeName(ITypeSymbol typeSymbol)
+    {
+        if (typeSymbol is INamedTypeSymbol namedTypeSymbol && namedTypeSymbol.IsGenericType)
+        {
+            var genericType = namedTypeSymbol.ToString();
+            var typeArgs = namedTypeSymbol.TypeArguments.Select(arg => arg.ToString()).ToList();
+            return $"{genericType}<{string.Join(", ", typeArgs)}>";
+        }
+        return typeSymbol.ToString();
+    }
+
+    static bool IsMethodParameterOrReturnType(string typeName)
+    {
+        return typeName.Contains("<");
     }
 
     static string GetProjectType(string filePath)
@@ -250,12 +333,25 @@ class Program
                 }
             }
 
-            if (classInfo.CreationObjects.Any())
+            var nonPrimitiveAggregations = classInfo.Aggregations.Where(a => !IsPrimitiveType(a)).ToList();
+            if (nonPrimitiveAggregations.Any())
             {
-                streamWriter.WriteLine("  Object Creation:");
-                foreach (var creationObject in classInfo.CreationObjects)
+                streamWriter.WriteLine("  Aggregations:");
+                foreach (var aggregation in nonPrimitiveAggregations)
                 {
-                    streamWriter.WriteLine($"    {creationObject}");
+                    streamWriter.WriteLine($"    {aggregation}");
+                }
+            }
+
+            var nonPrimitiveAssociations = classInfo.Associations
+                .Where(a => !IsPrimitiveType(a.Split('<')[0])) // Check only the main type, ignore the generic arguments
+                .ToList();
+            if (nonPrimitiveAssociations.Any())
+            {
+                streamWriter.WriteLine("  Associations:");
+                foreach (var association in nonPrimitiveAssociations)
+                {
+                    streamWriter.WriteLine($"    {association}");
                 }
             }
 
@@ -274,22 +370,23 @@ class Program
 
     static void WriteJsonFile(string jsonOutputPath, List<ClassInfo> classInfos)
     {
-        // Filter out primitive types from the composition
         foreach (var classInfo in classInfos)
         {
             classInfo.Composition = new HashSet<string>(classInfo.Composition.Where(c => !IsPrimitiveType(c)));
+            classInfo.Aggregations = new HashSet<string>(classInfo.Aggregations.Where(a => !IsPrimitiveType(a)));
+            classInfo.Associations = new HashSet<string>(classInfo.Associations
+                .Where(a => !IsPrimitiveType(a.Split('<')[0]))); // Check only the main type, ignore the generic arguments
         }
 
-        // Create a new list to hold ClassInfo objects without the FileName and ProjectType properties for JSON serialization
         var classInfosForJson = classInfos.Select(classInfo => new
         {
             classInfo.FolderName,
             classInfo.ClassName,
             classInfo.Accessibility,
             classInfo.InheritsFrom,
-            Compositions = classInfo.Composition.Where(c => !IsPrimitiveType(c)).ToList(),
-            classInfo.CreationObjects,
-            classInfo.Methods,
+            Compositions = classInfo.Composition.ToList(),
+            Aggregations = classInfo.Aggregations.ToList(),
+            Associations = classInfo.Associations.ToList(),
             classInfo.NestedClasses
         }).ToList();
 
@@ -308,7 +405,7 @@ class ClassInfo
     public string ProjectType { get; set; } // Exclude ProjectType from JSON
     public string InheritsFrom { get; set; }
     public HashSet<string> Composition { get; set; } = new HashSet<string>();
-    public HashSet<string> CreationObjects { get; set; } = new HashSet<string>();
-    public List<string> Methods { get; set; } = new List<string>();
     public List<ClassInfo> NestedClasses { get; set; } = new List<ClassInfo>();
+    public HashSet<string> Aggregations { get; set; } = new HashSet<string>();
+    public HashSet<string> Associations { get; set; } = new HashSet<string>();
 }

@@ -1,25 +1,32 @@
 {
   "format": 1,
   "restore": {
-    "/home/ec2-user/Code-Analyzer/C#/CodeAnalyzer.csproj": {}
+    "C:\\Users\\yonat\\Documents\\Code-Analyzer\\C#\\CodeAnalyzer.csproj": {}
   },
   "projects": {
-    "/home/ec2-user/Code-Analyzer/C#/CodeAnalyzer.csproj": {
+    "C:\\Users\\yonat\\Documents\\Code-Analyzer\\C#\\CodeAnalyzer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/ec2-user/Code-Analyzer/C#/CodeAnalyzer.csproj",
+        "projectUniqueName": "C:\\Users\\yonat\\Documents\\Code-Analyzer\\C#\\CodeAnalyzer.csproj",
         "projectName": "CodeAnalyzer",
-        "projectPath": "/home/ec2-user/Code-Analyzer/C#/CodeAnalyzer.csproj",
-        "packagesPath": "/home/ec2-user/.nuget/packages/",
-        "outputPath": "/home/ec2-user/Code-Analyzer/C#/obj/",
+        "projectPath": "C:\\Users\\yonat\\Documents\\Code-Analyzer\\C#\\CodeAnalyzer.csproj",
+        "packagesPath": "C:\\Users\\yonat\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\yonat\\Documents\\Code-Analyzer\\C#\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/home/ec2-user/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\yonat\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -32,6 +39,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -53,7 +65,8 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -62,7 +75,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/6.0.129/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300\\RuntimeIdentifierGraph.json"
         }
       }
     }

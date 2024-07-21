@@ -8,7 +8,8 @@ const OpenAIApi = require('./OpenAI');
 const CsUtiles = require('../C#/utils');
 const cors = require('cors'); 
 const gulp = require('gulp');
-//const { exec } = require('child_process');
+const AIconversationHistory = require('./InitAIConversation');
+
 
 const app = express();
 app.use(cors()); 
@@ -90,7 +91,7 @@ app.get(`/callback`, async (req, res) => {
       
       ///chat GTP
       console.log("runAI function")
-      const aiResult = await OpenAIApi.RunAI();
+      const aiResult = await OpenAIApi.RunAI(AIconversationHistory);
       try {
         parsedResult = JSON.parse(aiResult);
     } catch (error) {

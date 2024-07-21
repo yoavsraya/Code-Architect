@@ -1,0 +1,184 @@
+[
+  {
+    "FolderName": "Ex03.ConsoleUI",
+    "ClassName": "Program",
+    "Accessibility": "internal",
+    "InheritsFrom": null,
+    "Compositions": [],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": []
+  },
+  {
+    "FolderName": "Ex03.ConsoleUI",
+    "ClassName": "TUI",
+    "Accessibility": "public",
+    "InheritsFrom": null,
+    "Compositions": [
+      "GarageManager",
+      "CreatingObject"
+    ],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": []
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "Car",
+    "Accessibility": "internal",
+    "InheritsFrom": "Vehicle",
+    "Compositions": [
+      "eNumOfDoors",
+      "eCarColor"
+    ],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": []
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "CarExistException",
+    "Accessibility": "public",
+    "InheritsFrom": "Exception",
+    "Compositions": [],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": []
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "ClientInfo",
+    "Accessibility": "internal",
+    "InheritsFrom": null,
+    "Compositions": [
+      "Vehicle"
+    ],
+    "Aggregations": [
+      "eClientStatus"
+    ],
+    "Associations": [],
+    "NestedClasses": []
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "CreatingObject",
+    "Accessibility": "public",
+    "InheritsFrom": null,
+    "Compositions": [
+      "Vehicle"
+    ],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": []
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "ElectricMotor",
+    "Accessibility": "internal",
+    "InheritsFrom": "MotorType",
+    "Compositions": [],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": []
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "fillEnergyToMaxException",
+    "Accessibility": "public",
+    "InheritsFrom": "Exception",
+    "Compositions": [],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": []
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "GarageManager",
+    "Accessibility": "public",
+    "InheritsFrom": null,
+    "Compositions": [
+      "eClientStatus"
+    ],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": []
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "GasMotor",
+    "Accessibility": "internal",
+    "InheritsFrom": "MotorType",
+    "Compositions": [],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": []
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "MotorBike",
+    "Accessibility": "internal",
+    "InheritsFrom": "Vehicle",
+    "Compositions": [
+      "eLicenseType"
+    ],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": []
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "MotorType",
+    "Accessibility": "public",
+    "InheritsFrom": null,
+    "Compositions": [
+      "eEnergyType"
+    ],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": []
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "Track",
+    "Accessibility": "internal",
+    "InheritsFrom": "Vehicle",
+    "Compositions": [],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": []
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "ValueOutOfRangeException",
+    "Accessibility": "public",
+    "InheritsFrom": "Exception",
+    "Compositions": [],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": []
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "Vehicle",
+    "Accessibility": "public",
+    "InheritsFrom": null,
+    "Compositions": [
+      "MotorType",
+      "Wheels",
+      "Car"
+    ],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": []
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "Wheels",
+    "Accessibility": "public",
+    "InheritsFrom": null,
+    "Compositions": [],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": []
+  }
+]
