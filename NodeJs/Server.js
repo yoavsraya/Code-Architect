@@ -7,6 +7,7 @@ const GitHubApi = require('./GitHubApi');
 const OpenAIApi = require('./OpenAI');
 const CsUtiles = require('../C#/utils');
 const cors = require('cors'); 
+const AIconversationHistory = require('./InitAIConversation');
 
 const app = express();
 app.use(cors()); 
