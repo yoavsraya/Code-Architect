@@ -3,21 +3,50 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import './App.css';
 import GraphComponent from './GraphComponent';
 import LoginPage from './LoginPage';
+import Header from './Header';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState(null); // State variable to store the entire JSON response
+  const [selectedRepo, setSelectedRepo] = useState('');
+  const [finishFetchRepo, setFinishFetchRepo] = useState(false);
 
-  const handleLogin = (selectedRepo) => {
+  const handleLogin = async (selectedRepo) => {
     // Logic to handle login, e.g., saving the token
     setIsAuthenticated(true);
+    setSelectedRepo(selectedRepo); // Store the selected repository name in the state
     setData({ repo: selectedRepo }); // Store the selected repository name in the data state
+
+    try {
+      console.log("sending fetch to fetch selected repo");
+      const response = await fetch(`http://54.243.195.75:3000/api/fetchSelectedRepo?selectedRepo=${encodeURIComponent(selectedRepo)}`);
+      console.log("done!!!");
+      if (!response.ok) {
+        console.error('Failed to fetch selected repository data');
+      }
+      else
+      {
+        console.log("finsihFetchRepo = true")
+        setFinishFetchRepo(true);
+      }
+      
+      
+    }
+    catch (error) {
+      console.error('Error fetching selected repository data:', error);
+    }
+
+  };
+
+  const togglePanel = () => {
+    setIsOpen(!isOpen);
   };
 
   return (
     <Router>
       <div className="App">
+        <Header isOpen={isOpen} togglePanel={togglePanel} /> {/* Pass the hamburger menu state and toggle function */}
         <header className="App-header">
           <Routes>
             <Route
@@ -35,17 +64,16 @@ function App() {
               element={
                 isAuthenticated ? (
                   <>
-                    <button className="hamburger-button" onClick={() => setIsOpen(!isOpen)}>
-                      ☰
-                    </button>
                     {isOpen && data && (
                       <div className="panel">
                         <div className="message" dangerouslySetInnerHTML={{ __html: data.message?.content || '' }} />
                       </div>
                     )}
-                    <div className="graph-container">
-                      <GraphComponent />
-                    </div>
+                    {finishFetchRepo && (
+                      <div className="graph-container">
+                        <GraphComponent />
+                      </div>
+                    )}
                   </>
                 ) : (
                   <Navigate to="/login" />

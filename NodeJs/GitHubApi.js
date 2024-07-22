@@ -43,6 +43,11 @@ const localPath = '/home/ec2-user/Code-Analyzer/UserFiles';
     });
   }
 
+function getRepoByName(repoName)
+{
+  return UserData.repositories.find(repo => repo.name === repoName);
+}
+
 function getLoginUrl() {
   return `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&scope=user`;
 }
@@ -89,9 +94,10 @@ async function GetUserData(code)
 
 }
 
-async function cloneSelectedRepo()
+async function cloneSelectedRepo(selectedRepo)
 {
-  UserData.selectedRepo = UserData.repositories[3];
+  UserData.selectedRepo = selectedRepo;
+  console.log(`Selected repository: ${UserData.selectedRepo.owner}/${UserData.selectedRepo.name}`);
   const repoUrl = `https://github.com/${UserData.selectedRepo.owner}/${UserData.selectedRepo.name}.git`; // replace with your repo url
 
   exec(`git clone ${repoUrl} ${localPath}`, (error, stdout, stderr) => {
@@ -100,9 +106,8 @@ async function cloneSelectedRepo()
       return;
     }
   console.log(`Repository cloned successfully: ${stdout}`);
-});
-console.log("END cloneSelectedRepo function")
-
+  });
+  console.log("END cloneSelectedRepo function");
 }
 
 async function PullSelectedRepo()
@@ -211,4 +216,5 @@ module.exports = {
   getRepositories,
   GetUserData,
   GetUserPic,
+  getRepoByName,
 };

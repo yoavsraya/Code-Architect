@@ -92,13 +92,18 @@ app.get('/api/getUserPic', async (req, res) => {
 });
 
 app.get('/api/fetchSelectedRepo', async (req, res) => {
-  const selectedRepo = req.query.selectedRepo;
   console.log("GET /api/fetchSelectedRepo");
-     // Select the first repository in the list //TODO: Change to choose button in the future
+  const selectedRepo = GitHubApi.getRepoByName(req.query.selectedRepo);
+  console.log("repo name");
+  console.log(req.query.selectedRepo);
+  console.log("repo value");
+  console.log(selectedRepo);
       //console.log("PullSelectedRepo fuction")
       //await GitHubApi.PullSelectedRepo();
-      console.log("cloneSelectedRepo function")
-      await GitHubApi.cloneSelectedRepo();
+  console.log("cloneSelectedRepo function")
+  await GitHubApi.cloneSelectedRepo(selectedRepo);
+  res.status(200);
+  res.send();
 });
 
 app.get('/api/buildProject', async (req, res) => {

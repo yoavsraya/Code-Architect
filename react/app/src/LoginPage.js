@@ -64,6 +64,7 @@ const LoginPage = ({ onLogin, setData }) => {
             options={repoOptions}
             value={repoOptions.find(option => option.value === selectedRepo)}
             onChange={handleRepoSelect}
+            placeholder="Select a repository" // Pass the placeholder text here
           />
           <button onClick={handleConfirmSelection}>Confirm Selection</button>
         </div>

@@ -1,3 +1,5 @@
+/* src/components/LoginPage.css */
+
 .error-message {
   color: #ffffff;
   margin-top: 10px;
@@ -7,89 +9,89 @@
 }
 
 .login-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* This centers the children horizontally */
-    justify-content: center; /* This centers the children vertically if there's enough space */
-    height: 100vh; /* Take up full viewport height */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* This centers the children horizontally */
+  justify-content: center; /* This centers the children vertically if there's enough space */
+  height: 100vh; /* Take up full viewport height */
 }
 
 .login-image {
-    width: 300px; /* Adjusted width */
-    height: auto; /* Maintain aspect ratio */
-    margin-bottom: 30px; /* Add some space between the image and the button */
-    margin-top: -200px; /* Adjusted margin */
+  width: 300px; /* Adjusted width */
+  height: auto; /* Maintain aspect ratio */
+  margin-bottom: 30px; /* Add some space between the image and the button */
+  margin-top: -200px; /* Adjusted margin */
+  border-radius: 50%; /* Make the image circular */
+  object-fit: cover; /* Ensure the image covers the entire circle */
 }
 
 .login-content {
-    display: flex;
-    justify-content: center; /* Center the button horizontally */
-    width: 100%; /* Take up full width to center content */
+  display: flex;
+  justify-content: center; /* Center the button horizontally */
+  width: 100%; /* Take up full width to center content */
 }
 
 /* Adjust the button styling */
 .integrate-git-button {
-    background-color: #2ea44f;
-    color: #ffffff;
-    padding: 20px 35px;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    outline: none;
-    transition: background-color 0.3s;
-  }
-  
-  .integrate-git-button:hover {
-    background-color: #22863a;
-  }
+  background-color: #2ea44f;
+  color: #ffffff;
+  padding: 20px 35px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s;
+}
 
-  /* Container for the label, select, and button */
+.integrate-git-button:hover {
+  background-color: #22863a;
+}
+
+/* Container for the label, select, and button */
 .repo-list {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 20px;
-  }
-  
-  /* Style the select dropdown */
-  .repo-list select {
-    padding: 9px;
-    font-size: 16px;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    background-color: #f9f9f9;
-    color: #333;
-    appearance: none; /* Remove default arrow */
-    /*-webkit-appearance: none; /* Remove default arrow for Safari */
-    -moz-appearance: none; /* Remove default arrow for Firefox */
-  }
-  
-  /* Style the select options */
-  .repo-list option {
-    padding: 9px;
-    font-size: 14px;
-    background-color: #fff;
-    color: #333;
-  }
-  
-  /* Style the confirm button */
-  .repo-list button {
-    background-color: #2ea44f;
-    color: #ffffff;
-    padding: 13px 20px;
-    border: none;
-    border-radius: 9px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    outline: none;
-    transition: background-color 0.3s;
-  }
-  
-  .repo-list button:hover {
-    background-color: #22863a;
-  }
-  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* Style the select dropdown */
+.repo-list select {
+  padding: 9px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  color: #333;
+  appearance: none; /* Remove default arrow */
+  -moz-appearance: none; /* Remove default arrow for Firefox */
+}
+
+/* Style the select options */
+.repo-list option {
+  padding: 9px;
+  font-size: 14px;
+  background-color: #fff;
+  color: #333;
+}
+
+/* Style the confirm button */
+.repo-list button {
+  background-color: #2ea44f;
+  color: #ffffff;
+  padding: 13px 20px;
+  border: none;
+  border-radius: 9px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s;
+}
+
+.repo-list button:hover {
+  background-color: #22863a;
+}
