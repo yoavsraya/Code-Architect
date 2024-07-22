@@ -1,18 +1,38 @@
 /* src/components/Header.css */
 
 .header {
-    display: flex;
-    justify-content: space-between; /* Align items to the start */
-    align-items: center;
-    padding: 10px 20px;
-    background: transparent;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
-  }
+  display: flex;
+  justify-content: space-between; /* Space between the left and right sections */
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #ffffff; /* Red background color */
+  width: 100%;
+  z-index: 1000;
+}
 
-  .logo {
-    height: 160px; /* Adjust the height as needed */
-  }
-  
+.left-section {
+  display: flex;
+  align-items: center;
+}
+
+.text-logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  margin-right: 20px;
+}
+
+.logo {
+  height: 40px; /* Adjust the height as needed */
+  width: auto; /* Maintain aspect ratio */
+}
+
+.right-section {
+  display: flex;
+  align-items: center;
+}
+
+.github-logo {
+  height: 40px; /* Adjust the size as needed */
+  width: auto; /* Maintain aspect ratio */
+}
