@@ -26,11 +26,10 @@ async function RunAI(conversationHistory) {
   return assistantMessage;
 }
 
-async function ExpandTopic(conversationHistory, topic) {
-  // Add the user message asking to expand on the topic
+async function ExpandTopic(conversationHistory, topic, fileContents) {
   const userMessage = {
     role: "user",
-    content: `Please expand on the following topic: ${topic}`
+    content: `Please expand on the following topic: ${topic}\nHere are the related file contents:\n${fileContents}`
   };
 
   conversationHistory.push(userMessage);
