@@ -65,10 +65,6 @@ function App() {
               element={
                 isAuthenticated ? (
                   <>
-                  <div className="simple-text">
-                      <h1>Welcome to the Main Page</h1>
-                      <p>This is a simple text for testing the App-body layout.</p>
-                  </div>
                     {isOpen && data && (
                       <div className="MessagePanel">
                         <div className="message" dangerouslySetInnerHTML={{ __html: data.message?.content || '' }} />
