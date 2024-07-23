@@ -100,15 +100,24 @@ app.get('/api/runAI', async (req, res) => {
 
 app.post('/api/expand', async (req, res) => {
   const { topic, conversationHistory, files } = req.body;
+  console.log(`Received request to expand topic: ${topic}`);
+  console.log(`Files to search: ${files.join(', ')}`);
+  
   let fileContents = '';
 
   files.forEach(file => {
     const filePath = path.join('/home/ec2-user/Code-Analyzer/UserFiles', file);
+    console.log(`Checking file: ${filePath}`);
     if (fs.existsSync(filePath)) {
+      console.log(`File found: ${filePath}`);
       fileContents += fs.readFileSync(filePath, 'utf-8');
+    } else {
+      console.log(`File not found: ${filePath}`);
     }
   });
 
+  console.log(`File contents: ${fileContents}`);
+  
   const expandedMessage = await OpenAIApi.ExpandTopic(conversationHistory, topic, fileContents);
   res.json({ content: expandedMessage, conversationHistory });
 });

@@ -4,6 +4,7 @@ import './App.css';
 import GraphComponent from './GraphComponent';
 import LoginPage from './LoginPage';
 import Header from './Header';
+import MessagePanel from './MessagePanel';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -66,9 +67,7 @@ function App() {
                 isAuthenticated ? (
                   <>
                     {isOpen && data && (
-                      <div className="MessagePanel">
-                        <div className="message" dangerouslySetInnerHTML={{ __html: data.message?.content || '' }} />
-                      </div>
+                      <MessagePanel data={data} setData={setData} /> // Use MessagePanel here
                     )}
                     {finishFetchRepo && falseval &&(
                       <div className="graph-container">

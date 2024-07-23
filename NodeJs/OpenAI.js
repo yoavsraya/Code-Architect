@@ -27,6 +27,9 @@ async function RunAI(conversationHistory) {
 }
 
 async function ExpandTopic(conversationHistory, topic, fileContents) {
+  console.log(`Expanding topic: ${topic}`);
+  console.log(`File contents length: ${fileContents.length}`);
+
   const userMessage = {
     role: "user",
     content: `Please expand on the following topic: ${topic}\nHere are the related file contents:\n${fileContents}`
@@ -47,6 +50,8 @@ async function ExpandTopic(conversationHistory, topic, fileContents) {
   };
 
   conversationHistory.push(assistantResponse);
+
+  console.log(`Expanded message: ${assistantMessage}`);
 
   return assistantMessage;
 }

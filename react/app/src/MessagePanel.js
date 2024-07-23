@@ -8,11 +8,13 @@ const MessagePanel = ({ data, setData }) => {
 
   useEffect(() => {
     if (data) {
-      setConversationHistory(data.conversationHistory);
+      setConversationHistory(data.conversationHistory || []);
     }
   }, [data]);
 
   const handleExpand = async (topic) => {
+    const files = topic.match(/`([^`]*)`/g)?.map(match => match.slice(1, -1)) || [];
+
     try {
       const response = await fetch('http://54.243.195.75:3000/api/expand', {
         method: 'POST',
@@ -22,11 +24,13 @@ const MessagePanel = ({ data, setData }) => {
         body: JSON.stringify({
           topic,
           conversationHistory,
+          files,
         }),
       });
       const expandedData = await response.json();
       setExpandedContent(expandedData.content);
       setConversationHistory(expandedData.conversationHistory);
+      setData(expandedData); // Update the main data state
     } catch (error) {
       console.error('Error expanding topic:', error);
     }
@@ -35,7 +39,7 @@ const MessagePanel = ({ data, setData }) => {
   const renderButtons = () => {
     if (!data) return null;
 
-    const highlights = data.message.content.match(/<div class="highlight">.*?<\/div>/g);
+    const highlights = data.message?.content.match(/<div class="highlight">.*?<\/div>/g) || [];
 
     return highlights.map((highlight, index) => {
       const parsedHighlight = parse(highlight);
