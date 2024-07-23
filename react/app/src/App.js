@@ -11,6 +11,7 @@ function App() {
   const [data, setData] = useState(null); // State variable to store the entire JSON response
   const [selectedRepo, setSelectedRepo] = useState('');
   const [finishFetchRepo, setFinishFetchRepo] = useState(false);
+  const falseval = false
 
   const handleLogin = async (selectedRepo) => {
     // Logic to handle login, e.g., saving the token
@@ -47,7 +48,7 @@ function App() {
     <Router>
       <div className="App">
         <Header isOpen={isOpen} togglePanel={togglePanel} /> {/* Pass the hamburger menu state and toggle function */}
-        <header className="App-header">
+        <div className="App-body">
           <Routes>
             <Route
               path="/login"
@@ -64,12 +65,16 @@ function App() {
               element={
                 isAuthenticated ? (
                   <>
+                  <div className="simple-text">
+                      <h1>Welcome to the Main Page</h1>
+                      <p>This is a simple text for testing the App-body layout.</p>
+                  </div>
                     {isOpen && data && (
-                      <div className="panel">
+                      <div className="MessagePanel">
                         <div className="message" dangerouslySetInnerHTML={{ __html: data.message?.content || '' }} />
                       </div>
                     )}
-                    {finishFetchRepo && (
+                    {finishFetchRepo && falseval &&(
                       <div className="graph-container">
                         <GraphComponent />
                       </div>
@@ -81,7 +86,7 @@ function App() {
               }
             />
           </Routes>
-        </header>
+        </div>
       </div>
     </Router>
   );
