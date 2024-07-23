@@ -13,7 +13,7 @@
   position: relative; /* Ensure children elements are positioned correctly */
   width: 100%; /* Ensure it takes the full width */
   height: 100%; /* Ensure it takes the full height */
-  background-color: #fff; /* Add a background color to make it visible in the inspector */
+  background-color: #282c34; /* Add a background color to make it visible in the inspector */
   overflow: auto;
   margin-top: 60px; /* Adjust this value to create space for the sidebar */
 }

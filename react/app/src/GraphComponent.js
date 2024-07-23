@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Html } from '@react-three/drei';
 import { Line2 } from 'three/examples/jsm/lines/Line2';
@@ -18,7 +18,34 @@ const SpinningGroup = ({ children }) => {
   return <group ref={groupRef}>{children}</group>;
 };
 
-const GraphComponent = ({ graphData, loading, error }) => {
+const GraphComponent = () => {
+  console.log("Graph Component started");
+  const [graphData, setGraphData] = useState({ Vertices: [], Edges: [] });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    console.log("useEffect running");
+    fetch('http://54.243.195.75:3000/api/getGraphData')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log("Data fetched", data);
+        setGraphData(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.log("Error fetching data", err);
+        setError(err);
+        setLoading(false);
+      });
+  }, []);
+
+
   const radius = 7; // Radius of the sphere
   const center = [0, 0, 0]; // Center point of the sphere
 
@@ -67,7 +94,7 @@ const GraphComponent = ({ graphData, loading, error }) => {
         fontSize: '24px',
       }}>
         <div className="spinner"></div>
-        <div style={{marginTop: '20px', color: 'white'}}>Waiting for login...</div>
+        <div style={{ marginTop: '20px', color: 'white' }}>Loading graph data...</div>
       </div>
     );
   }

@@ -1,10 +1,9 @@
-/* GraphComponent.css adjustments */
 .graph-container {
-  width: 60vw; /* Adjust based on your preference for size */
-  height: 60vw; /* Making it square */
+  width: 100%; /* Make the container take the full width of the parent */
+  height: 100%; /* Make the container take the full height of the parent */
   position: relative;
-  margin: auto; /* Center the container */
-  border: none; /* Remove borders */
+  margin: 0; /* Ensure no margin */
+  padding: 0; /* Ensure no padding */
 }
 
 .canvas-container {

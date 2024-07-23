@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './MessagePanel.css';
-import parse from 'html-react-parser';
 
 const MessagePanel = ({ data, setData }) => {
   const [expandedContent, setExpandedContent] = useState('');
@@ -38,23 +37,6 @@ const MessagePanel = ({ data, setData }) => {
 
   const renderButtons = () => {
     if (!data) return null;
-
-    const highlights = data.message?.content.match(/<div class="highlight">.*?<\/div>/g) || [];
-
-    return highlights.map((highlight, index) => {
-      const parsedHighlight = parse(highlight);
-      const title = parsedHighlight.props.children[0].props.children;
-
-      return (
-        <button
-          key={index}
-          onClick={() => handleExpand(title)}
-          className={`highlight-button highlight-${index + 1}`}
-        >
-          {title}
-        </button>
-      );
-    });
   };
 
   return (

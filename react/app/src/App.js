@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
-import GraphComponent from './GraphComponent';
 import LoginPage from './LoginPage';
 import Header from './Header';
-import MessagePanel from './MessagePanel';
+import BigPanel from './BigPanel';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -12,7 +11,7 @@ function App() {
   const [data, setData] = useState(null); // State variable to store the entire JSON response
   const [selectedRepo, setSelectedRepo] = useState('');
   const [finishFetchRepo, setFinishFetchRepo] = useState(false);
-  const falseval = false
+  const falseval = false;
 
   const handleLogin = async (selectedRepo) => {
     // Logic to handle login, e.g., saving the token
@@ -26,19 +25,13 @@ function App() {
       console.log("done!!!");
       if (!response.ok) {
         console.error('Failed to fetch selected repository data');
-      }
-      else
-      {
-        console.log("finsihFetchRepo = true")
+      } else {
+        console.log("finishFetchRepo = true");
         setFinishFetchRepo(true);
       }
-      
-      
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Error fetching selected repository data:', error);
     }
-
   };
 
   const togglePanel = () => {
@@ -65,16 +58,7 @@ function App() {
               path="/"
               element={
                 isAuthenticated ? (
-                  <>
-                    {isOpen && data && (
-                      <MessagePanel data={data} setData={setData} /> // Use MessagePanel here
-                    )}
-                    {finishFetchRepo && falseval &&(
-                      <div className="graph-container">
-                        <GraphComponent />
-                      </div>
-                    )}
-                  </>
+                  <BigPanel data={data} />
                 ) : (
                   <Navigate to="/login" />
                 )

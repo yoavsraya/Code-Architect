@@ -8,6 +8,7 @@ const OpenAIApi = require('./OpenAI');
 const CsUtiles = require('../C#/utils');
 const cors = require('cors'); 
 const AIconversationHistory = require('./InitAIConversation');
+const GraphData = require('./GraphData.js');
 
 const app = express();
 app.use(cors()); 
@@ -120,6 +121,11 @@ app.post('/api/expand', async (req, res) => {
   
   const expandedMessage = await OpenAIApi.ExpandTopic(conversationHistory, topic, fileContents);
   res.json({ content: expandedMessage, conversationHistory });
+});
+
+app.get('/api/getGraphData', async (req, res) => {
+  data = await GraphData.createGraphFromData();
+  res.status(200).send(data);
 });
 
 server.listen(port, () => console.log(`Server listening on port ${port}!`));

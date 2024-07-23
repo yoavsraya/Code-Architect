@@ -1,5 +1,26 @@
 // src/GraphData.js
-import jsonData from './GraphData.json';
+const fs = require('fs');
+const path = require('path');
+
+const filePath = path.join(__dirname, 'GraphData.json');
+
+const readJSONFile = (filePath) => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      try {
+        const jsonData = JSON.parse(data);
+        resolve(jsonData);
+      } catch (parseErr) {
+        reject(parseErr);
+      }
+    });
+  });
+};
+
 
 let Vertices = [];
 let Edges = [];
@@ -41,6 +62,8 @@ function GetFolderIndex(folderName)
 
 async function createGraphFromData()
 {
+  console.log('createGraphFromData');
+  const jsonData = await readJSONFile(filePath);
   const verticesLookup = [];
   jsonData.forEach(vertex =>{
     Vertices.push({Label: vertex.ClassName, FolderIndex: GetFolderIndex(vertex.FolderName) , degree: 0, methods : vertex.Methods})
@@ -75,19 +98,6 @@ async function createGraphFromData()
           }
       })
       
-      vertex.CreationObjects.forEach(CreationObject => {
-        isContiener = false;
-        if(CreationObject.startsWith("System.Collections.Generic."))
-        {
-          isContiener = true;
-          CreationObject = CreationObject.match(/<(.*)>/)[1];
-        }
-
-        if(verticesLookup.includes(CreationObject))
-        {
-          Edges.push({From : vertex.ClassName, To : CreationObject , Label: SetLabel("Creating")})
-        }
-      })
       vertex.NestedClasses.forEach(NestedClasse => {
         isContiener = false;
         if(NestedClasse.startsWith("System.Collections.Generic."))
@@ -120,4 +130,6 @@ async function createGraphFromData()
   return {Vertices, Edges}
 }
 
-export default createGraphFromData;
+module.exports = {
+  createGraphFromData,
+};
