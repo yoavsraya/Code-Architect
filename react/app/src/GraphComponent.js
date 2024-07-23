@@ -1,7 +1,6 @@
-import React, { useMemo, useRef, useState, useEffect } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Html } from '@react-three/drei';
-import createGraphFromData from './GraphData';
 import { Line2 } from 'three/examples/jsm/lines/Line2';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
@@ -19,49 +18,7 @@ const SpinningGroup = ({ children }) => {
   return <group ref={groupRef}>{children}</group>;
 };
 
-const GraphComponent = () => {
-  const [graphData, setGraphData] = useState({ Vertices: [], Edges: [] });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const socket = new WebSocket('ws://54.243.195.75:3000');
-
-    socket.onopen = () => {
-      console.log('WebSocket connection established for GraphComponent');
-    };
-
-    socket.onmessage = async (event) => {
-      console.log('WebSocket message received:', event.data);
-      const message = JSON.parse(event.data);
-      if (message.loggedIn) {
-        console.log("Login finished, starting graph creation");
-        try {
-          const data = await createGraphFromData();
-          console.log("Graph data fetched");
-          setGraphData(data);
-          setLoading(false);
-        } catch (err) {
-          setError(err);
-          setLoading(false);
-        }
-      }
-    };
-
-    socket.onclose = () => {
-      console.log('WebSocket connection closed for GraphComponent');
-    };
-
-    socket.onerror = (error) => {
-      console.error('WebSocket error:', error);
-    };
-
-    // Clean up function to close the WebSocket connection when the component unmounts
-    return () => {
-      socket.close();
-    };
-  }, []);
-
+const GraphComponent = ({ graphData, loading, error }) => {
   const radius = 7; // Radius of the sphere
   const center = [0, 0, 0]; // Center point of the sphere
 

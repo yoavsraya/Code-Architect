@@ -1,8 +1,5 @@
 /* IntegrateGitButton.css */
 .integrate-git-button {
-    position: absolute; /* Set the button to absolute position */
-    top: 20px; /* Adjust the top position */
-    left: 20px; /* Adjust the left position */
     background-color: #2ea44f;
     color: #ffffff;
     padding: 8px 16px;

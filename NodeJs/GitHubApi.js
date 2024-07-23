@@ -15,11 +15,12 @@ const CLIENT_SECRET = process.env.GIT_HUB_CLIENT_SECRET;
 const localPath = '/home/ec2-user/Code-Analyzer/UserFiles'; 
 
   class User {
-    constructor(accessToken, userName, repositories) {
+    constructor(accessToken, userName, repositories, userPicture) {
       this.accessToken = accessToken;
       this.userName = userName;
       this.repositories = repositories;
       this.selectedRepo = null;
+      this.userPic = userPicture;
     }
   }
 
@@ -41,6 +42,11 @@ const localPath = '/home/ec2-user/Code-Analyzer/UserFiles';
       console.log(`Directory created successfully: ${stdout}`);
     });
   }
+
+function getRepoByName(repoName)
+{
+  return UserData.repositories.find(repo => repo.name === repoName);
+}
 
 function getLoginUrl() {
   return `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&scope=user`;
@@ -76,7 +82,7 @@ async function GetUserData(code)
     octokit = await new Octokit({ auth: accessToken });
     const { data: user } = await octokit.rest.users.getAuthenticated();
     UserAuto = user;
-    UserData = new User(accessToken, user.login, []);
+    UserData = new User(accessToken, user.login, [],user.avatar_url);
     await deleteFolder(localPath);
     await createFolder(localPath);
   }
@@ -88,9 +94,10 @@ async function GetUserData(code)
 
 }
 
-async function cloneSelectedRepo()
+async function cloneSelectedRepo(selectedRepo)
 {
-  UserData.selectedRepo = UserData.repositories[3];
+  UserData.selectedRepo = selectedRepo;
+  console.log(`Selected repository: ${UserData.selectedRepo.owner}/${UserData.selectedRepo.name}`);
   const repoUrl = `https://github.com/${UserData.selectedRepo.owner}/${UserData.selectedRepo.name}.git`; // replace with your repo url
 
   exec(`git clone ${repoUrl} ${localPath}`, (error, stdout, stderr) => {
@@ -99,9 +106,8 @@ async function cloneSelectedRepo()
       return;
     }
   console.log(`Repository cloned successfully: ${stdout}`);
-});
-console.log("END cloneSelectedRepo function")
-
+  });
+  console.log("END cloneSelectedRepo function");
 }
 
 async function PullSelectedRepo()
@@ -174,7 +180,8 @@ async function getRepositories() {
   {
     const { data: repos } = await octokit.rest.repos.listForAuthenticatedUser();
     UserData.repositories = repos.map(repo => ({ owner: repo.owner.login, name: repo.name }));
-    //console.log(UserData.repositories);
+    console.log(UserData.repositories);
+    return UserData.repositories.map(repo => repo.name);
   }
   catch(error)
   {
@@ -182,6 +189,21 @@ async function getRepositories() {
     throw error;
   }
   console.log("END getRepositories function")
+
+}
+
+async function GetUserPic()
+{
+  if(UserData.userPic)
+  {
+    console.log("UserData.userPic");
+    console.log(UserData.userPic);
+    return UserData.userPic;
+  }
+  else
+  {
+    return null;
+  }
 
 }
 
@@ -193,4 +215,6 @@ module.exports = {
   PullSelectedRepo,
   getRepositories,
   GetUserData,
+  GetUserPic,
+  getRepoByName,
 };

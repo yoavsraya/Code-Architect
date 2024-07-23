@@ -1,12 +1,12 @@
 import React from 'react';
 import './IntegrateGitButton.css';
 
-const IntegrateGitButton = ({ setData }) => {
+const IntegrateGitButton = ({ setData, onSuccess, onFail }) => {
   const handleClick = () => {
     console.log('Integrating Git...');
 
     // Open the login URL in a new window
-    const loginWindow = window.open('http://54.243.195.75:3000/Login', '_blank');
+    const loginWindow = window.open('/Login/integration', '_blank');
 
     // Connect to the WebSocket server
     const socket = new WebSocket('ws://54.243.195.75:3000');
@@ -19,23 +19,50 @@ const IntegrateGitButton = ({ setData }) => {
       console.log('WebSocket message received:', event.data);
       const message = JSON.parse(event.data);
       if (message.loggedIn) {
-        console.log("login finished, call back ended")
-        fetch('http://54.243.195.75:3000/api/message')
-        .then(response => {
-          console.log('Response received from /api/message');
-          return response.json();
-        })
-        .then(aiResult => {
-          console.log("Parsed aiResult:", aiResult);
-          setData(aiResult); // Set the data state to the entire JSON response
-          if (loginWindow)
-          {
+        console.log("Login finished, fetching repo list");
+
+        // Fetch the repo list and user picture
+        Promise.all([
+          fetch('http://54.243.195.75:3000/api/repoList').then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          }),
+          fetch('http://54.243.195.75:3000/api/getUserPic').then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+        ])
+        .then(([datarepo, dataurl]) => {
+          console.log('Response received from /api/repoList', datarepo);
+          console.log('Response received from /api/getUserPic', dataurl);
+          onSuccess(datarepo, dataurl); // Notify the parent component with the repo list and user picture
+          if (loginWindow) {
             loginWindow.close();
           }
-            console.log("socket close")
-            socket.close(); // Close the WebSocket connection after receiving the message
-          })
-          .catch(error => console.error('Error:', error));
+          console.log("Socket closing");
+          socket.close(); // Close the WebSocket connection after receiving the message
+        })
+        .catch(error => {
+          console.error('Fetch error:', error);
+          onFail('Fetch error');
+          if (loginWindow) {
+            loginWindow.close();
+          }
+          console.log("Socket closing");
+          socket.close(); // Close the WebSocket connection after receiving the message
+        });
+      } else {
+        console.log("Login failed, callback ended");
+        onFail("Login failed");
+        if (loginWindow) {
+          loginWindow.close();
+        }
+        console.log("Socket closing");
+        socket.close(); // Close the WebSocket connection after receiving the message
       }
     };
 
