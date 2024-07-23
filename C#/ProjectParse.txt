@@ -11,7 +11,7 @@ File: TUI.cs
 Class: TUI
   Accessibility: public
   Belongs to: EXE
-  Composition (components):
+  Composition:
     GarageManager
     CreatingObject
 
@@ -21,7 +21,7 @@ Class: Car
   Accessibility: internal
   Belongs to: DLL
   Inherits from: Vehicle
-  Composition (components):
+  Composition:
     eNumOfDoors
     eCarColor
 
@@ -37,7 +37,7 @@ File: ClientInfo.cs
 Class: ClientInfo
   Accessibility: internal
   Belongs to: DLL
-  Composition (components):
+  Composition:
     Vehicle
   Aggregations:
     eClientStatus
@@ -47,7 +47,7 @@ File: CreatingObject.cs
 Class: CreatingObject
   Accessibility: public
   Belongs to: DLL
-  Composition (components):
+  Composition:
     Vehicle
 
 Folder: Ex03.GarageLogic
@@ -69,7 +69,7 @@ File: GarageManeger.cs
 Class: GarageManager
   Accessibility: public
   Belongs to: DLL
-  Composition (components):
+  Composition:
     eClientStatus
 
 Folder: Ex03.GarageLogic
@@ -85,7 +85,7 @@ Class: MotorBike
   Accessibility: internal
   Belongs to: DLL
   Inherits from: Vehicle
-  Composition (components):
+  Composition:
     eLicenseType
 
 Folder: Ex03.GarageLogic
@@ -93,7 +93,7 @@ File: MotorType.cs
 Class: MotorType
   Accessibility: public
   Belongs to: DLL
-  Composition (components):
+  Composition:
     eEnergyType
 
 Folder: Ex03.GarageLogic
@@ -115,7 +115,7 @@ File: vehicle.cs
 Class: Vehicle
   Accessibility: public
   Belongs to: DLL
-  Composition (components):
+  Composition:
     MotorType
     Wheels
     Car
