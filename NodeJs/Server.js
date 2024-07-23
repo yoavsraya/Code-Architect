@@ -118,7 +118,7 @@ app.get('/api/buildProject', async (req, res) => {
     //     console.log('Building project...');
     // });
       console.log("csRun function")
-      //await CsUtiles.csRun("/home/ec2-user/Code-Analyzer/UserFiles");
+      //await CsUtiles.csRun("/home/ec2-user/Code-Analyzer/UserFiles")
     //   gulp.task('run', function() {
     //     // Your run tasks here
     //     console.log('Running project...');
