@@ -17,7 +17,7 @@
 }
 
 .login-image {
-  width: 300px; /* Adjusted width */
+  width: 250px; /* Adjusted width */
   height: auto; /* Maintain aspect ratio */
   margin-bottom: 30px; /* Add some space between the image and the button */
   margin-top: -200px; /* Adjusted margin */
