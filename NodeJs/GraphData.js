@@ -1,4 +1,3 @@
-// src/GraphData.js
 const fs = require('fs');
 const path = require('path');
 
@@ -21,54 +20,55 @@ const readJSONFile = (filePath) => {
   });
 };
 
-
 let Vertices = [];
 let Edges = [];
 let FolderCounter = 0;
 let folderNames = [];
-let isContiener = false;
+let isContainer = false;
 
-function SetLabel(name)
-{
-  if(isContiener == true)
-    {
-      return name + "(continer)"
-    }
-    
-    return name;
+function SetLabel(name) {
+  if (isContainer == true) {
+    return name + "(container)";
+  }
+  return name;
 }
 
 function findLabelVertexIndex(name) {
   return Vertices.findIndex(vertex => vertex.Label === name);
 }
 
-function GetFolderIndex(folderName)
-{
+function GetFolderIndex(folderName) {
   let newItem;
 
   for (let item of folderNames) {
-    if (item.Name === folderName)
-    {
-      newItem = item.Index;
-      break;
+    if (item.Name === folderName) {
+      return item.Index
     }
   }
-
   newItem = { Name: folderName, Index: ++FolderCounter };
   folderNames.push(newItem);
   return newItem.Index;
 }
 
-
-async function createGraphFromData()
-{
+async function createGraphFromData() {
+  Vertices = [];
+  Edges = [];
+  const folderVerticesMap = new Map();
   console.log('createGraphFromData');
   const jsonData = await readJSONFile(filePath);
   const verticesLookup = [];
-  jsonData.forEach(vertex =>{
-    Vertices.push({Label: vertex.ClassName, FolderIndex: GetFolderIndex(vertex.FolderName) , degree: 0, methods : vertex.Methods})
-    verticesLookup.push(vertex.ClassName)
-  })
+  jsonData.forEach(vertex => {
+    const folderIndex = GetFolderIndex(vertex.FolderName);
+    const newVertex = { Label: vertex.ClassName, FolderIndex: folderIndex, degree: 0, methods: vertex.Methods };
+
+    Vertices.push(newVertex);
+    verticesLookup.push(vertex.ClassName);
+
+    if (!folderVerticesMap.has(folderIndex)) {
+      folderVerticesMap.set(folderIndex, []);
+    }
+    folderVerticesMap.get(folderIndex).push(newVertex);
+  });
   console.log("Vertices");
   console.log(Vertices);
   console.log("verticesLookup");
@@ -76,43 +76,37 @@ async function createGraphFromData()
 
   jsonData.forEach(vertex => {
     const inhertageName = vertex.InheritsFrom;
-    if(inhertageName != null)
-      {
-        if(verticesLookup.includes(inhertageName))
-        {
-          Edges.push({From : vertex.ClassName, To : vertex.InheritsFrom, Label: "heritage"});
-        }
+    if (inhertageName != null) {
+      if (verticesLookup.includes(inhertageName)) {
+        Edges.push({ From: vertex.ClassName, To: vertex.InheritsFrom, Label: "heritage" });
       }
-      
-      vertex.Compositions.forEach(Composition => {
-        isContiener = false;
-        if(Composition.startsWith("System.Collections.Generic."))
-          {
-            isContiener = true;
-            Composition = Composition.match(/<(.*)>/)[1];
-          }
+    }
 
-        if(verticesLookup.includes(Composition))
-          {
-            Edges.push({From : vertex.ClassName, To : Composition , Label: SetLabel("Composition")})
-          }
-      })
-      
-      vertex.NestedClasses.forEach(NestedClasse => {
-        isContiener = false;
-        if(NestedClasse.startsWith("System.Collections.Generic."))
-          {
-            isContiener = true;
-            NestedClasse = NestedClasse.match(/<(.*)>/)[1];
-          }
+    vertex.Compositions.forEach(Composition => {
+      isContainer = false;
+      if (Composition.startsWith("System.Collections.Generic.")) {
+        isContainer = true;
+        Composition = Composition.match(/<(.*)>/)[1];
+      }
 
-        if(verticesLookup.includes(NestedClasse))
-          {
-            Edges.push({From : vertex.ClassName, To : NestedClasse , Label: SetLabel("Nested")})
-          }
-      })
+      if (verticesLookup.includes(Composition)) {
+        Edges.push({ From: vertex.ClassName, To: Composition, Label: SetLabel("Composition") });
+      }
+    });
 
-  }); 
+    vertex.NestedClasses.forEach(NestedClasse => {
+      isContainer = false;
+      if (NestedClasse.startsWith("System.Collections.Generic.")) {
+        isContainer = true;
+        NestedClasse = NestedClasse.match(/<(.*)>/)[1];
+      }
+
+      if (verticesLookup.includes(NestedClasse)) {
+        Edges.push({ From: vertex.ClassName, To: NestedClasse, Label: SetLabel("Nested") });
+      }
+    });
+
+  });
 
   Edges.forEach(edge => {
     const fromIndex = findLabelVertexIndex(edge.From);
@@ -125,9 +119,16 @@ async function createGraphFromData()
     }
   });
 
+  folderVerticesMap.forEach((vertices, folderIndex) => {
+    vertices.sort((a, b) => b.degree - a.degree);
+  });
+
   console.log(Vertices);
   console.log(Edges);
-  return {Vertices, Edges}
+  console.log("Folder Vertices Map:");
+  console.log(folderVerticesMap);
+
+  return { Vertices, Edges, folderVerticesMap };
 }
 
 module.exports = {
