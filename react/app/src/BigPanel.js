@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import './BigPanel.css';
 import SmallPanel from './SmallPanel';
 import GraphComponent from './GraphComponent';
+import MessagePanel from './MessagePanel';
 
 const BigPanel = ({ isOpen, data }) => {
   const containerRef = useRef(null);
@@ -63,11 +64,7 @@ const BigPanel = ({ isOpen, data }) => {
         {rightPanelVisible && (
           <div className="right-panel" style={{ width: leftPanelVisible ? `${100 - leftWidth}%` : '100%' }}>
             <SmallPanel>
-              {isOpen && data && (
-                <div className="MessagePanel">
-                  <div className="message" dangerouslySetInnerHTML={{ __html: data.message?.content || '' }} />
-                </div>
-              )}
+              <MessagePanel data={data} />
             </SmallPanel>
           </div>
         )}
