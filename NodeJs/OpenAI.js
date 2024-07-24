@@ -18,6 +18,10 @@ async function RunAI(conversationHistory) {
 
   const assistantMessage = completion.choices[0].message.content;
 
+  if (!assistantMessage) {
+    console.error('Assistant message is null or undefined');
+  }
+
   conversationHistory.push({
     role: "assistant",
     content: assistantMessage
@@ -43,6 +47,10 @@ async function ExpandTopic(conversationHistory, topic, fileContents) {
   });
 
   const assistantMessage = completion.choices[0].message.content;
+
+  if (!assistantMessage) {
+    console.error('Assistant message is null or undefined');
+  }
 
   const assistantResponse = {
     role: "assistant",

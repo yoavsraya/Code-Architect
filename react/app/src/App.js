@@ -33,6 +33,7 @@ function App() {
           } else {
             console.log("finishFetchRepo = true");
             setFinishFetchRepo(true);
+            await fetchAIResponse();
           }
         } catch (error) {
           console.error('Error fetching selected repository data:', error);
@@ -58,9 +59,26 @@ function App() {
       } else {
         console.log("finishFetchRepo = true");
         setFinishFetchRepo(true);
+        await fetchAIResponse();
       }
     } catch (error) {
       console.error('Error fetching selected repository data:', error);
+    }
+  };
+
+  const fetchAIResponse = async () => {
+    try {
+      console.log("Fetching initial AI response...");
+      const response = await fetch('http://54.243.195.75:3000/api/runAI');
+      if (response.ok) {
+        const data = await response.json();
+        console.log('AI Response:', data);
+        setData(data);
+      } else {
+        console.error('Error fetching initial AI response:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching initial AI response:', error);
     }
   };
 
@@ -98,7 +116,7 @@ function App() {
               path="/"
               element={
                 isAuthenticated ? (
-                  <BigPanel data={data} />
+                  <BigPanel data={data} setData={setData} />
                 ) : (
                   <Navigate to="/login" />
                 )

@@ -179,9 +179,7 @@ const InitAIConversation = [
 
 - **Adding New Vehicle Types**: If you need to add new types of vehicles in the future, ensure that the current design allows for easy extension. The Factory Pattern and Strategy Pattern can help in making the system more extensible.
 
-- **Energy Types**: The 'MotorType' class has a composition relationship with 'eEnergyType'. Ensure that adding new energy types (e.g., hybrid) is straightforward and does not require significant changes to existing code.
-
-By addressing these points, you can improve the design and maintainability of your Garage-Manager project.`
+- **Energy Types**: The 'MotorType' class has a composition relationship with 'eEnergyType'. Ensure that adding new energy types (e.g., hybrid) is straightforward and does not require significant changes to existing code.`
   },
   {
     "role": "user",
@@ -231,4 +229,3 @@ By addressing these points, you can improve the design and maintainability of yo
 ];
 
 module.exports = InitAIConversation;
-

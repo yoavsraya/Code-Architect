@@ -4,7 +4,7 @@ import SmallPanel from './SmallPanel';
 import GraphComponent from './GraphComponent';
 import MessagePanel from './MessagePanel';
 
-const BigPanel = ({ isOpen, data }) => {
+const BigPanel = ({ data, setData }) => {
   const containerRef = useRef(null);
   const [leftWidth, setLeftWidth] = useState(50);
   const [leftPanelVisible, setLeftPanelVisible] = useState(true);
@@ -64,7 +64,7 @@ const BigPanel = ({ isOpen, data }) => {
         {rightPanelVisible && (
           <div className="right-panel" style={{ width: leftPanelVisible ? `${100 - leftWidth}%` : '100%' }}>
             <SmallPanel>
-              <MessagePanel data={data} />
+              <MessagePanel data={data} setData={setData} />
             </SmallPanel>
           </div>
         )}
