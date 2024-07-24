@@ -65,7 +65,7 @@ async function exchangeCodeForToken(code) {
         accept: 'application/json',
       },
     },
-  );
+  ); //
 
   const { data } = response;
   if (data.error) {
