@@ -26,6 +26,10 @@ const GraphComponent = () => {
 
   useEffect(() => {
     console.log("useEffect running");
+    setGraphData({ Vertices: [], Edges: [] }); // Reset graph data before fetching new data
+    setLoading(true);
+    setError(null);
+
     fetch('http://54.243.195.75:3000/api/getGraphData')
       .then(response => {
         if (!response.ok) {
@@ -45,7 +49,6 @@ const GraphComponent = () => {
       });
   }, []);
 
-
   const radius = 7; // Radius of the sphere
   const center = [0, 0, 0]; // Center point of the sphere
 
@@ -63,7 +66,7 @@ const GraphComponent = () => {
         degree: vertex.degree,
       };
     });
-  }, [graphData.Vertices]);
+  }, [graphData.Vertices]); // Ensure this dependency is correct
 
   const edges = useMemo(() => {
     return graphData.Edges.map((edge) => {

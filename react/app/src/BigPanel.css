@@ -1,32 +1,59 @@
 .big-panel-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 90%; /* Adjust to leave some edges */
-    height: 90%; /* Adjust to leave some edges */
-    background-color: rgba(0, 0, 0, 0.1); /* Semi-transparent background */
-    border-radius: 20px; /* Rounded corners */
-    overflow: hidden; /* Hide overflow */
-    margin: auto; /* Center the panel */
-  }
-  
-  .big-panel {
-    display: flex;
-    width: 100%;
-    height: 100%;
-  }
-  
-  .left-panel, .right-panel {
-    display: flex;
-    flex-direction: column;
-    overflow: auto;
-  }
-  
-  .resizer {
-    width: 5px;
-    cursor: ew-resize;
-    background-color: rgba(0, 0, 0, 0.2);
-    position: relative;
-    z-index: 1;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%; /* Adjust to leave some edges */
+  height: 90%; /* Adjust to leave some edges */
+  background-color: #282c34; /* Semi-transparent background */
+  border-radius: 20px; /* Rounded corners */
+  overflow: hidden; /* Hide overflow */
+  margin: auto; /* Center the panel */
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between; /* Spread buttons to edges */
+  width: 100%;
+  margin-bottom: 10px;
+  padding-top: 10px; /* Add some padding to make sure the buttons are visible */
+}
+
+.toggle-button {
+  margin: 5px;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.toggle-button.active {
+  background-color: #45a049;
+}
+
+.toggle-button:not(.active) {
+  background-color: #a9a9a9;
+}
+
+.big-panel {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.left-panel, .right-panel {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.resizer {
+  width: 5px;
+  cursor: ew-resize;
+  background-color: #282c34;
+  position: relative;
+  z-index: 1;
+}
