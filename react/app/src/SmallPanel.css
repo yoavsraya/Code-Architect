@@ -2,7 +2,7 @@
     flex: 1;
     padding: 10px;
     box-sizing: border-box;
-    background-color: rgba(53, 73, 120, 0.3); /* Slightly transparent */
+    background-color: rgba(190, 199, 219, 0.3); /* Slightly transparent */
     overflow: auto; /* Ensure scrolling if content overflows */
     border-radius: 10px; /* Add rounded corners */
     display: flex; /* Ensure flex layout */

@@ -15,14 +15,15 @@ body, html {
   display: flex;
   justify-content: space-between; /* Space between the left and right sections */
   align-items: center;
-  padding: 5px 20px; /* Reduced padding for a smaller banner */
-  background-color: #559d67; /* Background color */
+  padding: 4px 20px; /* Reduced padding for a smaller banner */
+  background-color: #26402e; /* Background color */
   width: 100%;
   z-index: 1000;
   position: fixed; /* Fixed position to stay at the top */
   top: 0; /* Align to the top */
   left: 0;
-  height: 60px; /* Set a fixed height for the banner */
+  height: 50px; /* Set a fixed height for the banner */
+  border-bottom: 1px solid black;
 }
 
 .left-section {
@@ -31,7 +32,7 @@ body, html {
 }
 
 .logo {
-  height: 70px; /* Adjust the height as needed */
+  height: 45px; /* Adjust the height as needed */
   width: auto; /* Maintain aspect ratio */
   margin-right: 5px; /* Reduced margin between the logos */
 }
@@ -43,9 +44,9 @@ body, html {
 }
 
 .github-logo {
-  height: 70px; /* Adjust the size as needed */
+  height: 40px; /* Adjust the size as needed */
   width: auto; /* Maintain aspect ratio */
-  margin-left: 10px; /* Ensure the GitHub logo is closer to the right border */
+  margin-right: 20px; /* Ensure the GitHub logo is closer to the right border */
 }
 
 .hamburger-menu {
@@ -54,4 +55,5 @@ body, html {
   margin-left: 12px; /* Space between the GitHub logo and hamburger menu */
   cursor: pointer;
   height: 30px;
+  color: #ffffff;
 }

@@ -1,18 +1,37 @@
 /* IntegrateGitButton.css */
 .integrate-git-button {
     background-color: #2ea44f;
-    color: #ffffff;
+    color: #000000;
     padding: 8px 16px;
     border: none;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 23px;
     font-weight: 600;
     cursor: pointer;
     outline: none;
     transition: background-color 0.3s;
+    max-width: 250px;
+    max-height: 60px;
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Center items vertically */
+    justify-content: center; /* Center items horizontally */
   }
   
   .integrate-git-button:hover {
     background-color: #22863a;
   }
+
+  .integrate-git-button .button-image {
+    width: 30%; /* Adjust image width as a percentage of the button's width */
+    height: auto; /* Maintain aspect ratio */
+    margin-left: 15px; /* Space between image and text */
+    color: #ffffff;
+
+  }
+
+  .integrate-git-button .button-text {
+    vertical-align: middle; /* Align text vertically */
+    font-size: 20px; /* Adjust font size for the button text */
+    color: #ffffff;
+}
   

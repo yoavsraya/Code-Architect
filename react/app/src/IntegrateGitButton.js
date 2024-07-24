@@ -1,5 +1,6 @@
 import React from 'react';
 import './IntegrateGitButton.css';
+import gitHubLogo from './github-logo-white.png';
 
 const IntegrateGitButton = ({ setData, onSuccess, onFail }) => {
   const handleClick = () => {
@@ -77,7 +78,8 @@ const IntegrateGitButton = ({ setData, onSuccess, onFail }) => {
 
   return (
     <button className="integrate-git-button" onClick={handleClick}>
-      Integrate Git
+       <span className="button-text">Login</span>
+      <img src={gitHubLogo} alt="GitHub Logo" className="button-image" />
     </button>
   );
 };

@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Header.css';
 import logo from './logo3.png';
 import logo2 from './logo4.png';
 import logo3 from './logo5.png';
-import githubLogo from './github-logo.png'; // Add your GitHub logo image
+import githubLogo from './github-logo-white.png'; // Add your GitHub logo image
+import Menu from './Menu'; // Import the Menu component
 
-const Header = ({ isOpen, togglePanel }) => {
+
+const Header = ({ onLogout }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
     <header className="header">
       <div className="left-section">
@@ -15,14 +23,15 @@ const Header = ({ isOpen, togglePanel }) => {
         <a href="https://github.com/yoavsraya/Code-Analyzer" target="_blank" rel="noopener noreferrer">
           <img src={githubLogo} alt="GitHub" className="github-logo" />
         </a>
-        <div className="hamburger-menu" onClick={togglePanel}>
+        <div className="hamburger-menu" onClick={toggleMenu}>
           <svg viewBox="0 0 100 80" width="30" height="30">
-            <rect width="100" height="10" fill="black"></rect>
-            <rect y="30" width="100" height="10" fill="black"></rect>
-            <rect y="60" width="100" height="10" fill="black"></rect>
+            <rect width="100" height="10" fill="white"></rect>
+            <rect y="30" width="100" height="10" fill="white"></rect>
+            <rect y="60" width="100" height="10" fill="white"></rect>
           </svg>
         </div>
       </div>
+      <Menu isOpen={isMenuOpen} onLogout={onLogout} />
     </header>
   );
 };
