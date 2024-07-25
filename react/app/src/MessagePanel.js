@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import './MessagePanel.css';
 
 const MessagePanel = ({ data, setData }) => {
+  console.log('messagepanel started');
   const [expandedContent, setExpandedContent] = useState('');
   const [conversationHistory, setConversationHistory] = useState([]);
 
   useEffect(() => {
     if (data) {
-      console.log('Data received in useEffect:', data);
+      console.log('Data received in useEffect AI:', data);
       setConversationHistory(data.conversationHistory || []);
     }
   }, [data]);
