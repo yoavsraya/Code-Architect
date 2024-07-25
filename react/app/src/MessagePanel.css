@@ -1,30 +1,32 @@
-.Message-panel {
-    padding: 20px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-top: 20px;
-  }
-  
-  .highlight-button {
-    display: block;
-    margin-bottom: 10px;
-    padding: 10px;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .highlight-button:hover {
-    background-color: #2980b9;
-  }
-  
-  .expanded-content {
-    margin-top: 20px;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
-  
+.panel {
+  padding: 10px;
+  background-color: #2c2f33;
+  color: #ffffff;
+  border-radius: 8px;
+}
+
+h3 {
+  color: #4CAF50;
+  margin-bottom: 10px;
+}
+
+.topic-button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 5px;
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  text-align: left;
+}
+
+.topic-button:hover {
+  background-color: #45a049;
+}
+
+.topic-button strong {
+  font-weight: bold;
+}

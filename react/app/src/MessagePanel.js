@@ -53,7 +53,7 @@ const MessagePanel = () => {
   };
 
   const renderButtons = () => {
-    if (!initialData || !initialData.length) {
+    if (!initialData || !initialData[0]) {
       console.log("No data or message content available");
       return null;
     }
@@ -61,26 +61,32 @@ const MessagePanel = () => {
     const content = initialData[0];
     console.log('Message content:', content);
 
-    const topics = content.match(/### (.*?)(?=###|$)/gs) || [];
-    console.log('Parsed topics:', topics);
+    const sections = content.split('### ').slice(1);
+    console.log('Parsed sections:', sections);
 
-    return topics.map((topic, index) => {
-      const matches = topic.match(/- \*\*(.*?)\*\*/g) || [];
-      const topicTitle = topic.split('\n')[0].replace('### ', '');
+    return sections.map((section, index) => {
+      const lines = section.trim().split('\n').filter(line => line);
+      const topicTitle = lines.shift().trim();
+      const bullets = lines.join(' ').split('  - ').slice(1);
+
+      console.log('Section:', topicTitle);
+      console.log('Bullets:', bullets);
 
       return (
         <div key={index}>
           <h3>{topicTitle}</h3>
-          {matches.map((match, idx) => {
-            const buttonLabel = match.replace('- **', '').replace('**', '');
+          {bullets.map((bullet, idx) => {
+            const headlineMatch = bullet.match(/\*\*(.*?)\*\*/);
+            const headline = headlineMatch ? headlineMatch[0] : '';
+            const description = bullet.replace(headline, '').trim();
+            const buttonLabel = `<strong>${headline.replace(/\*\*/g, '')}:</strong> ${description}`;
             return (
               <button
                 key={idx}
                 onClick={() => handleExpand(buttonLabel)}
                 className="topic-button"
-              >
-                {buttonLabel}
-              </button>
+                dangerouslySetInnerHTML={{ __html: buttonLabel }}
+              />
             );
           })}
         </div>
