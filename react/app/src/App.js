@@ -100,7 +100,7 @@ function App() {
               path="/"
               element={
                 isAuthenticated ? (
-                  <BigPanel />
+                  <BigPanel data={data} setData={setData}/>
                 ) : (
                   <Navigate to="/login" />
                 )

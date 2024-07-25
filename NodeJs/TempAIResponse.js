@@ -34,4 +34,4 @@ const temporaryAIResponse = [
   - **Energy Types**: The 'MotorType' class has a composition relationship with 'eEnergyType'. Ensure that adding new energy types (e.g., hybrid) is straightforward and does not require significant changes to existing code.`
   ]
   
-  export default temporaryAIResponse;
+  module.exports = temporaryAIResponse;

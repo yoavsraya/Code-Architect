@@ -53,12 +53,12 @@ const MessagePanel = () => {
   };
 
   const renderButtons = () => {
-    if (!initialData || !initialData.message || !initialData.message.content) {
+    if (!initialData || !initialData.length) {
       console.log("No data or message content available");
       return null;
     }
 
-    const content = initialData.message.content;
+    const content = initialData[0];
     console.log('Message content:', content);
 
     const topics = content.match(/### (.*?)(?=###|$)/gs) || [];
