@@ -50,7 +50,7 @@ function getRepoByName(repoName)
 
 function getLoginUrl() {
   return `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&scope=user`;
-}
+} //
 
 async function exchangeCodeForToken(code) {
   const response = await axios.post(
