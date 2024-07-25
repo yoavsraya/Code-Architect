@@ -12,7 +12,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 async function RunAI(conversationHistory) {
   const completion = await openai.chat.completions.create({
-    model: "gpt-4",
+    model: "gpt-4o",
     messages: conversationHistory
   });
 
@@ -38,11 +38,11 @@ async function ExpandTopic(conversationHistory, topic, fileContents) {
     role: "user",
     content: `Please expand on the following topic: ${topic}\nHere are the related file contents:\n${fileContents}`
   };
-///
+
   conversationHistory.push(userMessage);
 
   const completion = await openai.chat.completions.create({
-    model: "gpt-4",
+    model: "gpt-4o",
     messages: conversationHistory
   });
 

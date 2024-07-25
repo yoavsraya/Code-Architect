@@ -1,17 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import './MessagePanel.css';
 
-const MessagePanel = ({ data, setData }) => {
-  console.log('messagepanel started');
+const MessagePanel = () => {
   const [expandedContent, setExpandedContent] = useState('');
   const [conversationHistory, setConversationHistory] = useState([]);
+  const [initialData, setInitialData] = useState(null);
 
   useEffect(() => {
-    if (data) {
-      console.log('Data received in useEffect AI:', data);
-      setConversationHistory(data.conversationHistory || []);
-    }
-  }, [data]);
+    const fetchAIResponse = async () => {
+      console.log("Fetching initial AI response...");
+      try {
+        const response = await fetch('http://54.243.195.75:3000/api/runAI');
+        if (!response.ok) {
+          throw new Error('Failed to fetch AI response');
+        }
+        const aiData = await response.json();
+        console.log('Initial AI response received:', aiData);
+        setInitialData(aiData);
+        setConversationHistory(aiData.conversationHistory || []);
+      } catch (error) {
+        console.error('Error fetching initial AI response:', error);
+      }
+    };
+
+    fetchAIResponse();
+  }, []);
 
   const handleExpand = async (topic) => {
     const files = topic.match(/`([^`]*)`/g)?.map(match => match.slice(1, -1)) || [];
@@ -34,19 +47,18 @@ const MessagePanel = ({ data, setData }) => {
       console.log('Expanded data received:', expandedData);
       setExpandedContent(expandedData.content);
       setConversationHistory(expandedData.conversationHistory);
-      setData(expandedData); // Update the main data state
     } catch (error) {
       console.error('Error expanding topic:', error);
     }
   };
 
   const renderButtons = () => {
-    if (!data || !data.message || !data.message.content) {
+    if (!initialData || !initialData.message || !initialData.message.content) {
       console.log("No data or message content available");
       return null;
     }
 
-    const content = data.message.content;
+    const content = initialData.message.content;
     console.log('Message content:', content);
 
     const topics = content.match(/### (.*?)(?=###|$)/gs) || [];
@@ -82,6 +94,7 @@ const MessagePanel = ({ data, setData }) => {
       {expandedContent && (
         <div
           className="expanded-content"
+          dangerouslySetInnerHTML={{ __html: expandedContent }}
         />
       )}
     </div>

@@ -9,6 +9,7 @@ const CsUtiles = require('../C#/utils');
 const cors = require('cors'); 
 const AIconversationHistory = require('./InitAIConversation');
 const GraphData = require('./GraphData.js');
+const temporaryAIResponse = require('./TempAIResponse');
 
 const app = express();
 app.use(cors()); 
@@ -92,11 +93,10 @@ app.get('/api/buildProject', async (req, res) => {
 
 app.get('/api/runAI', async (req, res) => {
   try {
-    const aiResult = await OpenAIApi.RunAI(AIconversationHistory);
+    const aiResult = temporaryAIResponse;//await OpenAIApi.RunAI(AIconversationHistory);
     console.log('AI Result:', aiResult);
-    parsedResult = JSON.parse(aiResult);
-    console.log('Parsed Result:', parsedResult);
-    res.json(parsedResult); // Ensure the response is sent back to the client
+
+    res.send(aiResult); // Send the result as plain text
   } catch (error) {
     console.error('Error running AI:', error);
     res.status(500).send('Error running AI');
@@ -124,7 +124,7 @@ app.post('/api/expand', async (req, res) => {
 
   console.log(`File contents: ${fileContents}`);
   
-  const expandedMessage = await OpenAIApi.ExpandTopic(conversationHistory, topic, fileContents);
+  const expandedMessage = "working";//await OpenAIApi.ExpandTopic(conversationHistory, topic, fileContents);
   res.json({ content: expandedMessage, conversationHistory });
 });
 

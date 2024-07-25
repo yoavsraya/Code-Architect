@@ -64,7 +64,7 @@ const BigPanel = ({ data, setData }) => {
         {rightPanelVisible && (
           <div className="right-panel" style={{ width: leftPanelVisible ? `${100 - leftWidth}%` : '100%' }}>
             <SmallPanel>
-              <MessagePanel data={data} setData={setData} />
+              <MessagePanel />
             </SmallPanel>
           </div>
         )}
