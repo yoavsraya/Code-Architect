@@ -93,11 +93,16 @@ app.get('/api/buildProject', async (req, res) => {
 app.get('/api/runAI', async (req, res) => {
   try {
     const aiResult = await OpenAIApi.RunAI(AIconversationHistory);
+    console.log('AI Result:', aiResult);
     parsedResult = JSON.parse(aiResult);
+    console.log('Parsed Result:', parsedResult);
+    res.json(parsedResult); // Ensure the response is sent back to the client
   } catch (error) {
     console.error('Error running AI:', error);
+    res.status(500).send('Error running AI');
   }
 });
+
 
 app.post('/api/expand', async (req, res) => {
   const { topic, conversationHistory, files } = req.body;
