@@ -9,7 +9,8 @@ const CsUtiles = require('../C#/utils');
 const cors = require('cors'); 
 const AIconversationHistory = require('./InitAIConversation');
 const GraphData = require('./GraphData.js');
-const temporaryAIResponse = require('./TempAIResponse');
+const temporaryAIResponseGM = require('./TempAIResponseGM');
+const temporaryAIResponseXO = require('./TempAIResponseXO');
 
 const app = express();
 app.use(cors()); 
@@ -18,8 +19,8 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
 let isLoggedIn = false;
-let parsedResult; ///
-let repoList; ////
+let parsedResult; 
+let repoList;
 
 const port = process.env.SERVER_PORT;
 
@@ -93,7 +94,7 @@ app.get('/api/buildProject', async (req, res) => {
 
 app.get('/api/runAI', async (req, res) => {
   try {
-    const aiResult = temporaryAIResponse;//await OpenAIApi.RunAI(AIconversationHistory);
+    const aiResult = temporaryAIResponseGM;//await OpenAIApi.RunAI(AIconversationHistory);
     console.log('AI Result:', aiResult);
 
     res.send(aiResult); // Send the result as plain text
@@ -124,7 +125,7 @@ app.post('/api/expand', async (req, res) => {
 
   console.log(`File contents: ${fileContents}`);
   
-  const expandedMessage = "working";//await OpenAIApi.ExpandTopic(conversationHistory, topic, fileContents);
+  const expandedMessage = temporaryAIResponseXO;//await OpenAIApi.ExpandTopic(conversationHistory, topic, fileContents);
   res.json({ content: expandedMessage, conversationHistory });
 });
 
