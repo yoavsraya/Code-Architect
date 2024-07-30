@@ -3,31 +3,29 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const WebSocket = require('ws');
-const session = require('express-session');
 const GitHubApi = require('./GitHubApi');
 const OpenAIApi = require('./OpenAI');
 const CsUtiles = require('../C#/utils');
-const cors = require('cors');
+const cors = require('cors'); 
+const AIconversationHistory = require('./InitAIConversation');
 const GraphData = require('./GraphData.js');
 const temporaryAIResponseGM = require('./TempAIResponseGM.js');
 const tempAIResponseExpandFactoryPattern = require('./TempAIResponseExpandFactoryPattern.js');
 
 const app = express();
-app.use(cors());
+app.use(cors()); 
 app.use(express.json());
-app.use(session({
-  secret: 'your-secret-key',
-  resave: false,
-  saveUninitialized: true
-}));
+
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
 let isLoggedIn = false;
-let parsedResult;
+let parsedResult; 
 let repoList;
 
 const port = process.env.SERVER_PORT;
+
+let conversationHistory = []; // In-memory array to store conversation history
 
 wss.on('connection', ws => {
   console.log('Client connected');
@@ -99,13 +97,10 @@ app.get('/api/buildProject', async (req, res) => {
 
 app.get('/api/runAI', async (req, res) => {
   try {
-    const aiResult = temporaryAIResponseGM; // Use tempAIResponseExpandFactoryPattern for testing
+    const aiResult = temporaryAIResponseGM;
     console.log('AI Result:', aiResult);
 
-    // Initialize conversation history in the session
-    req.session.conversationHistory = [aiResult];
-
-    res.send(aiResult); // Send the result as plain text
+    res.send({ content: aiResult});
   } catch (error) {
     console.error('Error running AI:', error);
     res.status(500).send('Error running AI');
@@ -132,16 +127,13 @@ app.post('/api/expand', async (req, res) => {
 
   console.log(`File contents: ${fileContents}`);
 
-  // Manage conversation history in the session
-  if (!req.session.conversationHistory) {
-    req.session.conversationHistory = [];
-  }
-  req.session.conversationHistory.push({ topic, files, fileContents });
+  // Add to conversation history in memory
+  conversationHistory.push({ topic, files, fileContents });
 
   const expandedMessage = tempAIResponseExpandFactoryPattern; // Replace with actual expansion logic if needed
   console.log(`Expanded message: ${expandedMessage}`);
-
-  res.json({ content: expandedMessage, conversationHistory: req.session.conversationHistory });
+  
+  res.json({ content: expandedMessage, conversationHistory });
 });
 
 app.get('/api/getGraphData', async (req, res) => {

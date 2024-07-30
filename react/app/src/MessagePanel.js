@@ -1,138 +1,120 @@
-const fs = require('fs');
-const path = require('path');
-const http = require('http');
-const express = require('express');
-const WebSocket = require('ws');
-const GitHubApi = require('./GitHubApi');
-const OpenAIApi = require('./OpenAI');
-const CsUtiles = require('../C#/utils');
-const cors = require('cors'); 
-const AIconversationHistory = require('./InitAIConversation');
-const GraphData = require('./GraphData.js');
-const temporaryAIResponseGM = require('./TempAIResponseGM.js');
-const tempAIResponseExpandFactoryPattern = require('./TempAIResponseExpandFactoryPattern.js');
+import React, { useState, useEffect } from 'react';
+import './MessagePanel.css';
 
-const app = express();
-app.use(cors()); 
-app.use(express.json());
-const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
+const MessagePanel = () => {
+  const [expandedContent, setExpandedContent] = useState('');
+  const [initialData, setInitialData] = useState(null);
 
-let isLoggedIn = false;
-let parsedResult; 
-let repoList;
-
-const port = process.env.SERVER_PORT;
-
-wss.on('connection', ws => {
-  console.log('Client connected');
-  ws.on('close', () => console.log('Client disconnected'));
-});
-
-app.get('/login-status', (req, res) => {
-  res.json({ loggedIn: isLoggedIn });
-});
-
-try {
-  const dotenvPath = path.join(__dirname, '../.env');
-  require('dotenv').config({ path: dotenvPath });
-} catch (error) {
-  console.error('Error loading .env file:', error);
-}
-
-app.get('/', (req, res) => res.send('Hello World!'));
-
-app.get('/LogIn', (req, res) => {
-  const loginUrl = GitHubApi.getLoginUrl();
-  res.redirect(loginUrl);
-});
-
-app.get(`/webhook`, async (req, res) => {
-  const code = req.query.code;
-  console.log(code);
-});
-
-app.get(`/callback`, async (req, res) => {
-  const code = req.query.code;
-  try {
-    console.log(' GET callback');
-    await GitHubApi.GetUserData(code);
-    repoList = await GitHubApi.getRepositories();
-    wss.clients.forEach(client => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify({ loggedIn: true }));
+  useEffect(() => {
+    const fetchAIResponse = async () => {
+      console.log("Fetching initial AI response...");
+      try {
+        const response = await fetch('http://54.243.195.75:3000/api/runAI');
+        if (!response.ok) {
+          throw new Error('Failed to fetch AI response');
+        }
+        const aiData = await response.json();
+        console.log('Initial AI response received:', aiData);
+        setInitialData(aiData.content); // Ensure this matches the server response structure
+      } catch (error) {
+        console.error('Error fetching initial AI response:', error);
       }
-    });
-  } catch (error) {
-    console.error('Error during authentication:', error);
-    res.status(500).send('Authentication failed');
-  }
-});
+    };
 
-app.get('/api/repoList', (req, res) => {
-  res.send(repoList);
-});
+    fetchAIResponse();
+  }, []);
 
-app.get('/api/getUserPic', async (req, res) => {
-  const url = await GitHubApi.GetUserPic();
-  res.json({ avatar_url: url });
-});
+  const handleExpand = async (topic) => {
+    const filesSet = new Set();
+    const regex = /'([^']*)'/g;
+    let match;
 
-app.get('/api/fetchSelectedRepo', async (req, res) => {
-  const selectedRepo = GitHubApi.getRepoByName(req.query.selectedRepo);
-  await GitHubApi.cloneSelectedRepo(selectedRepo);
-  res.status(200).send();
-});
-
-app.get('/api/buildProject', async (req, res) => {
-  try {
-    await CsUtiles.csRunBuild();
-  } catch (error) {
-    console.error('Error during build:', error);
-  }
-});
-
-app.get('/api/runAI', async (req, res) => {
-  try {
-    const aiResult = temporaryAIResponseGM;//await OpenAIApi.RunAI(AIconversationHistory);
-    console.log('AI Result:', aiResult);
-
-    res.send(aiResult); // Send the result as plain text
-  } catch (error) {
-    console.error('Error running AI:', error);
-    res.status(500).send('Error running AI');
-  }
-});
-
-app.post('/api/expand', async (req, res) => {
-  const { topic, files } = req.body;
-  console.log(`Received request to expand topic: ${topic}`);
-  console.log(`Files to search: ${files.join(', ')}`);
-
-  let fileContents = '';
-
-  files.forEach(file => {
-    const filePath = path.join('/home/ec2-user/Code-Analyzer/UserFiles', file);
-    console.log(`Checking file: ${filePath}`);
-    if (fs.existsSync(filePath)) {
-      console.log(`File found: ${filePath}`);
-      fileContents += fs.readFileSync(filePath, 'utf-8');
-    } else {
-      console.log(`File not found: ${filePath}`);
+    while ((match = regex.exec(topic)) !== null) {
+      filesSet.add(match[1]);
     }
-  });
 
-  console.log(`File contents: ${fileContents}`);
+    const files = Array.from(filesSet);
 
-  const expandedMessage = tempAIResponseExpandFactoryPattern; // Replace with actual expansion logic if needed
-  console.log(`Expanded message: ${expandedMessage}`);
-  
-  res.json({ content: expandedMessage });
-});
+    console.log('Expanding topic:', topic);
+    console.log('Files to fetch:', files);
 
-app.get('/api/getGraphData', async (req, res) => {
-  data = await GraphData.createGraphFromData();
-  res.status(200).send(data);
-});
+    try {
+      const response = await fetch('http://54.243.195.75:3000/api/expand', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          topic,
+          files,
+        }),
+      });
+      const expandedData = await response.json();
+      console.log('Expanded data received:', expandedData);
 
-server.listen(port, () => console.log(`Server listening on port ${port}!`));
+      if (Array.isArray(expandedData.content)) {
+        const content = expandedData.content.join('\n');
+        setExpandedContent(content); // Update with new expanded content
+      } else {
+        setExpandedContent(expandedData.content); // Update with new expanded content
+      }
+    } catch (error) {
+      console.error('Error expanding topic:', error);
+    }
+  };
+
+  const parseContent = (content) => {
+    if (Array.isArray(content)) {
+      content = content.join('\n');
+    }
+
+    if (typeof content !== 'string') {
+      console.error('Content is not a string:', content);
+      return [];
+    }
+
+    const sections = content.split('###')
+      .slice(1)
+      .map(section => {
+        const [title, ...bullets] = section.split('\n').filter(line => line.trim());
+        return {
+          title: title.trim(),
+          bullets: bullets.map(bullet => bullet.trim()).filter(bullet => bullet.startsWith('- '))
+        };
+      });
+
+    return sections;
+  };
+
+  const renderButtons = (sections) => {
+    return sections.map((section, index) => (
+      <div key={index}>
+        <h3>{section.title}</h3>
+        {section.bullets.map((bullet, idx) => {
+          const bulletParts = bullet.replace(/^- \*\*/, '').split('**:');
+          return (
+            <button
+              key={idx}
+              onClick={() => handleExpand(bullet)}
+              className="topic-button"
+            >
+              <strong>{bulletParts[0]}</strong>{bulletParts[1]}
+            </button>
+          );
+        })}
+      </div>
+    ));
+  };
+
+  return (
+    <div className="panel">
+      {expandedContent ? (
+        renderButtons(parseContent(expandedContent))
+      ) : (
+        initialData && renderButtons(parseContent(initialData))
+      )}
+    </div>
+  );
+};
+
+export default MessagePanel;

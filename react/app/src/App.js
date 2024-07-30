@@ -33,7 +33,6 @@ function App() {
           } else {
             console.log("finishFetchRepo = true");
             setFinishFetchRepo(true);
-            await fetchAIResponse();
           }
         } catch (error) {
           console.error('Error fetching selected repository data:', error);
@@ -59,7 +58,6 @@ function App() {
       } else {
         console.log("finishFetchRepo = true");
         setFinishFetchRepo(true);
-        await fetchAIResponse();
       }
     } catch (error) {
       console.error('Error fetching selected repository data:', error);
