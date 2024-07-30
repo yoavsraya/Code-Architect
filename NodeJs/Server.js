@@ -9,8 +9,8 @@ const CsUtiles = require('../C#/utils');
 const cors = require('cors'); 
 const AIconversationHistory = require('./InitAIConversation');
 const GraphData = require('./GraphData.js');
-const temporaryAIResponseGM = require('./TempAIResponseGM');
-const temporaryAIResponseXO = require('./TempAIResponseXO');
+const temporaryAIResponseGM = require('./TempAIResponseGM.js');
+const temporaryAIResponseXO = require('./TempAIResponseXO.js');
 
 const app = express();
 app.use(cors()); 
@@ -109,7 +109,8 @@ app.post('/api/expand', async (req, res) => {
   const { topic, conversationHistory, files } = req.body;
   console.log(`Received request to expand topic: ${topic}`);
   console.log(`Files to search: ${files.join(', ')}`);
-  
+  console.log(`Conversation history: ${JSON.stringify(conversationHistory)}`);
+
   let fileContents = '';
 
   files.forEach(file => {
@@ -125,9 +126,12 @@ app.post('/api/expand', async (req, res) => {
 
   console.log(`File contents: ${fileContents}`);
   
-  const expandedMessage = temporaryAIResponseXO;//await OpenAIApi.ExpandTopic(conversationHistory, topic, fileContents);
+  const expandedMessage = temporaryAIResponseXO; // Replace with actual expansion logic if needed
+  console.log(`Expanded message: ${expandedMessage}`);
+  
   res.json({ content: expandedMessage, conversationHistory });
 });
+
 
 app.get('/api/getGraphData', async (req, res) => {
   data = await GraphData.createGraphFromData();

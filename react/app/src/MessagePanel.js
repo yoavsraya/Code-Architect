@@ -26,12 +26,13 @@ const MessagePanel = () => {
     fetchAIResponse();
   }, []);
 
-  const handleExpand = async (topic) => {
-    const files = topic.match(/`([^`]*)`/g)?.map(match => match.slice(1, -1)) || [];
-    console.log('Expanding topic:', topic);
-    console.log('Files to fetch:', files);
+  const handleExpand = async (bullet) => {
+    console.log('Expanding bullet:', bullet);
+    const topic = bullet.split(':')[0].trim();
+    const files = []; // Adjust as needed to provide relevant files for the request
 
     try {
+      console.log('Sending expand request...');
       const response = await fetch('http://54.243.195.75:3000/api/expand', {
         method: 'POST',
         headers: {
@@ -43,6 +44,11 @@ const MessagePanel = () => {
           files,
         }),
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch expanded content');
+      }
+
       const expandedData = await response.json();
       console.log('Expanded data received:', expandedData);
       setExpandedContent(expandedData.content);
@@ -53,42 +59,31 @@ const MessagePanel = () => {
   };
 
   const renderButtons = () => {
-    if (!initialData || !initialData[0]) {
+    if (!initialData || !initialData.length) {
       console.log("No data or message content available");
       return null;
     }
 
-    const content = initialData[0];
-    console.log('Message content:', content);
+    return initialData.map((section, sectionIndex) => {
+      const sectionLines = section.split('\n').filter(line => line.trim().length > 0);
+      const sectionTitle = sectionLines[0].replace('###', '').trim();
+      const bullets = sectionLines.slice(1).map(line => line.replace('- ', '').trim());
 
-    const sections = content.split('### ').slice(1);
-    console.log('Parsed sections:', sections);
-
-    return sections.map((section, index) => {
-      const lines = section.trim().split('\n').filter(line => line);
-      const topicTitle = lines.shift().trim();
-      const bullets = lines.join(' ').split('  - ').slice(1);
-
-      console.log('Section:', topicTitle);
+      console.log('Section:', sectionTitle);
       console.log('Bullets:', bullets);
 
       return (
-        <div key={index}>
-          <h3>{topicTitle}</h3>
-          {bullets.map((bullet, idx) => {
-            const headlineMatch = bullet.match(/\*\*(.*?)\*\*/);
-            const headline = headlineMatch ? headlineMatch[0] : '';
-            const description = bullet.replace(headline, '').trim();
-            const buttonLabel = `<strong>${headline.replace(/\*\*/g, '')}:</strong> ${description}`;
-            return (
-              <button
-                key={idx}
-                onClick={() => handleExpand(buttonLabel)}
-                className="topic-button"
-                dangerouslySetInnerHTML={{ __html: buttonLabel }}
-              />
-            );
-          })}
+        <div key={sectionIndex}>
+          <h3>{sectionTitle}</h3>
+          {bullets.map((bullet, bulletIndex) => (
+            <button
+              key={bulletIndex}
+              onClick={() => handleExpand(bullet)}
+              className="topic-button"
+            >
+              <strong>{bullet.split(': ')[0]}</strong>: {bullet.split(': ')[1]}
+            </button>
+          ))}
         </div>
       );
     });
