@@ -112,7 +112,7 @@ Class: ValueOutOfRangeException
 
 Folder: Ex03.GarageLogic
 File: vehicle.cs
-Class: Vehicle
+Class: vehicle
   Accessibility: public
   Belongs to: DLL
   Composition:

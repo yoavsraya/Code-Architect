@@ -3,7 +3,6 @@ import './MessagePanel.css';
 
 const MessagePanel = () => {
   const [expandedContent, setExpandedContent] = useState('');
-  const [conversationHistory, setConversationHistory] = useState([]);
   const [initialData, setInitialData] = useState(null);
 
   useEffect(() => {
@@ -17,7 +16,6 @@ const MessagePanel = () => {
         const aiData = await response.json();
         console.log('Initial AI response received:', aiData);
         setInitialData(aiData);
-        setConversationHistory(aiData.conversationHistory || []);
       } catch (error) {
         console.error('Error fetching initial AI response:', error);
       }
@@ -26,13 +24,21 @@ const MessagePanel = () => {
     fetchAIResponse();
   }, []);
 
-  const handleExpand = async (bullet) => {
-    console.log('Expanding bullet:', bullet);
-    const topic = bullet.split(':')[0].trim();
-    const files = []; // Adjust as needed to provide relevant files for the request
-
+  const handleExpand = async (topic) => {
+    const filesSet = new Set();
+    const regex = /'([^']*)'/g;
+    let match;
+  
+    while ((match = regex.exec(topic)) !== null) {
+      filesSet.add(match[1]);
+    }
+  
+    const files = Array.from(filesSet);
+  
+    console.log('Expanding topic:', topic);
+    console.log('Files to fetch:', files);
+  
     try {
-      console.log('Sending expand request...');
       const response = await fetch('http://54.243.195.75:3000/api/expand', {
         method: 'POST',
         headers: {
@@ -40,63 +46,68 @@ const MessagePanel = () => {
         },
         body: JSON.stringify({
           topic,
-          conversationHistory,
           files,
         }),
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch expanded content');
-      }
-
       const expandedData = await response.json();
       console.log('Expanded data received:', expandedData);
-      setExpandedContent(expandedData.content);
-      setConversationHistory(expandedData.conversationHistory);
+  
+      if (Array.isArray(expandedData.content)) {
+        const content = expandedData.content.join('\n');
+        setExpandedContent(content); // Update with new expanded content
+      } else {
+        setExpandedContent(expandedData.content); // Update with new expanded content
+      }
     } catch (error) {
       console.error('Error expanding topic:', error);
     }
   };
-
-  const renderButtons = () => {
-    if (!initialData || !initialData.length) {
-      console.log("No data or message content available");
-      return null;
+  
+  const parseContent = (content) => {
+    if (typeof content !== 'string') {
+      console.error('Content is not a string:', content);
+      return [];
     }
 
-    return initialData.map((section, sectionIndex) => {
-      const sectionLines = section.split('\n').filter(line => line.trim().length > 0);
-      const sectionTitle = sectionLines[0].replace('###', '').trim();
-      const bullets = sectionLines.slice(1).map(line => line.replace('- ', '').trim());
+    const sections = content.split('###')
+      .slice(1)
+      .map(section => {
+        const [title, ...bullets] = section.split('\n').filter(line => line.trim());
+        return {
+          title: title.trim(),
+          bullets: bullets.map(bullet => bullet.trim()).filter(bullet => bullet.startsWith('- '))
+        };
+      });
 
-      console.log('Section:', sectionTitle);
-      console.log('Bullets:', bullets);
+    return sections;
+  };
 
-      return (
-        <div key={sectionIndex}>
-          <h3>{sectionTitle}</h3>
-          {bullets.map((bullet, bulletIndex) => (
+  const renderButtons = (sections) => {
+    return sections.map((section, index) => (
+      <div key={index}>
+        <h3>{section.title}</h3>
+        {section.bullets.map((bullet, idx) => {
+          const bulletParts = bullet.replace(/^- \*\*/, '').split('**:');
+          return (
             <button
-              key={bulletIndex}
+              key={idx}
               onClick={() => handleExpand(bullet)}
               className="topic-button"
             >
-              <strong>{bullet.split(': ')[0]}</strong>: {bullet.split(': ')[1]}
+              <strong>{bulletParts[0]}</strong>{bulletParts[1]}
             </button>
-          ))}
-        </div>
-      );
-    });
+          );
+        })}
+      </div>
+    ));
   };
 
   return (
     <div className="panel">
-      {renderButtons()}
-      {expandedContent && (
-        <div
-          className="expanded-content"
-          dangerouslySetInnerHTML={{ __html: expandedContent }}
-        />
+      {expandedContent ? (
+        renderButtons(parseContent(expandedContent))
+      ) : (
+        initialData && renderButtons(parseContent(initialData[0]))
       )}
     </div>
   );

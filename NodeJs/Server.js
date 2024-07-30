@@ -10,7 +10,7 @@ const cors = require('cors');
 const AIconversationHistory = require('./InitAIConversation');
 const GraphData = require('./GraphData.js');
 const temporaryAIResponseGM = require('./TempAIResponseGM.js');
-const temporaryAIResponseXO = require('./TempAIResponseXO.js');
+const tempAIResponseExpandFactoryPattern = require('./TempAIResponseExpandFactoryPattern.js');
 
 const app = express();
 app.use(cors()); 
@@ -106,10 +106,9 @@ app.get('/api/runAI', async (req, res) => {
 
 
 app.post('/api/expand', async (req, res) => {
-  const { topic, conversationHistory, files } = req.body;
+  const { topic, files } = req.body;
   console.log(`Received request to expand topic: ${topic}`);
   console.log(`Files to search: ${files.join(', ')}`);
-  console.log(`Conversation history: ${JSON.stringify(conversationHistory)}`);
 
   let fileContents = '';
 
@@ -125,12 +124,19 @@ app.post('/api/expand', async (req, res) => {
   });
 
   console.log(`File contents: ${fileContents}`);
-  
-  const expandedMessage = temporaryAIResponseXO; // Replace with actual expansion logic if needed
+
+  // Example of adding to conversation history (you may adjust as needed)
+  if (!req.session.conversationHistory) {
+    req.session.conversationHistory = [];
+  }
+  req.session.conversationHistory.push({ topic, files, fileContents });
+
+  const expandedMessage = tempAIResponseExpandFactoryPattern; // Replace with actual expansion logic if needed
   console.log(`Expanded message: ${expandedMessage}`);
   
-  res.json({ content: expandedMessage, conversationHistory });
+  res.json({ content: expandedMessage, conversationHistory: req.session.conversationHistory });
 });
+
 
 
 app.get('/api/getGraphData', async (req, res) => {

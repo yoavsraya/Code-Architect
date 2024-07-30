@@ -21,7 +21,7 @@ class Program
 
         string projectName = new DirectoryInfo(directoryPath).Name;
         string outputPath = $"ProjectParse.txt";
-        string jsonOutputPath = "Code-Analyzer/react/app/src/GraphData.jason";
+        string jsonOutputPath = "Code-Analyzer/react/app/src/GraphData.json";
 
         var classInfos = new List<ClassInfo>();
 
@@ -61,11 +61,12 @@ class Program
 
         foreach (var classNode in classes)
         {
+            var className = Path.GetFileNameWithoutExtension(filePath);
             var classInfo = new ClassInfo
             {
                 FolderName = Path.GetFileName(Path.GetDirectoryName(filePath)),
                 FileName = Path.GetFileName(filePath),
-                ClassName = classNode.Identifier.Text,
+                ClassName = className,
                 ProjectType = GetProjectType(filePath)
             };
             AnalyzeClass(classNode, semanticModel, classInfo);
