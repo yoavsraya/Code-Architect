@@ -72,7 +72,7 @@ const MessagePanel = () => {
       console.error('Content is not a string:', content);
       return [];
     }
-
+//
     const sections = content.split('###')
       .slice(1)
       .map(section => {
