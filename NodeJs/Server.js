@@ -7,10 +7,8 @@ const GitHubApi = require('./GitHubApi');
 const OpenAIApi = require('./OpenAI');
 const CsUtiles = require('../C#/utils');
 const cors = require('cors'); 
-const AIconversationHistory = require('./InitAIConversation');
 const GraphData = require('./GraphData.js');
-const temporaryAIResponseGM = require('./TempAIResponseGM.js');
-const tempAIResponseExpandFactoryPattern = require('./TempAIResponseExpandFactoryPattern.js');
+const getProjectFilePathMapping = require('./GetFilePath');
 
 const app = express();
 app.use(cors()); 
@@ -20,12 +18,11 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
 let isLoggedIn = false;
-let parsedResult; 
 let repoList;
 
 const port = process.env.SERVER_PORT;
 
-let conversationHistory = []; // In-memory array to store conversation history
+const filePathMapping = getProjectFilePathMapping(); // Initialize filePathMapping
 
 wss.on('connection', ws => {
   console.log('Client connected');
@@ -97,10 +94,10 @@ app.get('/api/buildProject', async (req, res) => {
 
 app.get('/api/runAI', async (req, res) => {
   try {
-    const aiResult = temporaryAIResponseGM;
+    const aiResult = await OpenAIApi.RunAI();
     console.log('AI Result:', aiResult);
 
-    res.send({ content: aiResult});
+    res.send({ content: aiResult });
   } catch (error) {
     console.error('Error running AI:', error);
     res.status(500).send('Error running AI');
@@ -115,25 +112,35 @@ app.post('/api/expand', async (req, res) => {
   let fileContents = '';
 
   files.forEach(file => {
-    const filePath = path.join('/home/ec2-user/Code-Analyzer/UserFiles', file);
-    console.log(`Checking file: ${filePath}`);
-    if (fs.existsSync(filePath)) {
-      console.log(`File found: ${filePath}`);
-      fileContents += fs.readFileSync(filePath, 'utf-8');
+    if (!file.endsWith('.cs')) {
+      file += '.cs';
+    }
+    const folder = filePathMapping[file];
+    if (folder) {
+      const filePath = path.join('/home/ec2-user/Code-Analyzer/UserFiles', folder, file);
+      console.log(`Checking file: ${filePath}`);
+      if (fs.existsSync(filePath)) {
+        console.log(`File found: ${filePath}`);
+        fileContents += fs.readFileSync(filePath, 'utf-8');
+      } else {
+        console.log(`File not found: ${filePath}`);
+      }
     } else {
-      console.log(`File not found: ${filePath}`);
+      console.log(`Folder for file ${file} not found in project structure.`);
     }
   });
 
   console.log(`File contents: ${fileContents}`);
 
-  // Add to conversation history in memory
-  conversationHistory.push({ topic, files, fileContents });
-
-  const expandedMessage = tempAIResponseExpandFactoryPattern; // Replace with actual expansion logic if needed
-  console.log(`Expanded message: ${expandedMessage}`);
-  
-  res.json({ content: expandedMessage, conversationHistory });
+  try {
+    const expandedMessage = await OpenAIApi.ExpandTopic(topic, fileContents);
+    console.log(`Expanded message: ${expandedMessage}`);
+    
+    res.json({ content: expandedMessage });
+  } catch (error) {
+    console.error('Error expanding topic:', error);
+    res.status(500).send('Error expanding topic');
+  }
 });
 
 app.get('/api/getGraphData', async (req, res) => {
