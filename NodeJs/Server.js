@@ -70,7 +70,7 @@ app.get(`/callback`, async (req, res) => {
 });
 
 app.get('/api/repoList', (req, res) => {
-  res.send(repoList);
+  res.send(repoList); //
 });
 
 app.get('/api/getUserPic', async (req, res) => {
