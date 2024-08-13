@@ -50,7 +50,7 @@ const GraphComponent = () => {
   }, []);
 
   const radius = 7; // Radius of the sphere
-  const center = [0, 0, 0]; // Center point of the sphere
+  const center = [0, 0, 0];
 
   const vertices = useMemo(() => {
     return graphData.Vertices.map((vertex, index) => {
