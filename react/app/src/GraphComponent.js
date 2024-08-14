@@ -53,6 +53,7 @@ const GraphComponent = () => {
   const center = [0, 0, 0];
 
   const vertices = useMemo(() => {
+    
     return graphData.Vertices.map((vertex, index) => {
       const phi = Math.acos(-1 + (2 * index) / graphData.Vertices.length);
       const theta = Math.sqrt(graphData.Vertices.length * Math.PI) * phi;
