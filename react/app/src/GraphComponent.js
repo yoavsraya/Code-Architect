@@ -6,7 +6,7 @@ import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
 import './GraphComponent.css';
 
-const SpinningGroup = ({ children }) => {
+const SpinningGroup = React.memo(({ children }) => {
   const groupRef = useRef();
 
   useFrame(() => {
@@ -16,9 +16,9 @@ const SpinningGroup = ({ children }) => {
   });
 
   return <group ref={groupRef}>{children}</group>;
-};
+});
 
-const GraphComponent = () => {
+const GraphComponent = React.memo(() => {
   console.log("Graph Component started");
   const [graphData, setGraphData] = useState({ Vertices: [], Edges: [] });
   const [loading, setLoading] = useState(true);
@@ -26,11 +26,16 @@ const GraphComponent = () => {
 
   useEffect(() => {
     console.log("useEffect running");
-    setGraphData({ Vertices: [], Edges: [] }); // Reset graph data before fetching new data
+
+    // Reset graph data before fetching new data
+    setGraphData({ Vertices: [], Edges: [] });
     setLoading(true);
     setError(null);
 
-    fetch('http://54.243.195.75:3000/api/getGraphData')
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    fetch('http://54.243.195.75:3000/api/getGraphData', { signal })
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -43,31 +48,64 @@ const GraphComponent = () => {
         setLoading(false);
       })
       .catch(err => {
-        console.log("Error fetching data", err);
-        setError(err);
+        if (err.name !== 'AbortError') {
+          console.log("Error fetching data", err);
+          setError(err);
+        }
         setLoading(false);
       });
+
+    return () => {
+      // Cleanup the fetch request if the component unmounts
+      controller.abort();
+    };
   }, []);
 
-  const radius = 7; // Radius of the sphere
-  const center = [0, 0, 0];
+  const groupRadius = 10; // Radius for each group of vertices
+  const folderSpacing = 50; // Minimum distance between different folder index groups
+
+  // Helper function to get a random position within a radius
+  const getRandomPosition = (center, radius) => {
+    const angle = Math.random() * Math.PI * 2;
+    const distance = Math.random() * radius;
+    const x = center[0] + distance * Math.cos(angle);
+    const y = center[1] + distance * Math.sin(angle);
+    const z = center[2];
+    return [x, y, z];
+  };
 
   const vertices = useMemo(() => {
-    
-    return graphData.Vertices.map((vertex, index) => {
-      const phi = Math.acos(-1 + (2 * index) / graphData.Vertices.length);
-      const theta = Math.sqrt(graphData.Vertices.length * Math.PI) * phi;
-      const x = center[0] + radius * Math.cos(theta) * Math.sin(phi);
-      const y = center[1] + radius * Math.sin(theta) * Math.sin(phi);
-      const z = center[2] + radius * Math.cos(phi);
-
-      return {
-        id: vertex.Label,
-        position: [x, y, z],
-        degree: vertex.degree,
-      };
+    const folderGroups = {};
+    graphData.Vertices.forEach(vertex => {
+      if (!folderGroups[vertex.folderIndex]) {
+        folderGroups[vertex.folderIndex] = [];
+      }
+      folderGroups[vertex.folderIndex].push(vertex);
     });
-  }, [graphData.Vertices]); // Ensure this dependency is correct
+
+    let currentFolderPosition = [0, 0, 0];
+    const vertexPositions = [];
+
+    Object.keys(folderGroups).sort().forEach((folderIndex, groupIndex) => {
+      const group = folderGroups[folderIndex];
+      group.forEach((vertex, index) => {
+        const position = getRandomPosition(currentFolderPosition, groupRadius);
+        vertexPositions.push({
+          id: vertex.Label,
+          position: position,
+          degree: vertex.degree,
+        });
+      });
+      // Move to a new random position for the next folder index group
+      currentFolderPosition = [
+        currentFolderPosition[0] + (Math.random() - 0.5) * folderSpacing * 2,
+        currentFolderPosition[1] + (Math.random() - 0.5) * folderSpacing * 2,
+        currentFolderPosition[2] + (Math.random() - 0.5) * folderSpacing * 2,
+      ];
+    });
+
+    return vertexPositions;
+  }, [graphData.Vertices]);
 
   const edges = useMemo(() => {
     return graphData.Edges.map((edge) => {
@@ -89,16 +127,9 @@ const GraphComponent = () => {
 
   if (loading) {
     return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        flexDirection: 'column',
-        fontSize: '24px',
-      }}>
+      <div className="loading-container">
         <div className="spinner"></div>
-        <div style={{ marginTop: '20px', color: 'white' }}>Loading graph data...</div>
+        <div className="loading-message">Loading graph data...</div>
       </div>
     );
   }
@@ -119,19 +150,12 @@ const GraphComponent = () => {
         <pointLight position={[10, 10, 10]} />
 
         <SpinningGroup>
-          {vertices.map((vertex) => (
-            <mesh key={vertex.id} position={vertex.position}>
+          {vertices.map((vertex, index) => (
+            <mesh key={vertex.id || index} position={vertex.position}>
               <sphereGeometry args={[0.7, 32, 32]} />
               <meshStandardMaterial color="#81E979" />
               <Html distanceFactor={10}>
-                <div
-                  style={{
-                    color: 'white',
-                    fontSize: '18px',
-                    textAlign: 'center',
-                    transform: 'translate(-50%, -50%)',
-                  }}
-                >
+                <div className="vertex-label">
                   {vertex.id} (Degree: {vertex.degree})
                 </div>
               </Html>
@@ -158,14 +182,7 @@ const GraphComponent = () => {
                   }
                 />
                 <Html position={edge.midpoint} distanceFactor={10}>
-                  <div
-                    style={{
-                      color: '#e5c100',
-                      fontSize: '20px',
-                      textAlign: 'center',
-                      transform: 'translate(-50%, -50%)',
-                    }}
-                  >
+                  <div className="edge-label">
                     {edge.label}
                   </div>
                 </Html>
@@ -176,6 +193,6 @@ const GraphComponent = () => {
       </Canvas>
     </div>
   );
-};
+});
 
 export default GraphComponent;

@@ -17,7 +17,10 @@ function App() {
     const savedIsAuthenticated = localStorage.getItem('isAuthenticated');
     const savedSelectedRepo = localStorage.getItem('selectedRepo');
 
-    if (savedIsAuthenticated === 'true' && savedSelectedRepo) {
+    if (savedIsAuthenticated && savedSelectedRepo)
+    {
+      console.log("there is a selected repo:");
+      console.log(savedSelectedRepo);
       setIsAuthenticated(true);
       setSelectedRepo(savedSelectedRepo);
       setData({ repo: savedSelectedRepo });
@@ -25,13 +28,13 @@ function App() {
       // Fetch selected repo data if needed
       (async () => {
         try {
-          console.log("sending fetch to fetch selected repo");
+          console.log("sending fetch to fetch selected repo in useEffect");
           const response = await fetch(`http://54.243.195.75:3000/api/fetchSelectedRepo?selectedRepo=${encodeURIComponent(savedSelectedRepo)}`);
-          console.log("done!!!");
+          console.log("done!!! in useEffect");
           if (!response.ok) {
             console.error('Failed to fetch selected repository data');
           } else {
-            console.log("finishFetchRepo = true");
+            console.log("finishFetchRepo = true in useEffect");
             setFinishFetchRepo(true);
           }
         } catch (error) {
@@ -50,13 +53,13 @@ function App() {
     setData({ repo: selectedRepo }); // Store the selected repository name in the data state
 
     try {
-      console.log("sending fetch to fetch selected repo");
+      console.log("sending fetch to fetch selected repo in handleLogin");
       const response = await fetch(`http://54.243.195.75:3000/api/fetchSelectedRepo?selectedRepo=${encodeURIComponent(selectedRepo)}`);
-      console.log("done!!!");
+      console.log("done!!! in handleLogin");
       if (!response.ok) {
         console.error('Failed to fetch selected repository data');
       } else {
-        console.log("finishFetchRepo = true");
+        console.log("finishFetchRepo = true in handleLogin");
         setFinishFetchRepo(true);
       }
     } catch (error) {

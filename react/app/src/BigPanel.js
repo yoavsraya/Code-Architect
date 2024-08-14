@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import './BigPanel.css';
 import SmallPanel from './SmallPanel';
 import GraphComponent from './GraphComponent';
@@ -10,41 +10,41 @@ const BigPanel = ({ data, setData }) => {
   const [leftPanelVisible, setLeftPanelVisible] = useState(true);
   const [rightPanelVisible, setRightPanelVisible] = useState(true);
 
-  const handleMouseMove = (e) => {
+  const handleMouseMove = useCallback((e) => {
     if (!containerRef.current || !leftPanelVisible || !rightPanelVisible) return;
     const containerWidth = containerRef.current.getBoundingClientRect().width;
     const newLeftWidth = ((e.clientX - containerRef.current.offsetLeft) / containerWidth) * 100;
     if (newLeftWidth >= 10 && newLeftWidth <= 90) {
       setLeftWidth(newLeftWidth);
     }
-  };
+  }, [leftPanelVisible, rightPanelVisible]);
 
-  const handleMouseDown = (e) => {
+  const handleMouseDown = useCallback((e) => {
     e.preventDefault();
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
-  };
+  }, [handleMouseMove]);
 
-  const handleMouseUp = () => {
+  const handleMouseUp = useCallback(() => {
     document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mouseup', handleMouseUp);
-  };
+  }, [handleMouseMove]);
 
-  const toggleLeftPanel = () => {
+  const toggleLeftPanel = useCallback(() => {
     if (leftPanelVisible && !rightPanelVisible) return; // Ensure at least one panel is visible
-    setLeftPanelVisible(!leftPanelVisible);
+    setLeftPanelVisible((prev) => !prev);
     if (!leftPanelVisible && !rightPanelVisible) {
       setRightPanelVisible(true);
     }
-  };
+  }, [leftPanelVisible, rightPanelVisible]);
 
-  const toggleRightPanel = () => {
+  const toggleRightPanel = useCallback(() => {
     if (rightPanelVisible && !leftPanelVisible) return; // Ensure at least one panel is visible
-    setRightPanelVisible(!rightPanelVisible);
+    setRightPanelVisible((prev) => !prev);
     if (!leftPanelVisible && !rightPanelVisible) {
       setLeftPanelVisible(true);
     }
-  };
+  }, [leftPanelVisible, rightPanelVisible]);
 
   return (
     <div className="big-panel-container">
@@ -56,7 +56,7 @@ const BigPanel = ({ data, setData }) => {
         {leftPanelVisible && (
           <div className="left-panel" style={{ width: rightPanelVisible ? `${leftWidth}%` : '100%' }}>
             <SmallPanel>
-              <GraphComponent />
+              <GraphComponent data={data} />
             </SmallPanel>
           </div>
         )}
@@ -73,4 +73,4 @@ const BigPanel = ({ data, setData }) => {
   );
 };
 
-export default BigPanel;
+export default React.memo(BigPanel);
