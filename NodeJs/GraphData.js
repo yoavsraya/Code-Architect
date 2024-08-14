@@ -128,7 +128,14 @@ async function createGraphFromData() {
   console.log("Folder Vertices Map:");
   console.log(folderVerticesMap);
 
-  return { Vertices, Edges, folderVerticesMap };
+  Vertices = [];
+  folderVerticesMap.forEach((vertices, folderIndex) => {
+    vertices.forEach(vertex => {
+      Vertices.push(vertex);
+    });
+  });
+
+  return { Vertices, Edges};
 }
 
 module.exports = {

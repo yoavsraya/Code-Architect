@@ -61,16 +61,17 @@ const GraphComponent = React.memo(() => {
     };
   }, []);
 
-  const groupRadius = 10; // Radius for each group of vertices
-  const folderSpacing = 50; // Minimum distance between different folder index groups
+  const groupRadius = 12; // Radius for each group of vertices
+  const folderSpacing = 3; // Minimum distance between different folder index groups
+  const zRange = 20; // Range for the random z value
 
   // Helper function to get a random position within a radius
-  const getRandomPosition = (center, radius) => {
+  const getRandomPosition = (center, radius, zRange) => {
     const angle = Math.random() * Math.PI * 2;
     const distance = Math.random() * radius;
     const x = center[0] + distance * Math.cos(angle);
     const y = center[1] + distance * Math.sin(angle);
-    const z = center[2];
+    const z = center[2] + (Math.random() - 0.5) * zRange;
     return [x, y, z];
   };
 
@@ -89,7 +90,7 @@ const GraphComponent = React.memo(() => {
     Object.keys(folderGroups).sort().forEach((folderIndex, groupIndex) => {
       const group = folderGroups[folderIndex];
       group.forEach((vertex, index) => {
-        const position = getRandomPosition(currentFolderPosition, groupRadius);
+        const position = getRandomPosition(currentFolderPosition, groupRadius, zRange);
         vertexPositions.push({
           id: vertex.Label,
           position: position,
