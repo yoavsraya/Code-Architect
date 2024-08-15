@@ -56,7 +56,6 @@ const GraphComponent = React.memo(() => {
       });
 
     return () => {
-      // Cleanup the fetch request if the component unmounts
       controller.abort();
     };
   }, []);
