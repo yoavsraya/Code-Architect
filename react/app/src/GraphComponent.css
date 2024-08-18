@@ -12,3 +12,31 @@
   background: none;
   border: none; /* Remove borders */
 }
+
+/* Styling for vertex labels */
+.vertex-label {
+  font-size: 0.5rem; /* Set a base font size */
+  color: #ffffff; /* White text color */
+  padding: 2px; /* Minimal padding */
+  border-radius: 2px; /* Rounded corners */
+  
+  display: flex; /* Use flexbox for centering */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  text-align: center; /* Ensure text alignment is centered */
+  
+  width: 100%; /* Take full width of the box */
+  height: 100%; /* Take full height of the box */
+  box-sizing: border-box; /* Include padding in size calculations */
+  overflow: hidden; /* Hide overflowing text */
+  white-space: normal; /* Allow text to wrap to the next line */
+  word-wrap: break-word; /* Break long words */
+  font-weight: bold; /* Make the text bold */
+}
+
+.vertex-label.mirrored {
+  transform: scaleX(-1);  /* Mirrors the text horizontally */
+}
+
+
+

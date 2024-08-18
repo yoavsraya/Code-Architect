@@ -1,9 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, extend } from '@react-three/fiber';
 import { OrbitControls, Html } from '@react-three/drei';
 import { Line2 } from 'three/examples/jsm/lines/Line2';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
+import { BoxGeometry, EdgesGeometry, LineBasicMaterial } from 'three';
+import { LineSegments } from '@react-three/fiber';
 import './GraphComponent.css';
 
 const SpinningGroup = React.memo(({ children }) => {
@@ -152,15 +154,29 @@ const GraphComponent = React.memo(() => {
 
         <SpinningGroup>
           {vertices.map((vertex, index) => (
-            <mesh key={vertex.id || index} position={vertex.position}>
-              <sphereGeometry args={[0.7, 32, 32]} />
-              <meshStandardMaterial color="#81E979" />
-              <Html distanceFactor={10}>
-                <div className="vertex-label">
-                  {vertex.id} (Degree: {vertex.degree})
-                </div>
-              </Html>
-            </mesh>
+ <mesh key={vertex.id || index} position={vertex.position}>
+ <boxGeometry args={[1.5, 1.5, 1.5]} />
+ <meshStandardMaterial color="#81E979" opacity={1} transparent={false} />
+
+ <lineSegments>
+    <edgesGeometry attach="geometry" args={[new BoxGeometry(1.5, 1.5, 1.5)]} />
+    <lineBasicMaterial attach="material" color="black" linewidth={1} />
+  </lineSegments>
+  
+ {/* Left Face */}
+ <Html
+  position={[-0.75, 0, 0]}
+  distanceFactor={10}
+  transform rotation={[0, Math.PI / 2, 0]}
+  scale={[1, 1, -1]}>
+   <div className="vertex-label mirrored">{vertex.id}</div>
+ </Html>
+
+ {/* Right Face */}
+ <Html position={[0.75, 0, 0]} distanceFactor={10} transform rotation={[0, -Math.PI / 2, 0]} scale={[1, 1, -1]}>
+ <div className="vertex-label mirrored">{vertex.id}</div>
+ </Html>
+</mesh>       
           ))}
 
           {edges.map((edge, index) => {
@@ -175,7 +191,7 @@ const GraphComponent = React.memo(() => {
                     new Line2(
                       lineGeometry,
                       new LineMaterial({
-                        color: 0xffffff,
+                        color: 0x000000,
                         linewidth: 2.4, // Adjust the linewidth as needed
                         resolution: [window.innerWidth, window.innerHeight], // Add resolution for proper scaling
                       })
