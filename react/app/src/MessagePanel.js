@@ -4,6 +4,7 @@ import './MessagePanel.css';
 const MessagePanel = () => {
   const [expandedContent, setExpandedContent] = useState('');
   const [initialData, setInitialData] = useState(null);
+  const [removedButtons, setRemovedButtons] = useState([]);
 
   useEffect(() => {
     const fetchAIResponse = async () => {
@@ -63,6 +64,10 @@ const MessagePanel = () => {
     }
   };
 
+  const handleRemoveButton = (index) => {
+    setRemovedButtons([...removedButtons, index]);
+  };
+
   const parseContent = (content) => {
     if (Array.isArray(content)) {
       content = content.join('\n');
@@ -87,19 +92,30 @@ const MessagePanel = () => {
   };
 
   const renderButtons = (sections) => {
-    return sections.map((section, index) => (
-      <div key={index}>
+    return sections.map((section, sectionIndex) => (
+      <div key={sectionIndex}>
         <h3>{section.title}</h3>
-        {section.bullets.map((bullet, idx) => {
+        {section.bullets.map((bullet, bulletIndex) => {
+          const index = `${sectionIndex}-${bulletIndex}`;
+          if (removedButtons.includes(index)) {
+            return null; // Skip rendering this button if it has been removed
+          }
           const bulletParts = bullet.replace(/^- \*\*/, '').split('**:');
           return (
-            <button
-              key={idx}
-              onClick={() => handleExpand(bullet)}
-              className="topic-button"
-            >
-              <strong>{bulletParts[0]}</strong>{bulletParts[1]}
-            </button>
+            <div key={index} className="button-container">
+              <button
+                onClick={() => handleExpand(bullet)}
+                className="topic-button"
+              >
+                <strong>{bulletParts[0]}</strong>{bulletParts[1]}
+              </button>
+              <button
+                onClick={() => handleRemoveButton(index)}
+                className="remove-button"
+              >
+                 &#10006;
+              </button>
+            </div>
           );
         })}
       </div>

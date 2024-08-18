@@ -23,6 +23,17 @@ h3 {
   text-align: left;
 }
 
+.remove-button {
+  background-color: #4CAF50; /* Same color as the topic button */
+  color: red; /* Red color for the "x" */
+  border: none;
+  margin-left: 10px;
+  padding: 10px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
 .topic-button:hover {
   background-color: #45a049;
 }
