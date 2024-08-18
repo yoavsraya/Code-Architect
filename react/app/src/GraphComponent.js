@@ -63,8 +63,8 @@ const GraphComponent = React.memo(() => {
     };
   }, []);
 
-  const groupRadius = 12; // Radius for each group of vertices
-  const folderSpacing = 3; // Minimum distance between different folder index groups
+  const groupRadius = 15; // Radius for each group of vertices
+  const folderSpacing = 10; // Minimum distance between different folder index groups
   const zRange = 20; // Range for the random z value
 
   // Helper function to get a random position within a radius

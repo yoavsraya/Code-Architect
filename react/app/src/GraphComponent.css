@@ -38,5 +38,10 @@
   transform: scaleX(-1);  /* Mirrors the text horizontally */
 }
 
-
+.edge-label {
+  color: #ffffff; /* Change edge label color to tomato red */
+  font-size: 1.3rem; /* Adjust the size of the edge labels */
+  font-weight: bold; /* Make the edge label text bold */
+  white-space: nowrap; /* Prevent text from wrapping */
+}
 
