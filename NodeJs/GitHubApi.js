@@ -94,21 +94,46 @@ async function GetUserData(code)
 
 }
 
-async function cloneSelectedRepo(selectedRepo)
-{
+async function cloneSelectedRepo(selectedRepo) {
   UserData.selectedRepo = selectedRepo;
   console.log(`Selected repository: ${UserData.selectedRepo.owner}/${UserData.selectedRepo.name}`);
-  const repoUrl = `https://github.com/${UserData.selectedRepo.owner}/${UserData.selectedRepo.name}.git`; // replace with your repo url
+  
+  const repoUrl = `https://github.com/${UserData.selectedRepo.owner}/${UserData.selectedRepo.name}.git`;
 
   exec(`git clone ${repoUrl} ${localPath}`, (error, stdout, stderr) => {
     if (error) {
       console.error(`Error cloning repository: ${error}`);
       return;
     }
-  console.log(`Repository cloned successfully: ${stdout}`);
+    console.log(`Repository cloned successfully: ${stdout}`);
+
+    // Ensure the UserFiles directory is ready
+    console.log("Running dotnet build...");
+    exec(`dotnet build /home/ec2-user/Code-Analyzer/C#`, (buildError, buildStdout, buildStderr) => {
+      if (buildError) {
+        console.error(`Error during build: ${buildError.message}`);
+        console.error(`Build stderr: ${buildStderr}`);
+        console.log(`Build stdout: ${buildStdout}`);
+        return;
+      }
+      console.log(`Build output: ${buildStdout}`);
+
+      console.log("Running dotnet application...");
+      exec(`dotnet run /home/ec2-user/Code-Analyzer/UserFiles`, (runError, runStdout, runStderr) => {
+        if (runError) {
+          console.error(`Error running application: ${runError.message}`);
+          console.error(`Run stderr: ${runStderr}`);
+          console.log(`Run stdout: ${runStdout}`);
+          return;
+        }
+        console.log(`Run output: ${runStdout}`);
+      });
+    });
   });
+
   console.log("END cloneSelectedRepo function");
 }
+
 
 async function PullSelectedRepo()
 {

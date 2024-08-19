@@ -21,7 +21,7 @@ class Program
 
         string projectName = new DirectoryInfo(directoryPath).Name;
         string outputPath = $"ProjectParse.txt";
-        string jsonOutputPath = "Code-Analyzer/react/app/src/GraphData.json";
+        string jsonOutputPath = "/home/ec2-user/Code-Analyzer/NodeJs/GraphData.json";
 
         var classInfos = new List<ClassInfo>();
 

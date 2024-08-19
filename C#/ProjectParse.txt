@@ -1,128 +1,63 @@
-Project: Garage-Manager
+Project: UserFiles
 
-Folder: Ex03.ConsoleUI
+Folder: GUI
+File: GameMainForm.cs
+Class: GameMainForm
+  Accessibility: internal
+  Belongs to: EXE
+  Inherits from: Form
+  Composition:
+    Game
+    GameSettingsForm
+    
+    Player
+    Label
+    FlowLayoutPanel
+    DialogResult
+
+Folder: GUI
+File: GameSettingsForm.cs
+Class: GameSettingsForm
+  Accessibility: public
+  Belongs to: EXE
+  Inherits from: Form
+  Composition:
+    Label
+    TextBox
+    CheckBox
+    NumericUpDown
+    Button
+
+Folder: GUI
 File: Program.cs
 Class: Program
-  Accessibility: internal
-  Belongs to: EXE
-
-Folder: Ex03.ConsoleUI
-File: TUI.cs
-Class: TUI
   Accessibility: public
   Belongs to: EXE
-  Composition:
-    GarageManager
-    CreatingObject
 
-Folder: Ex03.GarageLogic
-File: Car.cs
-Class: Car
-  Accessibility: internal
-  Belongs to: DLL
-  Inherits from: Vehicle
-  Composition:
-    eNumOfDoors
-    eCarColor
-
-Folder: Ex03.GarageLogic
-File: CarExistException.cs
-Class: CarExistException
+Folder: XO logics
+File: Board.cs
+Class: Board
   Accessibility: public
   Belongs to: DLL
-  Inherits from: Exception
+  Composition:
+    
 
-Folder: Ex03.GarageLogic
-File: ClientInfo.cs
-Class: ClientInfo
-  Accessibility: internal
+Folder: XO logics
+File: Game.cs
+Class: Game
+  Accessibility: public
   Belongs to: DLL
   Composition:
-    Vehicle
+    Board
+    Player
   Aggregations:
-    eClientStatus
+    eGameStatus
 
-Folder: Ex03.GarageLogic
-File: CreatingObject.cs
-Class: CreatingObject
+Folder: XO logics
+File: Player.cs
+Class: Player
   Accessibility: public
   Belongs to: DLL
-  Composition:
-    Vehicle
-
-Folder: Ex03.GarageLogic
-File: ElectricMotor.cs
-Class: ElectricMotor
-  Accessibility: internal
-  Belongs to: DLL
-  Inherits from: MotorType
-
-Folder: Ex03.GarageLogic
-File: fillEnergyToMaxException.cs
-Class: fillEnergyToMaxException
-  Accessibility: public
-  Belongs to: DLL
-  Inherits from: Exception
-
-Folder: Ex03.GarageLogic
-File: GarageManeger.cs
-Class: GarageManager
-  Accessibility: public
-  Belongs to: DLL
-  Composition:
-    eClientStatus
-
-Folder: Ex03.GarageLogic
-File: GasMotor.cs
-Class: GasMotor
-  Accessibility: internal
-  Belongs to: DLL
-  Inherits from: MotorType
-
-Folder: Ex03.GarageLogic
-File: MotorBike.cs
-Class: MotorBike
-  Accessibility: internal
-  Belongs to: DLL
-  Inherits from: Vehicle
-  Composition:
-    eLicenseType
-
-Folder: Ex03.GarageLogic
-File: MotorType.cs
-Class: MotorType
-  Accessibility: public
-  Belongs to: DLL
-  Composition:
-    eEnergyType
-
-Folder: Ex03.GarageLogic
-File: Track.cs
-Class: Track
-  Accessibility: internal
-  Belongs to: DLL
-  Inherits from: Vehicle
-
-Folder: Ex03.GarageLogic
-File: ValueOutOfRangeException.cs
-Class: ValueOutOfRangeException
-  Accessibility: public
-  Belongs to: DLL
-  Inherits from: Exception
-
-Folder: Ex03.GarageLogic
-File: vehicle.cs
-Class: vehicle
-  Accessibility: public
-  Belongs to: DLL
-  Composition:
-    MotorType
-    Wheels
-    Car
-
-Folder: Ex03.GarageLogic
-File: Wheels.cs
-Class: Wheels
-  Accessibility: public
-  Belongs to: DLL
+  Aggregations:
+    eBoardShape
 
