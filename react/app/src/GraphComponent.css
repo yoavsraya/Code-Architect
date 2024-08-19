@@ -15,7 +15,7 @@
 
 /* Styling for vertex labels */
 .vertex-label {
-  font-size: 0.5rem; /* Set a base font size */
+  font-size: 0.7rem; /* Set a base font size */
   color: #ffffff; /* White text color */
   padding: 2px; /* Minimal padding */
   border-radius: 2px; /* Rounded corners */
@@ -39,9 +39,36 @@
 }
 
 .edge-label {
-  color: #ffffff; /* Change edge label color to tomato red */
-  font-size: 1.3rem; /* Adjust the size of the edge labels */
+  color: #ffffff; /* White text color for edge labels */
+  font-size: 1.7rem; /* Adjust the size of the edge labels */
   font-weight: bold; /* Make the edge label text bold */
   white-space: nowrap; /* Prevent text from wrapping */
 }
 
+/* Styling for the popup note */
+.popup-note {
+  background-color: rgba(0, 0, 0, 0.75); /* Semi-transparent black background */
+  color: #ffffff; /* White text color */
+  padding: 10px; /* Padding inside the note */
+  border-radius: 5px; /* Rounded corners */
+  max-width: 200px; /* Maximum width of the note */
+  font-size: 0.9rem; /* Font size for the note */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+  position: relative; /* For positioning the close button */
+}
+
+/* Styling for the close button inside the popup note */
+.popup-note .close-button {
+  position: absolute; /* Position absolutely inside the note */
+  top: 5px; /* Position close to the top */
+  right: 5px; /* Position close to the right */
+  background-color: transparent; /* Transparent background */
+  border: none; /* No border */
+  color: #ffffff; /* White text color */
+  font-size: 1.2rem; /* Slightly larger text */
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+.popup-note .close-button:hover {
+  color: #ff6666; /* Change color on hover */
+}

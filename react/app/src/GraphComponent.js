@@ -1,18 +1,17 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Canvas, useFrame, extend } from '@react-three/fiber';
-import { OrbitControls, Html } from '@react-three/drei';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { OrbitControls, Html, Line } from '@react-three/drei';
+import { BoxGeometry } from 'three';
 import { Line2 } from 'three/examples/jsm/lines/Line2';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
-import { BoxGeometry, EdgesGeometry, LineBasicMaterial } from 'three';
-import { LineSegments } from '@react-three/fiber';
 import './GraphComponent.css';
 
-const SpinningGroup = React.memo(({ children }) => {
+const SpinningGroup = React.memo(({ children, isSpinning }) => {
   const groupRef = useRef();
 
   useFrame(() => {
-    if (groupRef.current) {
+    if (groupRef.current && isSpinning) {
       groupRef.current.rotation.y += 0.0015;
     }
   });
@@ -25,6 +24,8 @@ const GraphComponent = React.memo(() => {
   const [graphData, setGraphData] = useState({ Vertices: [], Edges: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedVertex, setSelectedVertex] = useState(null);
+  const [isSpinning, setIsSpinning] = useState(true);
 
   useEffect(() => {
     console.log("useEffect running");
@@ -63,52 +64,24 @@ const GraphComponent = React.memo(() => {
     };
   }, []);
 
-  const groupRadius = 15; // Radius for each group of vertices
-  const folderSpacing = 10; // Minimum distance between different folder index groups
-  const zRange = 20; // Range for the random z value
-
-  // Helper function to get a random position within a radius
-  const getRandomPosition = (center, radius, zRange) => {
-    const angle = Math.random() * Math.PI * 2;
-    const distance = Math.random() * radius;
-    const x = center[0] + distance * Math.cos(angle);
-    const y = center[1] + distance * Math.sin(angle);
-    const z = center[2] + (Math.random() - 0.5) * zRange;
-    return [x, y, z];
-  };
+  const xSpread = 50; // Adjust as needed for x-axis spread
+  const ySpread = 30; // Adjust as needed for y-axis spread
+  const zSpread = 20; // Adjust as needed for z-axis spread
 
   const vertices = useMemo(() => {
-    const folderGroups = {};
-    graphData.Vertices.forEach(vertex => {
-      if (!folderGroups[vertex.folderIndex]) {
-        folderGroups[vertex.folderIndex] = [];
-      }
-      folderGroups[vertex.folderIndex].push(vertex);
-    });
-
-    let currentFolderPosition = [0, 0, 0];
-    const vertexPositions = [];
-
-    Object.keys(folderGroups).sort().forEach((folderIndex, groupIndex) => {
-      const group = folderGroups[folderIndex];
-      group.forEach((vertex, index) => {
-        const position = getRandomPosition(currentFolderPosition, groupRadius, zRange);
-        vertexPositions.push({
-          id: vertex.Label,
-          position: position,
-          degree: vertex.degree,
-        });
-      });
-      // Move to a new random position for the next folder index group
-      currentFolderPosition = [
-        currentFolderPosition[0] + (Math.random() - 0.5) * folderSpacing * 2,
-        currentFolderPosition[1] + (Math.random() - 0.5) * folderSpacing * 2,
-        currentFolderPosition[2] + (Math.random() - 0.5) * folderSpacing * 2,
+    return graphData.Vertices.map(vertex => {
+      const position = [
+        (Math.random() - 0.5) * xSpread,
+        (Math.random() - 0.5) * ySpread,
+        (Math.random() - 0.5) * zSpread,
       ];
+      return {
+        id: vertex.Label,
+        position: position,
+        degree: vertex.degree,
+      };
     });
-
-    return vertexPositions;
-  }, [graphData.Vertices]);
+  }, [graphData.Vertices, xSpread, ySpread, zSpread]);
 
   const edges = useMemo(() => {
     return graphData.Edges.map((edge) => {
@@ -127,6 +100,16 @@ const GraphComponent = React.memo(() => {
       };
     });
   }, [vertices]);
+
+  const handleCubeClick = (vertex) => {
+    setSelectedVertex(vertex);
+    setIsSpinning(false);
+  };
+
+  const handleCloseNote = () => {
+    setSelectedVertex(null);
+    setIsSpinning(true);
+  };
 
   if (loading) {
     return (
@@ -152,31 +135,35 @@ const GraphComponent = React.memo(() => {
         <ambientLight />
         <pointLight position={[10, 10, 10]} />
 
-        <SpinningGroup>
+        <SpinningGroup isSpinning={isSpinning}>
           {vertices.map((vertex, index) => (
- <mesh key={vertex.id || index} position={vertex.position}>
- <boxGeometry args={[1.5, 1.5, 1.5]} />
- <meshStandardMaterial color="#81E979" opacity={1} transparent={false} />
+            <mesh
+              key={vertex.id || index}
+              position={vertex.position}
+              onClick={() => handleCubeClick(vertex)}
+            >
+              <boxGeometry args={[1.5, 1.5, 1.5]} />
+              <meshStandardMaterial color="#81E979" opacity={1} transparent={false} />
 
- <lineSegments>
-    <edgesGeometry attach="geometry" args={[new BoxGeometry(1.5, 1.5, 1.5)]} />
-    <lineBasicMaterial attach="material" color="black" linewidth={1} />
-  </lineSegments>
-  
- {/* Left Face */}
- <Html
-  position={[-0.75, 0, 0]}
-  distanceFactor={10}
-  transform rotation={[0, Math.PI / 2, 0]}
-  scale={[1, 1, -1]}>
-   <div className="vertex-label mirrored">{vertex.id}</div>
- </Html>
+              <lineSegments>
+                <edgesGeometry attach="geometry" args={[new BoxGeometry(1.5, 1.5, 1.5)]} />
+                <lineBasicMaterial attach="material" color="black" linewidth={1} />
+              </lineSegments>
 
- {/* Right Face */}
- <Html position={[0.75, 0, 0]} distanceFactor={10} transform rotation={[0, -Math.PI / 2, 0]} scale={[1, 1, -1]}>
- <div className="vertex-label mirrored">{vertex.id}</div>
- </Html>
-</mesh>       
+              {/* Left Face */}
+              <Html
+                position={[-0.75, 0, 0]}
+                distanceFactor={10}
+                transform rotation={[0, Math.PI / 2, 0]}
+                scale={[1, 1, -1]}>
+                <div className="vertex-label mirrored">{vertex.id}</div>
+              </Html>
+
+              {/* Right Face */}
+              <Html position={[0.75, 0, 0]} distanceFactor={10} transform rotation={[0, -Math.PI / 2, 0]} scale={[1, 1, -1]}>
+                <div className="vertex-label mirrored">{vertex.id}</div>
+              </Html>
+            </mesh>
           ))}
 
           {edges.map((edge, index) => {
@@ -207,6 +194,26 @@ const GraphComponent = React.memo(() => {
             );
           })}
         </SpinningGroup>
+
+        {selectedVertex && (
+          <>
+            <Line
+              points={[
+                selectedVertex.position, // Start of the line (cube position)
+                [selectedVertex.position[0], selectedVertex.position[1] + 2, selectedVertex.position[2] + 2], // End of the line (note position)
+              ]}
+              color="white"
+              lineWidth={2}
+            />
+            <Html position={[selectedVertex.position[0], selectedVertex.position[1] + 2, selectedVertex.position[2] + 2]} distanceFactor={8}>
+              <div className="popup-note">
+                <button className="close-button" onClick={handleCloseNote}>✕</button>
+                <strong>{selectedVertex.id}</strong>
+                <p>Additional information about this vertex.</p>
+              </div>
+            </Html>
+          </>
+        )}
       </Canvas>
     </div>
   );
