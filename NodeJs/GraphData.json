@@ -1,85 +1,270 @@
 [
   {
-    "FolderName": "GUI",
-    "ClassName": "GameMainForm",
-    "Accessibility": "internal",
-    "InheritsFrom": "Form",
-    "Compositions": [
-      "Game",
-      "GameSettingsForm",
-      "",
-      "Player",
-      "Label",
-      "FlowLayoutPanel",
-      "DialogResult"
-    ],
-    "Aggregations": [],
-    "Associations": [],
-    "NestedClasses": []
-  },
-  {
-    "FolderName": "GUI",
-    "ClassName": "GameSettingsForm",
-    "Accessibility": "public",
-    "InheritsFrom": "Form",
-    "Compositions": [
-      "Label",
-      "TextBox",
-      "CheckBox",
-      "NumericUpDown",
-      "Button"
-    ],
-    "Aggregations": [],
-    "Associations": [],
-    "NestedClasses": []
-  },
-  {
-    "FolderName": "GUI",
+    "FolderName": "Ex03.ConsoleUI",
     "ClassName": "Program",
     "Accessibility": "public",
     "InheritsFrom": null,
     "Compositions": [],
     "Aggregations": [],
     "Associations": [],
-    "NestedClasses": []
+    "NestedClasses": [],
+    "Methods": [
+      "+ Main"
+    ]
   },
   {
-    "FolderName": "XO logics",
-    "ClassName": "Board",
+    "FolderName": "Ex03.ConsoleUI",
+    "ClassName": "TUI",
     "Accessibility": "public",
     "InheritsFrom": null,
     "Compositions": [
-      ""
+      "GarageManager",
+      "CreatingObject"
     ],
     "Aggregations": [],
     "Associations": [],
-    "NestedClasses": []
+    "NestedClasses": [],
+    "Methods": [
+      "+ RunGarage",
+      "- getFullDetailsOnVehicle",
+      "- fillElectric",
+      "- fillGas",
+      "- fillAirToMax",
+      "- changeVehicleCondition",
+      "- getListOfVehiclesByFilter",
+      "- getUserChoiceFromMenu",
+      "- welcoming",
+      "- putVehicleInGarage",
+      "- putDetailsOfVehicleAndClient",
+      "- putFlatVehicleInGarage",
+      "- userInputForClientInfoRequirements",
+      "- userInputForVehicleRequirements",
+      "- printListOfString"
+    ]
   },
   {
-    "FolderName": "XO logics",
-    "ClassName": "Game",
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "Car",
+    "Accessibility": "internal",
+    "InheritsFrom": "Vehicle",
+    "Compositions": [
+      "eNumOfDoors",
+      "eCarColor"
+    ],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": [],
+    "Methods": [
+      "+ RequirementsList",
+      "+ BuildVehicle",
+      "+ VehicleDetails",
+      "# UpdateEnergyDetails",
+      "# UpdateFuelType"
+    ]
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "CarExistException",
+    "Accessibility": "public",
+    "InheritsFrom": "Exception",
+    "Compositions": [],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": [],
+    "Methods": []
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "ClientInfo",
+    "Accessibility": "internal",
+    "InheritsFrom": null,
+    "Compositions": [
+      "Vehicle"
+    ],
+    "Aggregations": [
+      "eClientStatus"
+    ],
+    "Associations": [],
+    "NestedClasses": [],
+    "Methods": [
+      "+ GetVehiclePlateNumber",
+      "+ FillWheelsAirToMax",
+      "+ FillEnergyInVehicle",
+      "+ GetInfo"
+    ]
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "CreatingObject",
     "Accessibility": "public",
     "InheritsFrom": null,
     "Compositions": [
-      "Board",
-      "Player"
+      "Vehicle"
     ],
-    "Aggregations": [
-      "eGameStatus"
-    ],
+    "Aggregations": [],
     "Associations": [],
-    "NestedClasses": []
+    "NestedClasses": [],
+    "Methods": [
+      "+ CreateNewVehicle",
+      "+ MyVehicleRequirements",
+      "+ MyClientInfoRequirements",
+      "+ CreateMyClientInfoCard",
+      "+ IsGarageEmpty"
+    ]
   },
   {
-    "FolderName": "XO logics",
-    "ClassName": "Player",
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "ElectricMotor",
+    "Accessibility": "internal",
+    "InheritsFrom": "MotorType",
+    "Compositions": [],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": [],
+    "Methods": [
+      "+ ReFill",
+      "+ ToString"
+    ]
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "GarageManeger",
+    "Accessibility": "public",
+    "InheritsFrom": null,
+    "Compositions": [
+      "eClientStatus"
+    ],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": [],
+    "Methods": [
+      "+ IsVehicleExist",
+      "- findClientByPlateNumber",
+      "+ ReturnListOfPlatesByFilter",
+      "+ UpdateClientStatus",
+      "- updateListOfClients",
+      "+ FillWheelsToMax",
+      "+ FillEnergyInVehicle",
+      "+ GetVehicleInfo",
+      "+ GetVehicleRequirement",
+      "+ GetClientRequirement",
+      "+ DetailsToAddClient",
+      "+ GetGasTypeList",
+      "+ GetVehicleOptions",
+      "+ IsGasType"
+    ]
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "GasMotor",
+    "Accessibility": "internal",
+    "InheritsFrom": "MotorType",
+    "Compositions": [],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": [],
+    "Methods": [
+      "+ ReFill",
+      "+ ToString"
+    ]
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "MotorBike",
+    "Accessibility": "internal",
+    "InheritsFrom": "Vehicle",
+    "Compositions": [
+      "eLicenseType"
+    ],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": [],
+    "Methods": [
+      "+ RequirementsList",
+      "+ BuildVehicle",
+      "+ VehicleDetails",
+      "# UpdateEnergyDetails",
+      "# UpdateFuelType"
+    ]
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "MotorType",
+    "Accessibility": "public",
+    "InheritsFrom": null,
+    "Compositions": [
+      "eEnergyType"
+    ],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": [],
+    "Methods": [
+      "+ ReFill",
+      "+ CalculateMeterPercent"
+    ]
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "Track",
+    "Accessibility": "internal",
+    "InheritsFrom": "Vehicle",
+    "Compositions": [],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": [],
+    "Methods": [
+      "+ RequirementsList",
+      "+ BuildVehicle",
+      "+ VehicleDetails",
+      "# UpdateEnergyDetails",
+      "# UpdateFuelType"
+    ]
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "ValueOutOfRangeException",
+    "Accessibility": "internal",
+    "InheritsFrom": "Exception",
+    "Compositions": [],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": [],
+    "Methods": []
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "Wheels",
     "Accessibility": "public",
     "InheritsFrom": null,
     "Compositions": [],
-    "Aggregations": [
-      "eBoardShape"
-    ],
+    "Aggregations": [],
     "Associations": [],
-    "NestedClasses": []
+    "NestedClasses": [],
+    "Methods": [
+      "~ UpdateWheelDetails"
+    ]
+  },
+  {
+    "FolderName": "Ex03.GarageLogic",
+    "ClassName": "vehicle",
+    "Accessibility": "public",
+    "InheritsFrom": null,
+    "Compositions": [
+      "MotorType",
+      "Wheels"
+    ],
+    "Aggregations": [],
+    "Associations": [],
+    "NestedClasses": [],
+    "Methods": [
+      "+ ReFillVehicle",
+      "+ FillWheelsAirToMax",
+      "+ RequirementsList",
+      "+ BuildVehicle",
+      "# CreateEngine",
+      "+ VehicleDetails",
+      "# UpdateEnergyDetails",
+      "# UpdateFuelType"
+    ]
   }
 ]

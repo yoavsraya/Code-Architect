@@ -88,6 +88,18 @@ class Program
             classInfo.InheritsFrom = baseType.Name;
         }
 
+        foreach (var member in classSymbol.GetMembers().OfType<IMethodSymbol>())
+    {
+        if (member.MethodKind == MethodKind.Ordinary) // Only ordinary methods, not constructors or properties
+        {
+            classInfo.Methods.Add(new MethodInfo
+            {
+                Name = member.Name,
+                Accessibility = GetAccessModifier(member)
+            });
+        }
+    }
+
         // Composition and Aggregation (fields and properties)
         var compositionCandidates = new HashSet<string>();
         var aggregationCandidates = new HashSet<string>();
@@ -370,30 +382,44 @@ class Program
     }
 
     static void WriteJsonFile(string jsonOutputPath, List<ClassInfo> classInfos)
+{
+    foreach (var classInfo in classInfos)
     {
-        foreach (var classInfo in classInfos)
-        {
-            classInfo.Composition = new HashSet<string>(classInfo.Composition.Where(c => !IsPrimitiveType(c)));
-            classInfo.Aggregations = new HashSet<string>(classInfo.Aggregations.Where(a => !IsPrimitiveType(a)));
-            classInfo.Associations = new HashSet<string>(classInfo.Associations
-                .Where(a => !IsPrimitiveType(a.Split('<')[0]))); // Check only the main type, ignore the generic arguments
-        }
-
-        var classInfosForJson = classInfos.Select(classInfo => new
-        {
-            classInfo.FolderName,
-            classInfo.ClassName,
-            classInfo.Accessibility,
-            classInfo.InheritsFrom,
-            Compositions = classInfo.Composition.ToList(),
-            Aggregations = classInfo.Aggregations.ToList(),
-            Associations = classInfo.Associations.ToList(),
-            classInfo.NestedClasses
-        }).ToList();
-
-        var json = JsonConvert.SerializeObject(classInfosForJson, Formatting.Indented);
-        File.WriteAllText(jsonOutputPath, json);
+        classInfo.Composition = new HashSet<string>(classInfo.Composition.Where(c => !IsPrimitiveType(c)));
+        classInfo.Aggregations = new HashSet<string>(classInfo.Aggregations.Where(a => !IsPrimitiveType(a)));
+        classInfo.Associations = new HashSet<string>(classInfo.Associations
+            .Where(a => !IsPrimitiveType(a.Split('<')[0]))); // Check only the main type, ignore the generic arguments
     }
+
+    var classInfosForJson = classInfos.Select(classInfo => new
+    {
+        classInfo.FolderName,
+        classInfo.ClassName,
+        classInfo.Accessibility,
+        classInfo.InheritsFrom,
+        Compositions = classInfo.Composition.ToList(),
+        Aggregations = classInfo.Aggregations.ToList(),
+        Associations = classInfo.Associations.ToList(),
+        NestedClasses = classInfo.NestedClasses,
+        Methods = classInfo.Methods.Select(m => $"{GetVisibilitySign(m.Accessibility)} {m.Name}").ToList()
+    }).ToList();
+
+    var json = JsonConvert.SerializeObject(classInfosForJson, Formatting.Indented);
+    File.WriteAllText(jsonOutputPath, json);
+}
+
+static string GetVisibilitySign(string accessibility)
+{
+    return accessibility switch
+    {
+        "public" => "+",
+        "protected" => "#",
+        "private" => "-",
+        "internal" => "~",
+        _ => "*"
+    };
+}
+
 }
 
 class ClassInfo
@@ -409,4 +435,11 @@ class ClassInfo
     public List<ClassInfo> NestedClasses { get; set; } = new List<ClassInfo>();
     public HashSet<string> Aggregations { get; set; } = new HashSet<string>();
     public HashSet<string> Associations { get; set; } = new HashSet<string>();
+    public List<MethodInfo> Methods { get; set; } = new List<MethodInfo>(); // Add this line
+}
+
+class MethodInfo
+{
+    public string Name { get; set; }
+    public string Accessibility { get; set; }
 }
