@@ -20,7 +20,7 @@ class Program
         }
 
         string projectName = new DirectoryInfo(directoryPath).Name;
-        string outputPath = $"ProjectParse.txt";
+        string outputPath = $"/home/ec2-user/Code-Analyzer/C#/ProjectParse.txt";
         string jsonOutputPath = "/home/ec2-user/Code-Analyzer/NodeJs/GraphData.json";
 
         var classInfos = new List<ClassInfo>();
