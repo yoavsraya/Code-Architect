@@ -53,7 +53,6 @@ const IntegrateGitButton = ({ setData, onSuccess, onFail }) => {
           if (loginWindow) {
             loginWindow.close();
           }
-          console.log("Socket closing");
           socket.close(); // Close the WebSocket connection after receiving the message
         });
       } else {

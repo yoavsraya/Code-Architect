@@ -6,61 +6,60 @@ import Header from './Header';
 import BigPanel from './BigPanel';
 import LoadingScreen from './LoadingScreen'; // Import the LoadingScreen component
 
-
-async function fetchAndBuildProject(selectedRepo) {
-  try
-        {
-          const response = await fetch(`http://54.243.195.75:3000/api/fetchSelectedRepo?selectedRepo=${encodeURIComponent(savedSelectedRepo)}`);
-          if (!response.ok)
-            {
-            console.error('Failed to fetch selected repository data');
-            }
-          else
-           {
-            setFinishFetchRepo(true);
-            console.log('Selected repository data fetched successfully');
-           }
-        }
-        catch (error) 
-        {
-          console.error('Error fetching selected repository data:', error);
-        }
-        finally
-        {
-          setIsLoading(false); // Set loading to false after fetch is done
-        }
-
-        try
-        {
-          const response = await fetch(`http://54.243.195.75:3000/api/buildProject`);
-          if (!response.ok)
-          {
-            console.error('Failed to build the project');
-          }
-          else
-          {
-            console.log('Project built successfully');
-          }
-        }
-        catch (error)
-        {
-          console.error('Error building the project:', error);
-        }
- }
-
 function App() {
+  const [finishFetchRepo, setFinishFetchRepo] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Set loading to false initially
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState(null);
   const [selectedRepo, setSelectedRepo] = useState('');
-  const [finishFetchRepo, setFinishFetchRepo] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // Set loading to false initially
+
+  async function fetchAndBuildProject(i_selectedRepo) {
+    try
+          {
+            const response = await fetch(`http://54.243.195.75:3000/api/fetchSelectedRepo?selectedRepo=${encodeURIComponent(i_selectedRepo)}`);
+            if (!response.ok)
+              {
+              console.error('Failed to fetch selected repository data');
+              }
+            else
+             {
+              setFinishFetchRepo(true);
+              console.log('Selected repository data fetched successfully');
+             }
+          }
+          catch (error) 
+          {
+            console.error('Error fetching selected repository data:', error);
+          }
+        
+          try
+          {
+            const response = await fetch(`http://54.243.195.75:3000/api/buildProject`);
+            if (!response.ok)
+            {
+              console.error('Failed to build the project');
+            }
+            else
+            {
+              console.log('Project built successfully');
+            }
+          }
+          catch (error)
+          {
+            console.error('Error building the project:', error);
+          }
+          finally
+          {
+            setIsLoading(false); // Set loading to false after fetch is done
+          }
+   }
 
    useEffect(() => {
     const savedIsAuthenticated = localStorage.getItem('isAuthenticated');
     const savedSelectedRepo = localStorage.getItem('selectedRepo');
 
-    //if the user alreay signin and selected a repo
+    console.log('check if the user alreay signin and selected a repo',savedIsAuthenticated ,  savedSelectedRepo);
     if (savedIsAuthenticated && savedSelectedRepo)
     {
       console.log('User is already authenticated');

@@ -106,6 +106,7 @@ app.get('/api/buildProject', async (req, res) => {
                console.log(`Run output: ${runStdout}`);
            });
        });
+
 });
 
 app.get('/api/runAI', async (req, res) => {
