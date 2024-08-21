@@ -1,0 +1,25 @@
+/* loadingPage.css */
+
+.loading-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: transparent; /* Remove background */
+  }
+  
+  .loading-graphic {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 20px;
+    background-image: url('./Spin@1x-1.0s-200px-200px-2.gif'); /* Replace with your graphic path */
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  
+  .loading-text {
+    font-size: 1.5rem;
+    color: #cbedcd;
+  }
+  

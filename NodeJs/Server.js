@@ -9,6 +9,8 @@ const CsUtiles = require('../C#/utils');
 const cors = require('cors'); 
 const GraphData = require('./GraphData.js');
 const getProjectFilePathMapping = require('./GetFilePath');
+const { exec } = require('child_process');
+const dotenvPath = path.join(__dirname, '../.env');
 
 const app = express();
 app.use(cors()); 
@@ -85,11 +87,25 @@ app.get('/api/fetchSelectedRepo', async (req, res) => {
 });
 
 app.get('/api/buildProject', async (req, res) => {
-  try {
-    await CsUtiles.csRunBuild();
-  } catch (error) {
-    console.error('Error during build:', error);
-  }
+       // After cloning, run dotnet build
+       console.log('Running dotnet build...');
+       exec(`dotnet build /home/ec2-user/Code-Analyzer/C#`, (buildError, buildStdout, buildStderr) => {
+           if (buildError) {
+               console.error(`Error during build: ${buildStderr}`);
+               return;
+           }
+           console.log(`Build output: ${buildStdout}`);
+ 
+           // After building, run the dotnet application
+           console.log('Running dotnet application...');
+           exec(`dotnet run --project /home/ec2-user/Code-Analyzer/C# /home/ec2-user/Code-Analyzer/UserFiles`, (runError, runStdout, runStderr) => {
+               if (runError) {
+                   console.error(`Error running application: ${runStderr}`);
+                   return;
+               }
+               console.log(`Run output: ${runStdout}`);
+           });
+       });
 });
 
 app.get('/api/runAI', async (req, res) => {
@@ -144,6 +160,7 @@ app.post('/api/expand', async (req, res) => {
 });
 
 app.get('/api/getGraphData', async (req, res) => {
+  console.log("app.get('/api/getGraphData', async (req, res) => {'");
   data = await GraphData.createGraphFromData();
   res.status(200).send(data);
 });

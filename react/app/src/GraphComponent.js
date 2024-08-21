@@ -64,9 +64,9 @@ const GraphComponent = React.memo(() => {
     };
   }, []);
 
-  const xSpread = 50; // Adjust as needed for x-axis spread
-  const ySpread = 30; // Adjust as needed for y-axis spread
-  const zSpread = 20; // Adjust as needed for z-axis spread
+  const xSpread = 20; // Adjust as needed for x-axis spread
+  const ySpread = 20; // Adjust as needed for y-axis spread
+  const zSpread = 10; // Adjust as needed for z-axis spread
 
   const vertices = useMemo(() => {
     return graphData.Vertices.map(vertex => {

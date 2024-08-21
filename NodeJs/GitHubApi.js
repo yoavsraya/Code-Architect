@@ -105,26 +105,6 @@ async function cloneSelectedRepo(selectedRepo) {
           return;
       }
       console.log(`Repository cloned successfully: ${stdout}`);
-
-      // After cloning, run dotnet build
-      console.log('Running dotnet build...');
-      exec(`dotnet build /home/ec2-user/Code-Analyzer/C#`, (buildError, buildStdout, buildStderr) => {
-          if (buildError) {
-              console.error(`Error during build: ${buildStderr}`);
-              return;
-          }
-          console.log(`Build output: ${buildStdout}`);
-
-          // After building, run the dotnet application
-          console.log('Running dotnet application...');
-          exec(`dotnet run --project /home/ec2-user/Code-Analyzer/C# /home/ec2-user/Code-Analyzer/UserFiles`, (runError, runStdout, runStderr) => {
-              if (runError) {
-                  console.error(`Error running application: ${runStderr}`);
-                  return;
-              }
-              console.log(`Run output: ${runStdout}`);
-          });
-      });
   });
 
   console.log("END cloneSelectedRepo function");

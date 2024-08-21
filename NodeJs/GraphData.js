@@ -56,6 +56,7 @@ async function createGraphFromData() {
   const folderVerticesMap = new Map();
   console.log('createGraphFromData');
   const jsonData = await readJSONFile(filePath);
+  console.log("jason data is: ",jsonData);
   const verticesLookup = [];
   jsonData.forEach(vertex => {
     const folderIndex = GetFolderIndex(vertex.FolderName);
