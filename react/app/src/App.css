@@ -41,3 +41,17 @@
   text-align: center;
   margin-top: 20px; /* Adjust as needed */
 }
+
+.loading-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f3f3f3;
+}
+
+.loading-screen h2 {
+  font-size: 2rem;
+  color: #333;
+}
+

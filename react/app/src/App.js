@@ -4,66 +4,63 @@ import './App.css';
 import LoginPage from './LoginPage';
 import Header from './Header';
 import BigPanel from './BigPanel';
+import LoadingScreen from './LoadingScreen'; // Import the LoadingScreen component
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [data, setData] = useState(null); // State variable to store the entire JSON response
+  const [data, setData] = useState(null);
   const [selectedRepo, setSelectedRepo] = useState('');
   const [finishFetchRepo, setFinishFetchRepo] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Add a loading state
 
   useEffect(() => {
-    // Check localStorage for authentication state and selected repo
     const savedIsAuthenticated = localStorage.getItem('isAuthenticated');
     const savedSelectedRepo = localStorage.getItem('selectedRepo');
 
-    if (savedIsAuthenticated && savedSelectedRepo)
-    {
-      console.log("there is a selected repo:");
-      console.log(savedSelectedRepo);
+    if (savedIsAuthenticated && savedSelectedRepo) {
       setIsAuthenticated(true);
       setSelectedRepo(savedSelectedRepo);
       setData({ repo: savedSelectedRepo });
 
-      // Fetch selected repo data if needed
+      // Fetch selected repo data
       (async () => {
         try {
-          console.log("sending fetch to fetch selected repo in useEffect");
           const response = await fetch(`http://54.243.195.75:3000/api/fetchSelectedRepo?selectedRepo=${encodeURIComponent(savedSelectedRepo)}`);
-          console.log("done!!! in useEffect");
           if (!response.ok) {
             console.error('Failed to fetch selected repository data');
           } else {
-            console.log("finishFetchRepo = true in useEffect");
             setFinishFetchRepo(true);
           }
         } catch (error) {
           console.error('Error fetching selected repository data:', error);
+        } finally {
+          setIsLoading(false); // Set loading to false after fetch is done
         }
       })();
+    } else {
+      setIsLoading(false); // Set loading to false if there's no saved authentication or repo
     }
   }, []);
 
   const handleLogin = async (selectedRepo) => {
-    // Logic to handle login, e.g., saving the token
     setIsAuthenticated(true);
     localStorage.setItem('isAuthenticated', 'true');
-    setSelectedRepo(selectedRepo); // Store the selected repository name in the state
-    localStorage.setItem('selectedRepo', selectedRepo);
-    setData({ repo: selectedRepo }); // Store the selected repository name in the data state
+    setSelectedRepo(selectedRepo);
+    setData({ repo: selectedRepo });
+    setIsLoading(true); // Set loading to true when starting fetch
 
     try {
-      console.log("sending fetch to fetch selected repo in handleLogin");
       const response = await fetch(`http://54.243.195.75:3000/api/fetchSelectedRepo?selectedRepo=${encodeURIComponent(selectedRepo)}`);
-      console.log("done!!! in handleLogin");
       if (!response.ok) {
         console.error('Failed to fetch selected repository data');
       } else {
-        console.log("finishFetchRepo = true in handleLogin");
         setFinishFetchRepo(true);
       }
     } catch (error) {
       console.error('Error fetching selected repository data:', error);
+    } finally {
+      setIsLoading(false); // Set loading to false after fetch is done
     }
   };
 
@@ -72,7 +69,6 @@ function App() {
   };
 
   const handleLogout = () => {
-    // Logic to handle logout, e.g., clearing the token
     setIsAuthenticated(false);
     setData(null);
     setSelectedRepo('');
@@ -84,30 +80,34 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Header isOpen={isOpen} togglePanel={togglePanel} onLogout={handleLogout}/> {/* Pass the hamburger menu state and toggle function */}
+        <Header isOpen={isOpen} togglePanel={togglePanel} onLogout={handleLogout} />
         <div className="App-body">
-          <Routes>
-            <Route
-              path="/login"
-              element={
-                isAuthenticated ? (
-                  <Navigate to="/" />
-                ) : (
-                  <LoginPage onLogin={handleLogin} setData={setData} />
-                )
-              }
-            />
-            <Route
-              path="/"
-              element={
-                isAuthenticated ? (
-                  <BigPanel data={data} setData={setData}/>
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
-            />
-          </Routes>
+          {isLoading ? ( // Check if loading state is true
+            <LoadingScreen /> // Show the loading screen
+          ) : (
+            <Routes>
+              <Route
+                path="/login"
+                element={
+                  isAuthenticated ? (
+                    <Navigate to="/" />
+                  ) : (
+                    <LoginPage onLogin={handleLogin} setData={setData} />
+                  )
+                }
+              />
+              <Route
+                path="/"
+                element={
+                  isAuthenticated ? (
+                    <BigPanel data={data} setData={setData} />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+            </Routes>
+          )}
         </div>
       </div>
     </Router>
