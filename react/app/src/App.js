@@ -51,7 +51,7 @@ function App() {
           }
           finally
           {
-            setIsLoading(false); // Set loading to false after fetch is done
+            setIsLoading(false); // Set loading to false after fetch
           }
    }
 
