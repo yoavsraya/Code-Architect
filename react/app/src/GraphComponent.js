@@ -200,7 +200,8 @@ const GraphComponent = React.memo(() => {
           <Html position={[0, 0, 0]}>
             <div className="loading-container">
               <div className="spinner"></div>
-              <div className="loading-message">Loading graph data...</div>
+              <div className="loading-graphic"></div>
+              <div className="loading-text">Loading graph data...</div>
             </div>
           </Html>
         )}
