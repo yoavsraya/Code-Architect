@@ -20,7 +20,6 @@ const SpinningGroup = React.memo(({ children, isSpinning }) => {
 });
 
 const GraphComponent = React.memo(() => {
-  console.log("Graph Component started");
   const [graphData, setGraphData] = useState({ Vertices: [], Edges: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -28,39 +27,37 @@ const GraphComponent = React.memo(() => {
   const [isSpinning, setIsSpinning] = useState(true);
 
   useEffect(() => {
-    console.log("useEffect running");
-
-    // Reset graph data before fetching new data
-    setGraphData({ Vertices: [], Edges: [] });
-    setLoading(true);
-    setError(null);
-
     const controller = new AbortController();
     const signal = controller.signal;
 
-    fetch('http://54.243.195.75:3000/api/getGraphData', { signal })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log("Data fetched", data);
-        setGraphData(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        if (err.name !== 'AbortError') {
-          console.log("Error fetching data", err);
-          setError(err);
-        }
-        setLoading(false);
-      });
+    const fetchGraphData = () => {
+      console.log("Fetching graph data...");
+      fetch('http://54.243.195.75:3000/api/getGraphData', { signal })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log("Data fetched", data);
+          setGraphData(data);
+          setLoading(false);
+        })
+        .catch(err => {
+          if (err.name !== 'AbortError') {
+            console.log("Error fetching data", err);
+            setError(err);
+          }
+          setLoading(false);
+        });
+    };
+
+    const timeoutId = setTimeout(fetchGraphData, 3000); // 3-second delay before fetching data
 
     return () => {
-      // Cleanup the fetch request if the component unmounts
-      controller.abort();
+      clearTimeout(timeoutId); // Clear timeout if component unmounts before timeout
+      controller.abort(); // Abort fetch request if component unmounts
     };
   }, []);
 
@@ -110,23 +107,6 @@ const GraphComponent = React.memo(() => {
     setSelectedVertex(null);
     setIsSpinning(true);
   };
-
-  if (loading) {
-    return (
-      <div className="loading-container">
-        <div className="spinner"></div>
-        <div className="loading-message">Loading graph data...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return <div>Error loading data: {error.message}</div>;
-  }
-
-  if (vertices.length === 0 || edges.length === 0) {
-    return <div>No graph data available.</div>;
-  }
 
   return (
     <div className="graph-container">
@@ -213,6 +193,16 @@ const GraphComponent = React.memo(() => {
               </div>
             </Html>
           </>
+        )}
+
+        {/* Render loading spinner if loading */}
+        {loading && (
+          <Html position={[0, 0, 0]}>
+            <div className="loading-container">
+              <div className="spinner"></div>
+              <div className="loading-message">Loading graph data...</div>
+            </div>
+          </Html>
         )}
       </Canvas>
     </div>

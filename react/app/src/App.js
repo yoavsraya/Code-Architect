@@ -49,10 +49,6 @@ function App() {
           {
             console.error('Error building the project:', error);
           }
-          finally
-          {
-            setIsLoading(false); // Set loading to false after fetch
-          }
    }
 
    useEffect(() => {
@@ -80,6 +76,7 @@ function App() {
        finally
        {
         setIsLoading(false);
+        console.log('loading is done by useEfect');
        }
 
     }
@@ -103,7 +100,10 @@ function App() {
     }
     finally
     {
-      setIsLoading(false); // Set loading to false after fetch is done
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 3000);
+      console.log('loading is done by login');
     }
   };
 
