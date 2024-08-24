@@ -2,19 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.WebSockets;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
 
-
 class Program
 {
-    static async Task Main(string[] args)
+    private static HttpListener httpListener = new HttpListener();
+    private static List<WebSocket> webSockets = new List<WebSocket>();
+
+    static void Main(string[] args)
     {
         string directoryPath = args.Length > 0 ? args[0] : "path/to/cloned_repos";
 
@@ -24,6 +26,10 @@ class Program
             return;
         }
 
+        // Step 1: Start the WebSocket server
+        StartWebSocketServer();
+
+        // Step 2: Process the project files and generate the JSON file
         string projectName = new DirectoryInfo(directoryPath).Name;
         string outputPath = $"/home/ec2-user/Code-Analyzer/C#/ProjectParse.txt";
         string jsonOutputPath = "/home/ec2-user/Code-Analyzer/NodeJs/GraphData.json";
@@ -47,38 +53,73 @@ class Program
             // Write JSON file
             WriteJsonFile(jsonOutputPath, classInfos);
             Console.WriteLine("JSON file created.");
-            await NotifyWebSocketAsync("ws://54.243.195.75:3000");
         }
+
+        // Step 3: Notify WebSocket clients that the JSON file creation is complete
+        NotifyClients(true);
+
+        // Step 4: Stop the WebSocket server after notification
+        StopWebSocketServer();
     }
 
-    static async Task NotifyWebSocketAsync(string uri)
+    static void StartWebSocketServer()
     {
-        using (ClientWebSocket ws = new ClientWebSocket())
+        httpListener.Prefixes.Add("http://localhost:5001/"); // WebSocket server running on port 5001
+        httpListener.Start();
+        Console.WriteLine("WebSocket server started on ws://localhost:5001/");
+
+        var context = httpListener.GetContext(); // Blocking call until a request comes in
+
+        if (context.Request.IsWebSocketRequest)
         {
-            try
+            var wsContext = context.AcceptWebSocketAsync(null).Result; // Accept WebSocket request
+            var webSocket = wsContext.WebSocket;
+            webSockets.Add(webSocket);
+
+            byte[] buffer = new byte[1024];
+            while (webSocket.State == WebSocketState.Open)
             {
-                Uri serverUri = new Uri(uri);
-                await ws.ConnectAsync(serverUri, CancellationToken.None);
-                Console.WriteLine("Connected to WebSocket server.");
-
-                // Prepare and send the message
-                var message = JsonConvert.SerializeObject(new { GraphJason = true });
-                var encodedMessage = Encoding.UTF8.GetBytes(message);
-                var buffer = new ArraySegment<byte>(encodedMessage);
-
-                await ws.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
-                Console.WriteLine("Message sent to WebSocket server.");
-
-                await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "Task completed", CancellationToken.None);
-                Console.WriteLine("WebSocket connection closed.");
+                var result = webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), System.Threading.CancellationToken.None).Result;
+                if (result.MessageType == WebSocketMessageType.Close)
+                {
+                    webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", System.Threading.CancellationToken.None).Wait();
+                    webSockets.Remove(webSocket);
+                }
             }
-            catch (Exception ex)
+        }
+        else
+        {
+            context.Response.StatusCode = 400;
+            context.Response.Close();
+        }
+    }
+
+    static void NotifyClients(bool isGraphJsonReady)
+    {
+        var messageObject = new
+        {
+            GraphJason = isGraphJsonReady
+        };
+
+        string message = JsonConvert.SerializeObject(messageObject);
+
+        byte[] messageBuffer = Encoding.UTF8.GetBytes(message);
+        foreach (var webSocket in webSockets)
+        {
+            if (webSocket.State == WebSocketState.Open)
             {
-                Console.WriteLine($"WebSocket error: {ex.Message}");
+                webSocket.SendAsync(new ArraySegment<byte>(messageBuffer), WebSocketMessageType.Text, true, System.Threading.CancellationToken.None).Wait();
             }
         }
     }
 
+    static void StopWebSocketServer()
+    {
+        httpListener.Stop();
+        Console.WriteLine("WebSocket server stopped.");
+    }
+
+    
     static void AnalyzeFile(string filePath, List<ClassInfo> classInfos)
     {
         string code = File.ReadAllText(filePath);
@@ -441,6 +482,7 @@ class Program
 
     var json = JsonConvert.SerializeObject(classInfosForJson, Formatting.Indented);
     File.WriteAllText(jsonOutputPath, json);
+    NotifyClients(true);
 }
 
 static string GetVisibilitySign(string accessibility)

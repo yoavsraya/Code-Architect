@@ -13,35 +13,52 @@ function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState(null);
   const [selectedRepo, setSelectedRepo] = useState('');
+  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const socket = new WebSocket('ws://54.243.195.75:3000');
+    const connectWebSocket = () => {
+      const ws = new WebSocket('ws://localhost:5001'); // Updated to match the C# server port
 
-    socket.onopen = () => {
-      console.log('WebSocket connection established');
+      ws.onopen = () => {
+        console.log('WebSocket connection established');
+      };
+
+      ws.onmessage = (event) => {
+        console.log('WebSocket message received:', event.data);
+        try {
+          const message = JSON.parse(event.data);
+          if (message.GraphJason) {
+            setIsLoading(false); // Stop loading screen when the message is received
+          }
+        } catch (error) {
+          console.error('Error parsing WebSocket message:', error);
+        }
+      };
+
+      ws.onclose = () => {
+        console.log('WebSocket connection closed. Attempting to reconnect...');
+        // Attempt to reconnect after a delay
+        setTimeout(connectWebSocket, 5000);
+      };
+
+      ws.onerror = (error) => {
+        console.error('WebSocket error:', error);
+        // Attempt to reconnect after a delay
+        setTimeout(connectWebSocket, 2500);
+      };
+
+      setSocket(ws);
     };
 
-    socket.onmessage = (event) => {
-      console.log('WebSocket message received:', event.data);
-      const message = JSON.parse(event.data);
-      if (message.GraphJason) {
-        setIsLoading(false);
-      }
-    };
-
-    socket.onclose = () => {
-      console.log('WebSocket connection closed');
-    };
-
-    socket.onerror = (error) => {
-      console.error('WebSocket error:', error);
-    };
+    connectWebSocket();
 
     // Cleanup WebSocket connection on component unmount
     return () => {
-      socket.close();
+      if (socket) {
+        socket.close();
+      }
     };
-  }, []); // Empty dependency array ensures this runs only once when the component mounts
+  }, []);
 
   async function fetchAndBuildProject(i_selectedRepo) {
     try {
