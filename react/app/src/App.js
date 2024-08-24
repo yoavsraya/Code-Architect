@@ -24,7 +24,7 @@ function App() {
       };
 
       ws.onmessage = (event) => {
-        console.log('WebSocket message received:', event.data);
+        console.log('WebSocket message received in app.js:', event.data);
         try {
           const message = JSON.parse(event.data);
           if (message.GraphJason) {
@@ -44,7 +44,7 @@ function App() {
       ws.onerror = (error) => {
         console.error('WebSocket error:', error);
         // Attempt to reconnect after a delay
-        setTimeout(connectWebSocket, 2500);
+        setTimeout(connectWebSocket, 10000);
       };
 
       setSocket(ws);

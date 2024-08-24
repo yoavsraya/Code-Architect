@@ -55,11 +55,13 @@ class Program
             Console.WriteLine("JSON file created.");
         }
 
+        Environment.Exit(0);
         // Step 3: Notify WebSocket clients that the JSON file creation is complete
         NotifyClients(true);
 
         // Step 4: Stop the WebSocket server after notification
         StopWebSocketServer();
+
     }
 
     static void StartWebSocketServer()
