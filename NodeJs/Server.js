@@ -104,12 +104,6 @@ app.get('/api/buildProject', async (req, res) => {
                    return;
                }
                console.log(`Run output: ${runStdout}`);
-               
-               wss.clients.forEach(client => {
-                 if (client.readyState === WebSocket.OPEN) {
-                   client.send(JSON.stringify({ GraphJason: true }));
-                  }
-                });
               });
 
        });
@@ -183,6 +177,15 @@ app.get('/api/getGraphData', async (req, res) => {
     
   }
   res.status(200).send(data);
+});
+
+app.get('/api/jasonParsing', async (req, res) => {
+  console.log("jason parsing is done notify react");
+  wss.clients.forEach(client => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify({ GraphJason: true }));
+     }
+   });
 });
 
 server.listen(port, () => console.log(`Server listening on port ${port}!`));

@@ -15,54 +15,38 @@ function App() {
   const [selectedRepo, setSelectedRepo] = useState('');
   const [socket, setSocket] = useState(null);
 
-  useEffect(() => {
-    const connectWebSocket = () => {
-      const ws = new WebSocket('ws://localhost:5001'); // Updated to match the C# server port
-
-      ws.onopen = () => {
-        console.log('WebSocket connection established');
-      };
-
-      ws.onmessage = (event) => {
-        console.log('WebSocket message received in app.js:', event.data);
-        try {
-          const message = JSON.parse(event.data);
-          if (message.GraphJason) {
-            setIsLoading(false); // Stop loading screen when the message is received
-          }
-        } catch (error) {
-          console.error('Error parsing WebSocket message:', error);
-        }
-      };
-
-      ws.onclose = () => {
-        console.log('WebSocket connection closed. Attempting to reconnect...');
-        // Attempt to reconnect after a delay
-        setTimeout(connectWebSocket, 5000);
-      };
-
-      ws.onerror = (error) => {
-        console.error('WebSocket error:', error);
-        // Attempt to reconnect after a delay
-        setTimeout(connectWebSocket, 10000);
-      };
-
-      setSocket(ws);
+  const initializeWebSocket = () => {
+    const ws = new WebSocket('ws://54.243.195.75:3000');
+    ws.onopen = () => {
+      console.log('WebSocket connection established');
     };
 
-    connectWebSocket();
-
-    // Cleanup WebSocket connection on component unmount
-    return () => {
-      if (socket) {
-        socket.close();
+    ws.onmessage = (event) => {
+      console.log('WebSocket message received:', event.data);
+      const message = JSON.parse(event.data);
+      if (message.GraphJason) {
+        console.log("Login finished, fetching repo list");
+        setIsLoading(false); // Stop loading when message received
+        ws.close();
       }
     };
-  }, []);
+
+    ws.onclose = () => {
+      console.log('WebSocket connection closed.');
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    setSocket(ws); // Save the WebSocket instance in the state
+  };
 
   async function fetchAndBuildProject(i_selectedRepo) {
     try {
+      initializeWebSocket();
       const response = await fetch(`http://54.243.195.75:3000/api/fetchSelectedRepo?selectedRepo=${encodeURIComponent(i_selectedRepo)}`);
+      const socket = new WebSocket('ws://54.243.195.75:3000');
       if (!response.ok) {
         console.error('Failed to fetch selected repository data');
       } else {

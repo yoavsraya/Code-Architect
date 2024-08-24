@@ -10,14 +10,14 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 class Program
 {
-    private static HttpListener httpListener = new HttpListener();
-    private static List<WebSocket> webSockets = new List<WebSocket>();
-
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
+        Console.WriteLine("Starting C# code analysis...");
         string directoryPath = args.Length > 0 ? args[0] : "path/to/cloned_repos";
 
         if (!Directory.Exists(directoryPath))
@@ -26,10 +26,6 @@ class Program
             return;
         }
 
-        // Step 1: Start the WebSocket server
-        StartWebSocketServer();
-
-        // Step 2: Process the project files and generate the JSON file
         string projectName = new DirectoryInfo(directoryPath).Name;
         string outputPath = $"/home/ec2-user/Code-Analyzer/C#/ProjectParse.txt";
         string jsonOutputPath = "/home/ec2-user/Code-Analyzer/NodeJs/GraphData.json";
@@ -55,73 +51,16 @@ class Program
             Console.WriteLine("JSON file created.");
         }
 
-        Environment.Exit(0);
-        // Step 3: Notify WebSocket clients that the JSON file creation is complete
-        NotifyClients(true);
-
-        // Step 4: Stop the WebSocket server after notification
-        StopWebSocketServer();
-
-    }
-
-    static void StartWebSocketServer()
-    {
-        httpListener.Prefixes.Add("http://localhost:5001/"); // WebSocket server running on port 5001
-        httpListener.Start();
-        Console.WriteLine("WebSocket server started on ws://localhost:5001/");
-
-        var context = httpListener.GetContext(); // Blocking call until a request comes in
-
-        if (context.Request.IsWebSocketRequest)
+        using (HttpClient client = new HttpClient())
         {
-            var wsContext = context.AcceptWebSocketAsync(null).Result; // Accept WebSocket request
-            var webSocket = wsContext.WebSocket;
-            webSockets.Add(webSocket);
-
-            byte[] buffer = new byte[1024];
-            while (webSocket.State == WebSocketState.Open)
-            {
-                var result = webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), System.Threading.CancellationToken.None).Result;
-                if (result.MessageType == WebSocketMessageType.Close)
-                {
-                    webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", System.Threading.CancellationToken.None).Wait();
-                    webSockets.Remove(webSocket);
-                }
-            }
+            HttpResponseMessage response = await client.GetAsync("http://54.243.195.75:3000/api/jasonParsing");
+            response.EnsureSuccessStatusCode();
+            string responseBody = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(responseBody);
         }
-        else
-        {
-            context.Response.StatusCode = 400;
-            context.Response.Close();
-        }
-    }
-
-    static void NotifyClients(bool isGraphJsonReady)
-    {
-        var messageObject = new
-        {
-            GraphJason = isGraphJsonReady
-        };
-
-        string message = JsonConvert.SerializeObject(messageObject);
-
-        byte[] messageBuffer = Encoding.UTF8.GetBytes(message);
-        foreach (var webSocket in webSockets)
-        {
-            if (webSocket.State == WebSocketState.Open)
-            {
-                webSocket.SendAsync(new ArraySegment<byte>(messageBuffer), WebSocketMessageType.Text, true, System.Threading.CancellationToken.None).Wait();
-            }
-        }
-    }
-
-    static void StopWebSocketServer()
-    {
-        httpListener.Stop();
-        Console.WriteLine("WebSocket server stopped.");
-    }
-
     
+    }
+
     static void AnalyzeFile(string filePath, List<ClassInfo> classInfos)
     {
         string code = File.ReadAllText(filePath);
@@ -484,7 +423,6 @@ class Program
 
     var json = JsonConvert.SerializeObject(classInfosForJson, Formatting.Indented);
     File.WriteAllText(jsonOutputPath, json);
-    NotifyClients(true);
 }
 
 static string GetVisibilitySign(string accessibility)
