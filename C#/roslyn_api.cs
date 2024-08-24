@@ -46,7 +46,7 @@ class Program
 
             // Write JSON file
             WriteJsonFile(jsonOutputPath, classInfos);
-
+            Console.WriteLine("JSON file created.");
             await NotifyWebSocketAsync("ws://54.243.195.75:3000");
         }
     }
