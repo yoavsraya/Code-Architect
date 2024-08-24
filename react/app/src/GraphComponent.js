@@ -21,7 +21,6 @@ const SpinningGroup = React.memo(({ children, isSpinning }) => {
 
 const GraphComponent = React.memo(() => {
   const [graphData, setGraphData] = useState({ Vertices: [], Edges: [] });
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedVertex, setSelectedVertex] = useState(null);
   const [isSpinning, setIsSpinning] = useState(true);
@@ -52,7 +51,7 @@ const GraphComponent = React.memo(() => {
         });
     };
 
-
+    fetchGraphData();
     return () => {
       controller.abort(); // Abort fetch request if component unmounts
     };

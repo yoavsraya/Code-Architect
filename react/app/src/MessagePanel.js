@@ -2,9 +2,18 @@ import React, { useState, useEffect } from 'react';
 import './MessagePanel.css';
 
 const MessagePanel = () => {
+
+  const initialMessages = [
+    { type: 'from-system', text: "Hello! I'm your architect AI Assistance!" },
+    { type: 'from-system', text: "I went over your code and I have some suggestions for you." },
+  ];
+
   const [expandedContent, setExpandedContent] = useState('');
-  const [initialData, setInitialData] = useState(null);
+  const [initialData, setInitialData] = useState([]);
   const [removedButtons, setRemovedButtons] = useState([]);
+  const [selectedMessage, setSelectedMessage] = useState('');
+  const [isExpandedView, setIsExpandedView] = useState(false); // Track if we are in the expanded view
+  const [isClickable, setIsClickable] = useState(true); // Track whether messages are clickable
 
   useEffect(() => {
     const fetchAIResponse = async () => {
@@ -16,7 +25,9 @@ const MessagePanel = () => {
         }
         const aiData = await response.json();
         console.log('Initial AI response received:', aiData);
-        setInitialData(aiData.content); // Ensure this matches the server response structure
+
+        // Only set the fetched AI data without adding initialMessages
+        setInitialData(aiData.content);
       } catch (error) {
         console.error('Error fetching initial AI response:', error);
       }
@@ -25,7 +36,25 @@ const MessagePanel = () => {
     fetchAIResponse();
   }, []);
 
-  const handleExpand = async (topic) => {
+  const handleExpand = async (topic, index, sectionTitle) => {
+    if (!isClickable) return; // Prevent clicks if not clickable
+
+    // Remove all '**' occurrences in the topic
+    const cleanedTopic = topic.replace(/\*\*(.*?)\*\*/g, '$1');
+
+    // Create the additional message
+    const additionalMessage = "Give me more information about this subject";
+
+    // Set the selected message with the title and texts
+    setSelectedMessage({
+      sectionTitle, // Pass the section title
+      texts: [additionalMessage, cleanedTopic], // Store both messages
+    });
+
+    setRemovedButtons([...removedButtons, index]); // Remove the selected button
+    setIsExpandedView(true); // Set to expanded view
+    setIsClickable(false); // Disable clicks on other messages
+
     const filesSet = new Set();
     const regex = /'([^']*)'/g;
     let match;
@@ -59,6 +88,13 @@ const MessagePanel = () => {
       } else {
         setExpandedContent(expandedData.content); // Update with new expanded content
       }
+
+      // Scroll to the top after content is fully rendered
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+
     } catch (error) {
       console.error('Error expanding topic:', error);
     }
@@ -66,6 +102,13 @@ const MessagePanel = () => {
 
   const handleRemoveButton = (index) => {
     setRemovedButtons([...removedButtons, index]);
+  };
+
+  const handleBack = () => {
+    setIsExpandedView(false); // Return to the initial view
+    setSelectedMessage(''); // Clear the selected message
+    setExpandedContent(''); // Clear expanded content
+    setIsClickable(true); // Re-enable clicks on messages
   };
 
   const parseContent = (content) => {
@@ -94,7 +137,7 @@ const MessagePanel = () => {
   const renderButtons = (sections) => {
     return sections.map((section, sectionIndex) => (
       <div key={sectionIndex}>
-        <h3>{section.title}</h3>
+        {!isExpandedView && <h3>{section.title}</h3>} {/* Only render the title if not in expanded view */}
         {section.bullets.map((bullet, bulletIndex) => {
           const index = `${sectionIndex}-${bulletIndex}`;
           if (removedButtons.includes(index)) {
@@ -102,20 +145,23 @@ const MessagePanel = () => {
           }
           const bulletParts = bullet.replace(/^- \*\*/, '').split('**:');
           return (
-            <div key={index} className="button-container">
-              <button
-                onClick={() => handleExpand(bullet)}
-                className="topic-button"
-              >
-                <strong>{bulletParts[0]}</strong>{bulletParts[1]}
-              </button>
-              <button
-                onClick={() => handleRemoveButton(index)}
+            <button
+              onClick={() => handleExpand(bullet, index, section.title)}
+              className="from-them"
+              key={index}
+              disabled={!isClickable} // Disable button if not clickable
+            >
+              {bulletParts[0]}{bulletParts[1]}
+              <span 
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent the expand action from triggering
+                  handleRemoveButton(index);
+                }}
                 className="remove-button"
               >
-                 &#10006;
-              </button>
-            </div>
+                &#10006;
+              </span>
+            </button>
           );
         })}
       </div>
@@ -123,11 +169,34 @@ const MessagePanel = () => {
   };
 
   return (
-    <div className="panel">
-      {expandedContent ? (
+    <div className="imessage">
+      {isExpandedView && (
+        <>
+          <button className="back-button" onClick={handleBack}>Back</button>
+          {selectedMessage && (
+            <>
+              <h3>{selectedMessage.sectionTitle}</h3> {/* Title appears before the messages */}
+              <button className="from-me">
+                {selectedMessage.texts[0]}
+              </button>
+              <button className="from-me">
+                {selectedMessage.texts[1]}
+              </button>
+            </>
+          )}
+        </>
+      )}
+      {expandedContent && isExpandedView ? (
         renderButtons(parseContent(expandedContent))
       ) : (
-        initialData && renderButtons(parseContent(initialData))
+        <>
+          {initialMessages.map((msg, index) => (
+            <button key={index} className={msg.type}>
+              {msg.text}
+            </button>
+          ))}
+          {initialData && renderButtons(parseContent(initialData))}
+        </>
       )}
     </div>
   );

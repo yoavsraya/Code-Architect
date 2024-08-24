@@ -1,0 +1,49 @@
+Project: UserFiles
+
+Folder: FacebookWinFormsApp
+File: MainForm.Designer.cs
+Class: MainForm.Designer
+  Accessibility: internal
+  Belongs to: EXE
+  Composition:
+    IContainer
+    Button
+    PictureBox
+    Label
+    TextBox
+    ComboBox
+
+Folder: FacebookWinFormsApp
+File: MainForm.cs
+Class: MainForm
+  Accessibility: public
+  Belongs to: EXE
+  Inherits from: Form
+  Composition:
+    User
+    LoginResult
+
+Folder: FacebookWinFormsApp
+File: Program.cs
+Class: Program
+  Accessibility: internal
+  Belongs to: EXE
+
+Folder: Properties
+File: Resources.Designer.cs
+Class: Resources.Designer
+  Accessibility: internal
+  Belongs to: EXE
+  Composition:
+    ResourceManager
+    CultureInfo
+
+Folder: Properties
+File: Settings.Designer.cs
+Class: Settings.Designer
+  Accessibility: internal
+  Belongs to: EXE
+  Inherits from: ApplicationSettingsBase
+  Composition:
+    Settings
+
