@@ -52,10 +52,8 @@ const GraphComponent = React.memo(() => {
         });
     };
 
-    const timeoutId = setTimeout(fetchGraphData, 3); // 3-second delay before fetching data
 
     return () => {
-      clearTimeout(timeoutId); // Clear timeout if component unmounts before timeout
       controller.abort(); // Abort fetch request if component unmounts
     };
   }, []);
@@ -192,17 +190,6 @@ const GraphComponent = React.memo(() => {
               </div>
             </Html>
           </>
-        )}
-
-        {/* Render loading spinner if loading */}
-        {loading && (
-          <Html position={[0, 0, 0]}>
-            <div className="loading-container">
-              <div className="spinner"></div>
-              <div className="loading-graphic-of-graph"></div>
-              <div className="loading-text-of-graph">Loading Graph</div>
-            </div>
-          </Html>
         )}
       </Canvas>
     </div>

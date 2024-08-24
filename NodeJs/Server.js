@@ -182,10 +182,13 @@ app.get('/api/getGraphData', async (req, res) => {
 app.get('/api/jasonParsing', async (req, res) => {
   console.log("jason parsing is done notify react");
   wss.clients.forEach(client => {
-    if (client.readyState === WebSocket.OPEN) {
+    if (client.readyState === WebSocket.OPEN)
+    {
+      console.log("notife react");
       client.send(JSON.stringify({ GraphJason: true }));
-     }
+    }
    });
+   res.status(200).send();
 });
 
 server.listen(port, () => console.log(`Server listening on port ${port}!`));
