@@ -2,14 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.WebSockets;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
 
+
 class Program
 {
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
         string directoryPath = args.Length > 0 ? args[0] : "path/to/cloned_repos";
 
@@ -41,6 +46,36 @@ class Program
 
             // Write JSON file
             WriteJsonFile(jsonOutputPath, classInfos);
+
+            await NotifyWebSocketAsync("ws://54.243.195.75:3000");
+        }
+    }
+
+    static async Task NotifyWebSocketAsync(string uri)
+    {
+        using (ClientWebSocket ws = new ClientWebSocket())
+        {
+            try
+            {
+                Uri serverUri = new Uri(uri);
+                await ws.ConnectAsync(serverUri, CancellationToken.None);
+                Console.WriteLine("Connected to WebSocket server.");
+
+                // Prepare and send the message
+                var message = JsonConvert.SerializeObject(new { GraphJason = true });
+                var encodedMessage = Encoding.UTF8.GetBytes(message);
+                var buffer = new ArraySegment<byte>(encodedMessage);
+
+                await ws.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
+                Console.WriteLine("Message sent to WebSocket server.");
+
+                await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "Task completed", CancellationToken.None);
+                Console.WriteLine("WebSocket connection closed.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"WebSocket error: {ex.Message}");
+            }
         }
     }
 

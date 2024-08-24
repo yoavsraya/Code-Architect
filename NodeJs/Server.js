@@ -104,7 +104,14 @@ app.get('/api/buildProject', async (req, res) => {
                    return;
                }
                console.log(`Run output: ${runStdout}`);
-           });
+               
+               wss.clients.forEach(client => {
+                 if (client.readyState === WebSocket.OPEN) {
+                   client.send(JSON.stringify({ GraphJason: true }));
+                  }
+                });
+              });
+
        });
 
 });
@@ -162,7 +169,19 @@ app.post('/api/expand', async (req, res) => {
 
 app.get('/api/getGraphData', async (req, res) => {
   console.log("app.get('/api/getGraphData', async (req, res) => {'");
-  data = await GraphData.createGraphFromData();
+  try
+  {
+    data = await GraphData.createGraphFromData();
+  }
+  catch (error)
+  {
+    console.error('Error getting graph data:', error);
+    res.status(500).send('Error getting graph data');
+  }
+  finally
+  {
+    
+  }
   res.status(200).send(data);
 });
 

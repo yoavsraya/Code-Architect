@@ -73,16 +73,18 @@
   color: #ff6666; /* Change color on hover */
 }
 
-.loading-graphic {
+.loading-graphic-of-graph {
   width: 100px;
   height: 100px;
   margin-bottom: 20px;
-  background-image: url('./GraphGIF2.gif');
+  background-image: url('./GraphGIF2.gif') ;
   background-size: cover;
   background-repeat: no-repeat;
 }
 
-.loading-text {
-  font-size: 0.7rem;
-  color: #cbedcd;
+.loading-text-of-graph {
+  font-size: 1.3rem;
+  color: #B0EBCD;
+  text-align: center;
+  white-space: nowrap;
 }

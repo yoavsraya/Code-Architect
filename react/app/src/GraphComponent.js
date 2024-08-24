@@ -26,6 +26,7 @@ const GraphComponent = React.memo(() => {
   const [selectedVertex, setSelectedVertex] = useState(null);
   const [isSpinning, setIsSpinning] = useState(true);
 
+
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
@@ -42,18 +43,16 @@ const GraphComponent = React.memo(() => {
         .then(data => {
           console.log("Data fetched", data);
           setGraphData(data);
-          setLoading(false);
         })
         .catch(err => {
           if (err.name !== 'AbortError') {
             console.log("Error fetching data", err);
             setError(err);
           }
-          setLoading(false);
         });
     };
 
-    const timeoutId = setTimeout(fetchGraphData, 3000); // 3-second delay before fetching data
+    const timeoutId = setTimeout(fetchGraphData, 3); // 3-second delay before fetching data
 
     return () => {
       clearTimeout(timeoutId); // Clear timeout if component unmounts before timeout
@@ -200,8 +199,8 @@ const GraphComponent = React.memo(() => {
           <Html position={[0, 0, 0]}>
             <div className="loading-container">
               <div className="spinner"></div>
-              <div className="loading-graphic"></div>
-              <div className="loading-text">Loading graph</div>
+              <div className="loading-graphic-of-graph"></div>
+              <div className="loading-text-of-graph">Loading Graph</div>
             </div>
           </Html>
         )}

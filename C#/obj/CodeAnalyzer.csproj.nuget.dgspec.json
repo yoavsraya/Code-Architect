@@ -45,6 +45,10 @@
             "Microsoft.CodeAnalysis.Workspaces.MSBuild": {
               "target": "Package",
               "version": "[4.9.2, )"
+            },
+            "System.Net.WebSockets.Client": {
+              "target": "Package",
+              "version": "[4.3.2, )"
             }
           },
           "imports": [
