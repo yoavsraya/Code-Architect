@@ -1,49 +1,63 @@
 Project: UserFiles
 
-Folder: FacebookWinFormsApp
-File: MainForm.Designer.cs
-Class: MainForm.Designer
+Folder: GUI
+File: GameMainForm.cs
+Class: GameMainForm
   Accessibility: internal
   Belongs to: EXE
+  Inherits from: Form
   Composition:
-    IContainer
-    Button
-    PictureBox
+    Game
+    GameSettingsForm
+    
+    Player
     Label
-    TextBox
-    ComboBox
+    FlowLayoutPanel
+    DialogResult
 
-Folder: FacebookWinFormsApp
-File: MainForm.cs
-Class: MainForm
+Folder: GUI
+File: GameSettingsForm.cs
+Class: GameSettingsForm
   Accessibility: public
   Belongs to: EXE
   Inherits from: Form
   Composition:
-    User
-    LoginResult
+    Label
+    TextBox
+    CheckBox
+    NumericUpDown
+    Button
 
-Folder: FacebookWinFormsApp
+Folder: GUI
 File: Program.cs
 Class: Program
-  Accessibility: internal
+  Accessibility: public
   Belongs to: EXE
 
-Folder: Properties
-File: Resources.Designer.cs
-Class: Resources.Designer
-  Accessibility: internal
-  Belongs to: EXE
+Folder: XO logics
+File: Board.cs
+Class: Board
+  Accessibility: public
+  Belongs to: DLL
   Composition:
-    ResourceManager
-    CultureInfo
+    
 
-Folder: Properties
-File: Settings.Designer.cs
-Class: Settings.Designer
-  Accessibility: internal
-  Belongs to: EXE
-  Inherits from: ApplicationSettingsBase
+Folder: XO logics
+File: Game.cs
+Class: Game
+  Accessibility: public
+  Belongs to: DLL
   Composition:
-    Settings
+    Board
+    Player
+  Aggregations:
+    eGameStatus
+
+Folder: XO logics
+File: Player.cs
+Class: Player
+  Accessibility: public
+  Belongs to: DLL
+  Aggregations:
+    eBoardShape
 

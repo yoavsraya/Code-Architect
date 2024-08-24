@@ -41,7 +41,7 @@ async function ExpandTopic(topic, fileContents) {
 
   const userMessage = {
     role: "user",
-    content: `Please expand as you did with headlines and bullets on the following topic: ${topic}\nHere are the related file's contents:\n${fileContents}`
+    content: `Please expand with exactly the same instructions on the following topic: ${topic}\nHere are the related file's contents:\n${fileContents}`
   };
 
   conversationHistory.push(userMessage);
