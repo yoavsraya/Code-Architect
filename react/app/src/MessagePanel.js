@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './MessagePanel.css';
 
 const MessagePanel = () => {
-
   const initialMessages = [
     { type: 'from-system', text: "Hello! I'm your architect AI Assistance!" },
     { type: 'from-system', text: "I went over your code and I have some suggestions for you." },
@@ -26,7 +25,6 @@ const MessagePanel = () => {
         const aiData = await response.json();
         console.log('Initial AI response received:', aiData);
 
-        // Only set the fetched AI data without adding initialMessages
         setInitialData(aiData.content);
       } catch (error) {
         console.error('Error fetching initial AI response:', error);
@@ -39,19 +37,13 @@ const MessagePanel = () => {
   const handleExpand = async (topic, index, sectionTitle) => {
     if (!isClickable) return; // Prevent clicks if not clickable
 
-    // Remove all '**' occurrences in the topic
     const cleanedTopic = topic.replace(/\*\*(.*?)\*\*/g, '$1');
-
-    // Create the additional message
-    const additionalMessage = "Give me more information about this subject";
-
-    // Set the selected message with the title and texts
     setSelectedMessage({
-      sectionTitle, // Pass the section title
-      texts: [additionalMessage, cleanedTopic], // Store both messages
+      sectionTitle,
+      texts: [cleanedTopic],
     });
 
-    setRemovedButtons([...removedButtons, index]); // Remove the selected button
+    setRemovedButtons([...removedButtons, index]);
     setIsExpandedView(true); // Set to expanded view
     setIsClickable(false); // Disable clicks on other messages
 
@@ -89,10 +81,9 @@ const MessagePanel = () => {
         setExpandedContent(expandedData.content); // Update with new expanded content
       }
 
-      // Scroll to the top after content is fully rendered
       window.scrollTo({
         top: 0,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
 
     } catch (error) {
@@ -100,15 +91,21 @@ const MessagePanel = () => {
     }
   };
 
-  const handleRemoveButton = (index) => {
-    setRemovedButtons([...removedButtons, index]);
-  };
-
   const handleBack = () => {
     setIsExpandedView(false); // Return to the initial view
     setSelectedMessage(''); // Clear the selected message
     setExpandedContent(''); // Clear expanded content
     setIsClickable(true); // Re-enable clicks on messages
+  };
+
+  const renderExpandedContent = (content) => {
+    return (
+      <button className="expanded-content-button">
+        {content.split('\n').map((paragraph, index) => (
+          <p className="expanded-paragraph" key={index}>{paragraph}</p>
+        ))}
+      </button>
+    );
   };
 
   const parseContent = (content) => {
@@ -137,7 +134,7 @@ const MessagePanel = () => {
   const renderButtons = (sections) => {
     return sections.map((section, sectionIndex) => (
       <div key={sectionIndex}>
-        {!isExpandedView && <h3>{section.title}</h3>} {/* Only render the title if not in expanded view */}
+        {!isExpandedView && <h3>{section.title}</h3>}
         {section.bullets.map((bullet, bulletIndex) => {
           const index = `${sectionIndex}-${bulletIndex}`;
           if (removedButtons.includes(index)) {
@@ -149,18 +146,9 @@ const MessagePanel = () => {
               onClick={() => handleExpand(bullet, index, section.title)}
               className="from-them"
               key={index}
-              disabled={!isClickable} // Disable button if not clickable
+              disabled={!isClickable}
             >
               {bulletParts[0]}{bulletParts[1]}
-              <span 
-                onClick={(e) => {
-                  e.stopPropagation(); // Prevent the expand action from triggering
-                  handleRemoveButton(index);
-                }}
-                className="remove-button"
-              >
-                &#10006;
-              </span>
             </button>
           );
         })}
@@ -170,24 +158,12 @@ const MessagePanel = () => {
 
   return (
     <div className="imessage">
-      {isExpandedView && (
+      {isExpandedView ? (
         <>
           <button className="back-button" onClick={handleBack}>Back</button>
-          {selectedMessage && (
-            <>
-              <h3>{selectedMessage.sectionTitle}</h3> {/* Title appears before the messages */}
-              <button className="from-me">
-                {selectedMessage.texts[0]}
-              </button>
-              <button className="from-me">
-                {selectedMessage.texts[1]}
-              </button>
-            </>
-          )}
+          <h3>{selectedMessage.sectionTitle}</h3>
+          {renderExpandedContent(expandedContent)}
         </>
-      )}
-      {expandedContent && isExpandedView ? (
-        renderButtons(parseContent(expandedContent))
       ) : (
         <>
           {initialMessages.map((msg, index) => (

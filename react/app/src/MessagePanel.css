@@ -1,3 +1,33 @@
+/* General button styling for topic and expanded content */
+.topic-button,
+.expanded-content-button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 5px;
+  background-color: #4CAF50; /* Green background */
+  border: none;
+  color: white;
+  cursor: pointer; /* Hand cursor */
+  border-radius: 5px;
+  text-align: left;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Hover effect for topic and expanded content buttons */
+.topic-button:hover,
+.expanded-content-button:hover {
+  background-color: #45a049; /* Slightly darker green on hover */
+  cursor: pointer; /* Hand cursor on hover */
+}
+
+/* Paragraph styling within the expanded content */
+.expanded-paragraph {
+  margin-bottom: 10px;
+}
+
+/* Back button styling */
 .back-button {
   display: inline-block;
   background-color: transparent;
@@ -20,44 +50,14 @@
   font-weight: bold;
 }
 
+/* Section header styling */
 h3 {
   color: #4CAF50;
   margin-bottom: 10px;
   font-size: 1.2rem;
 }
 
-.topic-button {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 5px;
-  background-color: #4CAF50;
-  border: none;
-  color: white;
-  cursor: pointer;
-  border-radius: 5px;
-  text-align: left;
-}
-
-.remove-button {
-  color: rgb(0, 0, 0); /* Black color for the "x" */
-  background: transparent;
-  border: none;
-  position: absolute;
-  top: 5px;
-  right: 10px;
-  font-size: 10px;
-  cursor: pointer;
-}
-
-.topic-button:hover {
-  background-color: #45a049;
-}
-
-.topic-button strong {
-  font-weight: bold;
-}
-
+/* General messaging styles */
 .imessage {
   display: flex;
   flex-direction: column;
@@ -66,7 +66,6 @@ h3 {
   margin: 0 auto 1rem;
   width: 100%;
   padding: 0.5rem 1.5rem;
-  flex-direction: column;
 }
 
 .imessage button {
@@ -78,9 +77,9 @@ h3 {
   word-wrap: break-word;
   border: none;
   text-align: left;
-  
 }
 
+/* Styles for messages from me */
 button.from-me {
   align-self: flex-end;
   background-color: #6ac596;
@@ -113,6 +112,7 @@ button.from-me::after {
   width: 10px;
 }
 
+/* Styles for messages from others */
 button.from-them {
   background-color: #e5e5ea;
   color: #000;
@@ -149,6 +149,7 @@ button.from-them::after {
   width: 10px;
 }
 
+/* Styles for system messages */
 button.from-system {
   align-self: flex-start;
   background-color: #419efb;
@@ -210,7 +211,7 @@ p[class^="from-"].emoji::before {
   margin-top: 1rem !important;
 }
 
-/* general styling */
+/* General styling */
 @font-face {
   font-family: "SanFrancisco";
   src:
@@ -260,6 +261,7 @@ h2 {
   padding: 0;
 }
 
+/* Mobile adjustments */
 @media screen and (max-width: 800px) {
   body {
     margin: 0 0.5rem;
