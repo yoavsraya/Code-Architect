@@ -1,0 +1,90 @@
+/* FlowChartComponent.css */
+
+/* Base styles for nodes */
+.custom-node {
+    display: inline-block; /* Allow the node to size based on its content */
+    border: 2px solid #333;
+    padding: 10px 15px; /* Add padding to make text fit well */
+    cursor: pointer;
+    text-align: center;
+    color: #fff;
+    border-radius: 5px;
+    word-wrap: break-word; /* Allow long words to wrap inside the node */
+    white-space: nowrap; /* Prevent text from overflowing */
+    max-width: 200px; /* Optional: Set a maximum width */
+  }
+  
+  /* Node colors based on FolderIndex */
+  .color-0 {
+    background-color: #a673e5; /* Red color */
+  }
+  
+  .color-1 {
+    background-color: #81c784; /* Green color */
+  }
+  
+  .color-2 {
+    background-color: #64b5f6; /* Blue color */
+  }
+  
+  .color-3 {
+    background-color: #ffd54f; /* Yellow color */
+  }
+  
+  /* Method list styles */
+  .method-list {
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0;
+  }
+  
+  .method-item {
+    font-size: 10px;
+  }
+  
+  /* Edge label styles */
+  .react-flow__edge-text {
+    fill: #333; /* Text color */
+    font-size: 12px; /* Font size */
+    font-family: Arial, sans-serif; /* Font family */
+    background-color: rgba(255, 255, 255, 0.8); /* Add background for readability */
+    padding: 2px 5px; /* Padding around text */
+    border-radius: 4px; /* Rounded corners */
+    white-space: nowrap; /* Prevent text wrapping */
+    box-sizing: border-box; /* Include padding in the total width */
+    user-select: none; /* Prevent text selection */
+    pointer-events: none; /* Prevent interaction with the label */
+    max-width: none; /* Allow the label to expand with text */
+    overflow: visible; /* Let the text be fully visible */
+    text-overflow: clip; /* Remove ellipsis, show full text */
+  }
+
+  /* Style for the dropdown container */
+/* Custom styles for the Bootstrap Dropdown */
+.custom-dropdown-toggle {
+  background-color: #4CAF50; /* Change button color */
+  color: white; /* Change text color */
+  font-size: 14px; /* Adjust font size */
+  border: none;
+  padding: 8px 16px;
+}
+
+.custom-dropdown-toggle:hover {
+  background-color: #45a049; /* Hover effect */
+}
+
+.custom-dropdown-menu {
+  background-color: #454545; /* Background color for the menu */
+  border-radius: 4px;
+}
+
+.custom-dropdown-item {
+  font-size: 14px; /* Adjust font size */
+  color: #333; /* Change item text color */
+}
+
+.custom-dropdown-item:hover {
+  background-color: #575757; /* Hover background color */
+  color: #000; /* Hover text color */
+}
+  

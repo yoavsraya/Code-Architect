@@ -5,6 +5,7 @@ import LoginPage from './LoginPage';
 import Header from './Header';
 import BigPanel from './BigPanel';
 import LoadingScreen from './LoadingScreen'; // Import the LoadingScreen component
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [finishFetchRepo, setFinishFetchRepo] = useState(false);
