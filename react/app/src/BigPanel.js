@@ -56,7 +56,7 @@ const BigPanel = ({ data, setData }) => {
         {leftPanelVisible && (
           <div className="left-panel" style={{ width: rightPanelVisible ? `${leftWidth}%` : '100%' }}>
             <SmallPanel>
-              <GraphComponent data={data} />
+              <FlowChartComponent data={data} />
             </SmallPanel>
           </div>
         )}

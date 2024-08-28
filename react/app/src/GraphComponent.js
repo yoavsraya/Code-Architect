@@ -1,3 +1,4 @@
+// Import necessary hooks and components
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Html, Line } from '@react-three/drei';
@@ -7,25 +8,76 @@ import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
 import './GraphComponent.css';
 
-const SpinningGroup = React.memo(({ children, isSpinning }) => {
-  const groupRef = useRef();
+// Utility function to determine parent-child hierarchy and find roots
+const buildHierarchy = (vertices, edges) => {
+  const hierarchy = {};
+  const incomingEdges = {}; // Track incoming edges to find roots
 
-  useFrame(() => {
-    if (groupRef.current && isSpinning) {
-      groupRef.current.rotation.y += 0.0015;
+  vertices.forEach((vertex) => {
+    hierarchy[vertex.id] = { children: [], added: false };
+    incomingEdges[vertex.id] = 0; // Initialize incoming edge count
+  });
+
+  edges.forEach((edge) => {
+    if (hierarchy[edge.From] && hierarchy[edge.To]) {
+      hierarchy[edge.From].children.push(edge.To);
+      incomingEdges[edge.To] += 1; // Increment incoming edge count for the child
     }
   });
 
-  return <group ref={groupRef}>{children}</group>;
-});
+  // Find root nodes (nodes with no incoming edges)
+  const roots = Object.keys(incomingEdges).filter((id) => incomingEdges[id] === 0);
+  return { hierarchy, roots };
+};
 
+// Recursive function to position nodes and mark them as added
+const positionNodes = (nodeId, hierarchy, positions, level = 0, xOffset = 0, yOffset = 0) => {
+  const node = hierarchy[nodeId];
+  
+  if (node.added) return; // Skip if node is already added
+
+  // Mark the current node as added
+  node.added = true;
+
+  // Set the position of the current node
+  positions[nodeId] = { x: xOffset, y: yOffset }; // Use xOffset and yOffset to control positioning
+
+  // Recursively position children nodes from left to right
+  node.children.forEach((childId, index) => {
+    positionNodes(
+      childId,
+      hierarchy,
+      positions,
+      level + 1,
+      xOffset + 5, // Move each child further to the right
+      yOffset + (index * 3) - (node.children.length - 1) * 1.5 // Adjust vertical spacing
+    );
+  });
+};
+
+// Main loop to position nodes based on their added status
+const runPositioning = (hierarchy, roots, positions) => {
+  roots.forEach((rootId, index) => {
+    // Position each root and its children
+    positionNodes(rootId, hierarchy, positions, 0, index * 10, 0); // Start each root at a new vertical position
+  });
+
+  // Verify all nodes are positioned
+  Object.keys(hierarchy).forEach((nodeId) => {
+    if (!hierarchy[nodeId].added) {
+      console.warn(`Vertex ${nodeId} was not positioned.`);
+    }
+  });
+};
+
+// Main component with graph rendering
 const GraphComponent = React.memo(() => {
   const [graphData, setGraphData] = useState({ Vertices: [], Edges: [] });
   const [error, setError] = useState(null);
   const [selectedVertex, setSelectedVertex] = useState(null);
   const [isSpinning, setIsSpinning] = useState(true);
 
-
+  // Fetch graph data on component mount
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
@@ -33,17 +85,17 @@ const GraphComponent = React.memo(() => {
     const fetchGraphData = () => {
       console.log("Fetching graph data...");
       fetch('http://54.243.195.75:3000/api/getGraphData', { signal })
-        .then(response => {
+        .then((response) => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
           return response.json();
         })
-        .then(data => {
+        .then((data) => {
           console.log("Data fetched", data);
           setGraphData(data);
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.name !== 'AbortError') {
             console.log("Error fetching data", err);
             setError(err);
@@ -57,41 +109,51 @@ const GraphComponent = React.memo(() => {
     };
   }, []);
 
-  const xSpread = 20; // Adjust as needed for x-axis spread
-  const ySpread = 20; // Adjust as needed for y-axis spread
-  const zSpread = 10; // Adjust as needed for z-axis spread
+  // Calculate positions of nodes based on hierarchy
+  const vertexPositions = useMemo(() => {
+    const { hierarchy, roots } = buildHierarchy(graphData.Vertices, graphData.Edges);
+    const positions = {};
 
+    // Run the main positioning function for all roots
+    runPositioning(hierarchy, roots, positions);
+
+    return positions;
+  }, [graphData.Vertices, graphData.Edges]);
+
+  // Prepare vertices with assigned positions
   const vertices = useMemo(() => {
-    return graphData.Vertices.map(vertex => {
-      const position = [
-        (Math.random() - 0.5) * xSpread,
-        (Math.random() - 0.5) * ySpread,
-        (Math.random() - 0.5) * zSpread,
-      ];
-      return {
-        id: vertex.Label,
-        position: position,
-        degree: vertex.degree,
-      };
-    });
-  }, [graphData.Vertices, xSpread, ySpread, zSpread]);
+    return graphData.Vertices.map((vertex) => ({
+      ...vertex,
+      position: [
+        vertexPositions[vertex.id]?.x || 0,
+        vertexPositions[vertex.id]?.y || 0,
+        0 // Keep z constant, or modify if needed
+      ],
+    }));
+  }, [graphData.Vertices, vertexPositions]);
 
+  // Prepare edges to connect positioned vertices
   const edges = useMemo(() => {
     return graphData.Edges.map((edge) => {
       const fromVertex = vertices.find((v) => v.id === edge.From);
       const toVertex = vertices.find((v) => v.id === edge.To);
-      const midpoint = [
-        (fromVertex.position[0] + toVertex.position[0]) / 2,
-        (fromVertex.position[1] + toVertex.position[1]) / 2,
-        (fromVertex.position[2] + toVertex.position[2]) / 2,
-      ];
-      return {
-        from: fromVertex.position,
-        to: toVertex.position,
-        midpoint,
-        label: edge.Label,
-      };
-    });
+
+      if (fromVertex && toVertex) {
+        const midpoint = [
+          (fromVertex.position[0] + toVertex.position[0]) / 2,
+          (fromVertex.position[1] + toVertex.position[1]) / 2,
+          (fromVertex.position[2] + toVertex.position[2]) / 2,
+        ];
+
+        return {
+          from: fromVertex.position,
+          to: toVertex.position,
+          midpoint,
+          label: edge.Label,
+        };
+      }
+      return null;
+    }).filter(Boolean);
   }, [vertices]);
 
   const handleCubeClick = (vertex) => {
@@ -120,23 +182,22 @@ const GraphComponent = React.memo(() => {
             >
               <boxGeometry args={[1.5, 1.5, 1.5]} />
               <meshStandardMaterial color="#81E979" opacity={1} transparent={false} />
-
-              <lineSegments>
-                <edgesGeometry attach="geometry" args={[new BoxGeometry(1.5, 1.5, 1.5)]} />
-                <lineBasicMaterial attach="material" color="black" linewidth={1} />
-              </lineSegments>
-
               {/* Left Face */}
               <Html
                 position={[-0.75, 0, 0]}
                 distanceFactor={10}
                 transform rotation={[0, Math.PI / 2, 0]}
-                scale={[1, 1, -1]}>
+                scale={[1, 1, -1]}
+              >
                 <div className="vertex-label mirrored">{vertex.id}</div>
               </Html>
-
               {/* Right Face */}
-              <Html position={[0.75, 0, 0]} distanceFactor={10} transform rotation={[0, -Math.PI / 2, 0]} scale={[1, 1, -1]}>
+              <Html
+                position={[0.75, 0, 0]}
+                distanceFactor={10}
+                transform rotation={[0, -Math.PI / 2, 0]}
+                scale={[1, 1, -1]}
+              >
                 <div className="vertex-label mirrored">{vertex.id}</div>
               </Html>
             </mesh>
@@ -175,15 +236,28 @@ const GraphComponent = React.memo(() => {
           <>
             <Line
               points={[
-                selectedVertex.position, // Start of the line (cube position)
-                [selectedVertex.position[0], selectedVertex.position[1] + 2, selectedVertex.position[2] + 2], // End of the line (note position)
+                selectedVertex.position,
+                [
+                  selectedVertex.position[0],
+                  selectedVertex.position[1] + 2,
+                  selectedVertex.position[2] + 2,
+                ],
               ]}
               color="white"
               lineWidth={2}
             />
-            <Html position={[selectedVertex.position[0], selectedVertex.position[1] + 2, selectedVertex.position[2] + 2]} distanceFactor={8}>
+            <Html
+              position={[
+                selectedVertex.position[0],
+                selectedVertex.position[1] + 2,
+                selectedVertex.position[2] + 2,
+              ]}
+              distanceFactor={8}
+            >
               <div className="popup-note">
-                <button className="close-button" onClick={handleCloseNote}>✕</button>
+                <button className="close-button" onClick={handleCloseNote}>
+                  ✕
+                </button>
                 <strong>{selectedVertex.id}</strong>
                 <p>Additional information about this vertex.</p>
               </div>
