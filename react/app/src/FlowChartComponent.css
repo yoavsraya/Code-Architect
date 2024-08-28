@@ -59,32 +59,4 @@
     text-overflow: clip; /* Remove ellipsis, show full text */
   }
 
-  /* Style for the dropdown container */
-/* Custom styles for the Bootstrap Dropdown */
-.custom-dropdown-toggle {
-  background-color: #4CAF50; /* Change button color */
-  color: white; /* Change text color */
-  font-size: 14px; /* Adjust font size */
-  border: none;
-  padding: 8px 16px;
-}
-
-.custom-dropdown-toggle:hover {
-  background-color: #45a049; /* Hover effect */
-}
-
-.custom-dropdown-menu {
-  background-color: #454545; /* Background color for the menu */
-  border-radius: 4px;
-}
-
-.custom-dropdown-item {
-  font-size: 14px; /* Adjust font size */
-  color: #333; /* Change item text color */
-}
-
-.custom-dropdown-item:hover {
-  background-color: #575757; /* Hover background color */
-  color: #000; /* Hover text color */
-}
   

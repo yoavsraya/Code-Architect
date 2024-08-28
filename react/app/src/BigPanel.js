@@ -1,7 +1,6 @@
 import React, { useRef, useState, useCallback } from 'react';
 import './BigPanel.css';
 import SmallPanel from './SmallPanel';
-import GraphComponent from './GraphComponent';
 import FlowChartComponent from './FlowChartComponent';
 import MessagePanel from './MessagePanel';
 

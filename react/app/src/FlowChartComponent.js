@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactFlow, {
   addEdge,
   Background,
@@ -24,6 +24,9 @@ const CustomNode = ({ data }) => {
   const handleClick = () => {
     setShowMethods((prev) => !prev);
   };
+
+  // Attach the click handler to the node data for external triggers
+  data.triggerClick = handleClick;
 
   return (
     <div
@@ -65,7 +68,6 @@ const FlowChartComponent = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
   const reactFlowInstance = useReactFlow(); // Use hook to control viewport
 
   useEffect(() => {
@@ -142,12 +144,12 @@ const FlowChartComponent = () => {
 
   // Handle class search and zoom to selected node
   const handleSearch = (className) => {
-    setSearchTerm(className);
-
     // Find the node by label (id) and zoom to it
     const node = nodes.find((node) => node.id === className);
     if (node) {
-      reactFlowInstance.setCenter(node.position.x, node.position.y - 100, {
+      const yOffset = 150; // Adjust this value to set the node higher or lower
+
+      reactFlowInstance.setCenter(node.position.x, node.position.y + yOffset, {
         zoom: 1.5,
         duration: 800,
       });
@@ -157,7 +159,7 @@ const FlowChartComponent = () => {
         if (node.data.triggerClick) {
           node.data.triggerClick(); // Trigger the click function to open the method list
         }
-      }, 800); // Delay to allow zoom animation to complete
+      }, 850); // Delay to ensure zoom completes before clicking
     }
   };
 
@@ -167,25 +169,23 @@ const FlowChartComponent = () => {
         <p>Error loading graph: {error.message}</p>
       ) : (
         <>
-          <div className="dropdown-container">
-            <Dropdown>
-              <Dropdown.Toggle variant="success" id="dropdown-basic" className="custom-dropdown-toggle">
+            <Dropdown data-bs-theme="dark"  className="mt-2" variant="secondary">
+              <Dropdown.Toggle variant="secondary" id="dropdown-basic">
                 Select a Class
               </Dropdown.Toggle>
 
-              <Dropdown.Menu className="custom-dropdown-menu">
+              <Dropdown.Menu menuVariant="dark">
+              
                 {nodes.map((node) => (
                   <Dropdown.Item
                     key={node.id}
                     onClick={() => handleSearch(node.id)}
-                    className="custom-dropdown-item"
                   >
                     {node.id}
                   </Dropdown.Item>
                 ))}
               </Dropdown.Menu>
             </Dropdown>
-          </div>
 
           <ReactFlow
             nodes={nodes}
@@ -196,7 +196,7 @@ const FlowChartComponent = () => {
             nodeTypes={nodeTypes}
             fitView
             nodesDraggable={true}
-            defaultViewport={{ x: 0, y: 0, zoom: 0.5 }}
+            defaultViewport={{ x: 0, y: 0, zoom: 0.1 }} // Set the initial zoom level here
           >
             <Background variant="none" />
             <Controls />

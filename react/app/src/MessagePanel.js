@@ -9,8 +9,10 @@ const MessagePanel = () => {
 
   const [expandedContent, setExpandedContent] = useState('');
   const [initialData, setInitialData] = useState([]);
+  const [additionalMessages, setAdditionalMessages] = useState([]); // State for additional messages
   const [removedButtons, setRemovedButtons] = useState([]);
   const [selectedMessage, setSelectedMessage] = useState('');
+  const [selectedMessageIndex, setSelectedMessageIndex] = useState(null); // Track selected message index
   const [isExpandedView, setIsExpandedView] = useState(false); // Track if we are in the expanded view
   const [isClickable, setIsClickable] = useState(true); // Track whether messages are clickable
 
@@ -37,13 +39,28 @@ const MessagePanel = () => {
   const handleExpand = async (topic, index, sectionTitle) => {
     if (!isClickable) return; // Prevent clicks if not clickable
 
+    // Remove all '**' occurrences in the topic
     const cleanedTopic = topic.replace(/\*\*(.*?)\*\*/g, '$1');
+
+    // Create additional messages and append them to the existing messages
+    const newMessages = [
+      { type: 'from-me', text: "Please add more information about this:" },
+      { type: 'from-me', text: cleanedTopic }
+    ];
+
+    // Update state with new additional messages
+    setAdditionalMessages((prevMessages) => {
+      const updatedMessages = [...prevMessages, ...newMessages];
+      console.log('Updated additional messages:', updatedMessages);
+      return updatedMessages;
+    });
+
+    // Set the selected message with the title and texts
     setSelectedMessage({
       sectionTitle,
       texts: [cleanedTopic],
     });
 
-    setRemovedButtons([...removedButtons, index]);
     setIsExpandedView(true); // Set to expanded view
     setIsClickable(false); // Disable clicks on other messages
 
@@ -95,16 +112,25 @@ const MessagePanel = () => {
     setIsExpandedView(false); // Return to the initial view
     setSelectedMessage(''); // Clear the selected message
     setExpandedContent(''); // Clear expanded content
+    setSelectedMessageIndex(null); // Clear selected message index
+    setAdditionalMessages([]); // Clear additional messages
     setIsClickable(true); // Re-enable clicks on messages
   };
 
   const renderExpandedContent = (content) => {
+    const lines = content.split('\n').filter(paragraph => paragraph.trim() !== '');
+    const firstLine = lines[0]?.replace(/^###\s*/, ''); // Remove "###" from the start of the first line
     return (
-      <button className="expanded-content-button">
-        {content.split('\n').map((paragraph, index) => (
-          <p className="expanded-paragraph" key={index}>{paragraph}</p>
+      <>
+        {firstLine && <h3Y>{firstLine}</h3Y>}
+        {lines.slice(1).map((paragraph, index) => (
+          <button key={index} className="from-them">
+            {paragraph.split('**').map((part, i) => (
+              i % 2 === 1 ? <strong key={i}>{part}</strong> : part
+            ))}
+          </button>
         ))}
-      </button>
+      </>
     );
   };
 
@@ -124,7 +150,7 @@ const MessagePanel = () => {
         const [title, ...bullets] = section.split('\n').filter(line => line.trim());
         return {
           title: title.trim(),
-          bullets: bullets.map(bullet => bullet.trim()).filter(bullet => bullet.startsWith('- '))
+          bullets: bullets.map(bullet => bullet.trim()).filter(bullet => bullet.startsWith('- ') && bullet.trim().length > 0),
         };
       });
 
@@ -148,7 +174,12 @@ const MessagePanel = () => {
               key={index}
               disabled={!isClickable}
             >
-              {bulletParts[0]}{bulletParts[1]}
+              {bulletParts[0].split('**').map((part, i) => (
+                i % 2 === 1 ? <strong key={i}>{part}</strong> : part
+              ))}
+              {bulletParts[1] && bulletParts[1].split('**').map((part, i) => (
+                i % 2 === 1 ? <strong key={i}>{part}</strong> : part
+              ))}
             </button>
           );
         })}
@@ -172,6 +203,11 @@ const MessagePanel = () => {
             </button>
           ))}
           {initialData && renderButtons(parseContent(initialData))}
+          {additionalMessages.map((msg, index) => (
+            <button key={index} className={msg.type}>
+              {msg.text}
+            </button>
+          ))}
         </>
       )}
     </div>
