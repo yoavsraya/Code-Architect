@@ -122,7 +122,7 @@ async function createGraphFromData() {
 
   folderVerticesMap.forEach((vertices, folderIndex) => {
     vertices.sort((a, b) => b.degree - a.degree);
-  });
+  }); ///
 
   console.log(Vertices);
   console.log(Edges);
