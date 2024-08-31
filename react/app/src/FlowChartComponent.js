@@ -79,7 +79,11 @@ const FlowChartComponent = () => {
         return response.json();
       })
       .then((data) => {
+        console.log("data nodes:" , data.Vertices);
+        console.log("data Edges", data.Edges);
         const { transformedNodes, transformedEdges } = transformGraphData(data.Vertices, data.Edges);
+        console.log("transformedNodes nodes:" , transformedNodes);
+        console.log("transformedEdges Edges", transformedEdges);
         setNodes(transformedNodes);
         setEdges(transformedEdges);
       })
@@ -108,12 +112,18 @@ const FlowChartComponent = () => {
         const column = Math.floor(index / maxNodesPerColumn);
         const row = index % maxNodesPerColumn;
 
+
+        const methodAndEnum = [
+          ...(Array.isArray(vertex.methods) ? vertex.methods : []),
+          ...(Array.isArray(vertex.enum) ? vertex.enum : [])
+        ];
+
         transformedNodes.push({
-          id: vertex.Label,
+          id: vertex.Label.trim().toLowerCase(),
           type: 'custom',
           data: {
             label: vertex.Label,
-            methods: vertex.methods,
+            methods: methodAndEnum,
             folderIndex: vertex.FolderIndex,
             triggerClick: null, // Placeholder for triggering clicks externally
           },
@@ -128,14 +138,17 @@ const FlowChartComponent = () => {
 
     const transformedEdges = edges.map((edge) => ({
       id: `${edge.From}-${edge.To}`,
-      source: edge.From,
-      target: edge.To,
+      source: edge.From.trim().toLowerCase(),
+      target: edge.To.trim().toLowerCase(),
       label: edge.Label,
       type: 'smoothstep',
       animated: false,
-      style: { stroke: '#000' },
+      style: { stroke: '#000', strokeWidth: 1.7 },
       labelStyle: { fontSize: 12 },
     }));
+
+    console.log('Node IDs:', transformedNodes.map(node => node.id));
+    console.log('Edge IDs:', transformedEdges.map(edge => ({ source: edge.source, target: edge.target })));
 
     return { transformedNodes, transformedEdges };
   };

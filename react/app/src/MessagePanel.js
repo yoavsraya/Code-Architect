@@ -32,7 +32,7 @@ const MessagePanel = () => {
         console.error('Error fetching initial AI response:', error);
       }
     };
-
+    
     fetchAIResponse();
   }, []);
 

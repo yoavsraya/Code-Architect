@@ -77,10 +77,11 @@ async function createGraphFromData() {
 
   jsonData.forEach(vertex => {
     const inhertageName = vertex.InheritsFrom;
-    if (inhertageName != null) {
-      if (verticesLookup.includes(inhertageName)) {
-        Edges.push({ From: vertex.ClassName, To: vertex.InheritsFrom, Label: "heritage" });
-      }
+    console.log(vertex.ClassName, "is heritage from" , vertex.InheritsFrom);
+    if (inhertageName != null)
+    {
+    Edges.push({ From: vertex.ClassName, To: vertex.InheritsFrom, Label: "heritage" });
+    
     }
 
     vertex.Compositions.forEach(Composition => {
@@ -89,10 +90,18 @@ async function createGraphFromData() {
         isContainer = true;
         Composition = Composition.match(/<(.*)>/)[1];
       }
+      Edges.push({ From: vertex.ClassName, To: Composition, Label: SetLabel("Composition") });
+     
+    });
 
-      if (verticesLookup.includes(Composition)) {
-        Edges.push({ From: vertex.ClassName, To: Composition, Label: SetLabel("Composition") });
+    vertex.Aggregations.forEach(Aggregation => {
+      isContainer = false;
+      if (Aggregation.startsWith("System.Collections.Generic.")) {
+        isContainer = true;
+        Aggregation = Aggregation.match(/<(.*)>/)[1];
       }
+      Edges.push({ From: vertex.ClassName, To: Aggregation, Label: SetLabel("Aggregation") });
+     
     });
 
     vertex.NestedClasses.forEach(NestedClasse => {
@@ -101,10 +110,18 @@ async function createGraphFromData() {
         isContainer = true;
         NestedClasse = NestedClasse.match(/<(.*)>/)[1];
       }
-
-      if (verticesLookup.includes(NestedClasse)) {
         Edges.push({ From: vertex.ClassName, To: NestedClasse, Label: SetLabel("Nested") });
+      
+    });
+
+    vertex.Usage.forEach(Usage1 => {
+      isContainer = false;
+      if (Usage1.startsWith("System.Collections.Generic.")) {
+        isContainer = true;
+        Usage1 = Usage.match(/<(.*)>/)[1];
       }
+        Edges.push({ From: vertex.ClassName, To: Usage1, Label: SetLabel("Usage") });
+      
     });
 
   });
