@@ -5,103 +5,125 @@ File: Program.cs
 Class: Program
   Accessibility: public
   Belongs to: EXE
+  Dependencies:
+    Usage:
+      TUI
 
 Folder: Ex03.ConsoleUI
 File: TUI.cs
 Class: TUI
   Accessibility: public
   Belongs to: EXE
-  Composition:
-    GarageManager
-    CreatingObject
+  Dependencies:
+    Composition:
+      GarageManager
+      CreatingObject
 
 Folder: Ex03.GarageLogic
 File: Car.cs
 Class: Car
   Accessibility: internal
   Belongs to: DLL
-  Inherits from: Vehicle
-  Composition:
-    eNumOfDoors
-    eCarColor
+  Dependencies:
+    Inheritance:
+      Inherits from: Vehicle
+    Composition:
+      eNumOfDoors
+      eCarColor
 
 Folder: Ex03.GarageLogic
 File: CarExistException.cs
 Class: CarExistException
   Accessibility: public
   Belongs to: DLL
-  Inherits from: Exception
+  Dependencies:
+    Inheritance:
+      Inherits from: Exception
 
 Folder: Ex03.GarageLogic
 File: ClientInfo.cs
 Class: ClientInfo
   Accessibility: internal
   Belongs to: DLL
-  Composition:
-    Vehicle
-  Aggregations:
-    eClientStatus
+  Dependencies:
+    Composition:
+      Vehicle
+    Aggregations:
+      eClientStatus
 
 Folder: Ex03.GarageLogic
 File: CreatingObject.cs
 Class: CreatingObject
   Accessibility: public
   Belongs to: DLL
-  Composition:
-    Vehicle
+  Dependencies:
+    Composition:
+      Vehicle
 
 Folder: Ex03.GarageLogic
 File: ElectricMotor.cs
 Class: ElectricMotor
   Accessibility: internal
   Belongs to: DLL
-  Inherits from: MotorType
+  Dependencies:
+    Inheritance:
+      Inherits from: MotorType
 
 Folder: Ex03.GarageLogic
 File: GarageManeger.cs
 Class: GarageManeger
   Accessibility: public
   Belongs to: DLL
-  Composition:
-    eClientStatus
+  Dependencies:
+    Composition:
+      eClientStatus
 
 Folder: Ex03.GarageLogic
 File: GasMotor.cs
 Class: GasMotor
   Accessibility: internal
   Belongs to: DLL
-  Inherits from: MotorType
+  Dependencies:
+    Inheritance:
+      Inherits from: MotorType
 
 Folder: Ex03.GarageLogic
 File: MotorBike.cs
 Class: MotorBike
   Accessibility: internal
   Belongs to: DLL
-  Inherits from: Vehicle
-  Composition:
-    eLicenseType
+  Dependencies:
+    Inheritance:
+      Inherits from: Vehicle
+    Composition:
+      eLicenseType
 
 Folder: Ex03.GarageLogic
 File: MotorType.cs
 Class: MotorType
   Accessibility: public
   Belongs to: DLL
-  Composition:
-    eEnergyType
+  Dependencies:
+    Composition:
+      eEnergyType
 
 Folder: Ex03.GarageLogic
 File: Track.cs
 Class: Track
   Accessibility: internal
   Belongs to: DLL
-  Inherits from: Vehicle
+  Dependencies:
+    Inheritance:
+      Inherits from: Vehicle
 
 Folder: Ex03.GarageLogic
 File: ValueOutOfRangeException.cs
 Class: ValueOutOfRangeException
   Accessibility: internal
   Belongs to: DLL
-  Inherits from: Exception
+  Dependencies:
+    Inheritance:
+      Inherits from: Exception
 
 Folder: Ex03.GarageLogic
 File: Wheels.cs
@@ -114,7 +136,8 @@ File: vehicle.cs
 Class: vehicle
   Accessibility: public
   Belongs to: DLL
-  Composition:
-    MotorType
-    Wheels
+  Dependencies:
+    Composition:
+      MotorType
+      Wheels
 

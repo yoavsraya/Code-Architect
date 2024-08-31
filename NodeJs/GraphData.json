@@ -6,10 +6,13 @@
     "InheritsFrom": null,
     "Compositions": [],
     "Aggregations": [],
-    "Associations": [],
     "NestedClasses": [],
     "Methods": [
       "+ Main"
+    ],
+    "Enums": [],
+    "Usage": [
+      "TUI"
     ]
   },
   {
@@ -22,7 +25,6 @@
       "CreatingObject"
     ],
     "Aggregations": [],
-    "Associations": [],
     "NestedClasses": [],
     "Methods": [
       "+ RunGarage",
@@ -40,7 +42,11 @@
       "- userInputForClientInfoRequirements",
       "- userInputForVehicleRequirements",
       "- printListOfString"
-    ]
+    ],
+    "Enums": [
+      "eChoiceFromMenu"
+    ],
+    "Usage": []
   },
   {
     "FolderName": "Ex03.GarageLogic",
@@ -52,7 +58,6 @@
       "eCarColor"
     ],
     "Aggregations": [],
-    "Associations": [],
     "NestedClasses": [],
     "Methods": [
       "+ RequirementsList",
@@ -60,7 +65,13 @@
       "+ VehicleDetails",
       "# UpdateEnergyDetails",
       "# UpdateFuelType"
-    ]
+    ],
+    "Enums": [
+      "eNumOfDoors",
+      "eCarColor",
+      "eRequirements"
+    ],
+    "Usage": []
   },
   {
     "FolderName": "Ex03.GarageLogic",
@@ -69,9 +80,10 @@
     "InheritsFrom": "Exception",
     "Compositions": [],
     "Aggregations": [],
-    "Associations": [],
     "NestedClasses": [],
-    "Methods": []
+    "Methods": [],
+    "Enums": [],
+    "Usage": []
   },
   {
     "FolderName": "Ex03.GarageLogic",
@@ -84,14 +96,17 @@
     "Aggregations": [
       "eClientStatus"
     ],
-    "Associations": [],
     "NestedClasses": [],
     "Methods": [
       "+ GetVehiclePlateNumber",
       "+ FillWheelsAirToMax",
       "+ FillEnergyInVehicle",
       "+ GetInfo"
-    ]
+    ],
+    "Enums": [
+      "eClientStatus"
+    ],
+    "Usage": []
   },
   {
     "FolderName": "Ex03.GarageLogic",
@@ -102,7 +117,6 @@
       "Vehicle"
     ],
     "Aggregations": [],
-    "Associations": [],
     "NestedClasses": [],
     "Methods": [
       "+ CreateNewVehicle",
@@ -110,7 +124,11 @@
       "+ MyClientInfoRequirements",
       "+ CreateMyClientInfoCard",
       "+ IsGarageEmpty"
-    ]
+    ],
+    "Enums": [
+      "eVehiclesType"
+    ],
+    "Usage": []
   },
   {
     "FolderName": "Ex03.GarageLogic",
@@ -119,12 +137,13 @@
     "InheritsFrom": "MotorType",
     "Compositions": [],
     "Aggregations": [],
-    "Associations": [],
     "NestedClasses": [],
     "Methods": [
       "+ ReFill",
       "+ ToString"
-    ]
+    ],
+    "Enums": [],
+    "Usage": []
   },
   {
     "FolderName": "Ex03.GarageLogic",
@@ -135,7 +154,6 @@
       "eClientStatus"
     ],
     "Aggregations": [],
-    "Associations": [],
     "NestedClasses": [],
     "Methods": [
       "+ IsVehicleExist",
@@ -152,7 +170,9 @@
       "+ GetGasTypeList",
       "+ GetVehicleOptions",
       "+ IsGasType"
-    ]
+    ],
+    "Enums": [],
+    "Usage": []
   },
   {
     "FolderName": "Ex03.GarageLogic",
@@ -161,12 +181,13 @@
     "InheritsFrom": "MotorType",
     "Compositions": [],
     "Aggregations": [],
-    "Associations": [],
     "NestedClasses": [],
     "Methods": [
       "+ ReFill",
       "+ ToString"
-    ]
+    ],
+    "Enums": [],
+    "Usage": []
   },
   {
     "FolderName": "Ex03.GarageLogic",
@@ -177,7 +198,6 @@
       "eLicenseType"
     ],
     "Aggregations": [],
-    "Associations": [],
     "NestedClasses": [],
     "Methods": [
       "+ RequirementsList",
@@ -185,7 +205,12 @@
       "+ VehicleDetails",
       "# UpdateEnergyDetails",
       "# UpdateFuelType"
-    ]
+    ],
+    "Enums": [
+      "eLicenseType",
+      "eRequirements"
+    ],
+    "Usage": []
   },
   {
     "FolderName": "Ex03.GarageLogic",
@@ -196,12 +221,15 @@
       "eEnergyType"
     ],
     "Aggregations": [],
-    "Associations": [],
     "NestedClasses": [],
     "Methods": [
       "+ ReFill",
       "+ CalculateMeterPercent"
-    ]
+    ],
+    "Enums": [
+      "eEnergyType"
+    ],
+    "Usage": []
   },
   {
     "FolderName": "Ex03.GarageLogic",
@@ -210,7 +238,6 @@
     "InheritsFrom": "Vehicle",
     "Compositions": [],
     "Aggregations": [],
-    "Associations": [],
     "NestedClasses": [],
     "Methods": [
       "+ RequirementsList",
@@ -218,7 +245,11 @@
       "+ VehicleDetails",
       "# UpdateEnergyDetails",
       "# UpdateFuelType"
-    ]
+    ],
+    "Enums": [
+      "eRequirements"
+    ],
+    "Usage": []
   },
   {
     "FolderName": "Ex03.GarageLogic",
@@ -227,9 +258,10 @@
     "InheritsFrom": "Exception",
     "Compositions": [],
     "Aggregations": [],
-    "Associations": [],
     "NestedClasses": [],
-    "Methods": []
+    "Methods": [],
+    "Enums": [],
+    "Usage": []
   },
   {
     "FolderName": "Ex03.GarageLogic",
@@ -238,11 +270,12 @@
     "InheritsFrom": null,
     "Compositions": [],
     "Aggregations": [],
-    "Associations": [],
     "NestedClasses": [],
     "Methods": [
       "~ UpdateWheelDetails"
-    ]
+    ],
+    "Enums": [],
+    "Usage": []
   },
   {
     "FolderName": "Ex03.GarageLogic",
@@ -254,7 +287,6 @@
       "Wheels"
     ],
     "Aggregations": [],
-    "Associations": [],
     "NestedClasses": [],
     "Methods": [
       "+ ReFillVehicle",
@@ -265,6 +297,8 @@
       "+ VehicleDetails",
       "# UpdateEnergyDetails",
       "# UpdateFuelType"
-    ]
+    ],
+    "Enums": [],
+    "Usage": []
   }
 ]
