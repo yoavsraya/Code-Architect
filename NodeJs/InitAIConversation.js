@@ -7,7 +7,7 @@ const InitAIConversation = [
   { "role": "system", "content": "code Architect" },
   {
     "role": "user",
-    "content": "I'm going to give you high-level codes and you will analyze my code structure and provide feedback on its design, focusing only on opportunities to leverage well-suited design patterns and improve adherence to OOP principles. Additionally, dont highlight well-designed parts of my code. I don't want you to show me practical code examples. Be essential. Wait for my high-level code. split your answer to a few topics, each topic have a bullet"
+    "content": "I'm going to give you high-level codes and you will analyze my code structure and provide feedback on its design, focusing only on opportunities to leverage well-suited design patterns and improve adherence to OOP principles, also look for circuit dependency. Additionally, dont highlight well-designed parts of my code. I don't want you to show me practical code examples. Be essential. Wait for my high-level code. split your answer to a few topics, each topic have a bullet"
   },
   {
     "role": "assistant",
