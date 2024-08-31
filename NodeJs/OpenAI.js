@@ -14,12 +14,12 @@ try {
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 async function RunAI() {
-  //const completion = await openai.chat.completions.create({
-    //model: "gpt-4o",
-    //messages: conversationHistory
-  //});
+  const completion = await openai.chat.completions.create({
+    model: "gpt-4o",
+    messages: conversationHistory
+  });
 
-  const assistantMessage = tempAIResponseGarageManager;//completion.choices[0].message.content;
+  const assistantMessage = completion.choices[0].message.content;
 
   if (!assistantMessage) {
     console.error('Assistant message is null or undefined');
@@ -46,12 +46,12 @@ async function ExpandTopic(topic, fileContents) {
 
   conversationHistory.push(userMessage);
 
-  //const completion = await openai.chat.completions.create({
-    //model: "gpt-4o",
-    //messages: conversationHistory
-  //});
+  const completion = await openai.chat.completions.create({
+    model: "gpt-4o",
+    messages: conversationHistory
+  });
 
-  const assistantMessage = tempAIResponseExpandFactoryPattern;  //completion.choices[0].message.content;
+  const assistantMessage = completion.choices[0].message.content;
 
   if (!assistantMessage) {
     console.error('Assistant message is null or undefined');

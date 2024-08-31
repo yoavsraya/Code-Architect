@@ -1,143 +1,57 @@
 Project: UserFiles
 
-Folder: Ex03.ConsoleUI
+Folder: Academic_College_Tel_Aviv_Jafo
+File: Course.cs
+Class: Course
+  Accessibility: public
+  Belongs to: EXE
+  Dependencies:
+    Aggregations:
+      Student
+
+Folder: Academic_College_Tel_Aviv_Jafo
+File: Professor.cs
+Class: Professor
+  Accessibility: public
+  Belongs to: EXE
+
+Folder: Academic_College_Tel_Aviv_Jafo
 File: Program.cs
 Class: Program
   Accessibility: public
   Belongs to: EXE
   Dependencies:
     Usage:
-      TUI
+      Course
+      Student
 
-Folder: Ex03.ConsoleUI
-File: TUI.cs
-Class: TUI
+Folder: Academic_College_Tel_Aviv_Jafo
+File: Student.cs
+Class: Student
   Accessibility: public
   Belongs to: EXE
   Dependencies:
     Composition:
-      GarageManager
-      CreatingObject
+      Course
 
-Folder: Ex03.GarageLogic
-File: Car.cs
-Class: Car
-  Accessibility: internal
-  Belongs to: DLL
-  Dependencies:
-    Inheritance:
-      Inherits from: Vehicle
-    Composition:
-      eNumOfDoors
-      eCarColor
-
-Folder: Ex03.GarageLogic
-File: CarExistException.cs
-Class: CarExistException
+Folder: Academic_College_Tel_Aviv_Jafo
+File: UniversityAdmin.cs
+Class: UniversityAdmin
   Accessibility: public
-  Belongs to: DLL
-  Dependencies:
-    Inheritance:
-      Inherits from: Exception
-
-Folder: Ex03.GarageLogic
-File: ClientInfo.cs
-Class: ClientInfo
-  Accessibility: internal
-  Belongs to: DLL
+  Belongs to: EXE
   Dependencies:
     Composition:
-      Vehicle
+      UniversityAdmin
+
+Folder: Academic_College_Tel_Aviv_Jafo
+File: UniversityDatabase.cs
+Class: UniversityDatabase
+  Accessibility: public
+  Belongs to: EXE
+  Dependencies:
+    Composition:
+      UniversityDatabase
     Aggregations:
-      eClientStatus
-
-Folder: Ex03.GarageLogic
-File: CreatingObject.cs
-Class: CreatingObject
-  Accessibility: public
-  Belongs to: DLL
-  Dependencies:
-    Composition:
-      Vehicle
-
-Folder: Ex03.GarageLogic
-File: ElectricMotor.cs
-Class: ElectricMotor
-  Accessibility: internal
-  Belongs to: DLL
-  Dependencies:
-    Inheritance:
-      Inherits from: MotorType
-
-Folder: Ex03.GarageLogic
-File: GarageManeger.cs
-Class: GarageManeger
-  Accessibility: public
-  Belongs to: DLL
-  Dependencies:
-    Composition:
-      eClientStatus
-
-Folder: Ex03.GarageLogic
-File: GasMotor.cs
-Class: GasMotor
-  Accessibility: internal
-  Belongs to: DLL
-  Dependencies:
-    Inheritance:
-      Inherits from: MotorType
-
-Folder: Ex03.GarageLogic
-File: MotorBike.cs
-Class: MotorBike
-  Accessibility: internal
-  Belongs to: DLL
-  Dependencies:
-    Inheritance:
-      Inherits from: Vehicle
-    Composition:
-      eLicenseType
-
-Folder: Ex03.GarageLogic
-File: MotorType.cs
-Class: MotorType
-  Accessibility: public
-  Belongs to: DLL
-  Dependencies:
-    Composition:
-      eEnergyType
-
-Folder: Ex03.GarageLogic
-File: Track.cs
-Class: Track
-  Accessibility: internal
-  Belongs to: DLL
-  Dependencies:
-    Inheritance:
-      Inherits from: Vehicle
-
-Folder: Ex03.GarageLogic
-File: ValueOutOfRangeException.cs
-Class: ValueOutOfRangeException
-  Accessibility: internal
-  Belongs to: DLL
-  Dependencies:
-    Inheritance:
-      Inherits from: Exception
-
-Folder: Ex03.GarageLogic
-File: Wheels.cs
-Class: Wheels
-  Accessibility: public
-  Belongs to: DLL
-
-Folder: Ex03.GarageLogic
-File: vehicle.cs
-Class: vehicle
-  Accessibility: public
-  Belongs to: DLL
-  Dependencies:
-    Composition:
-      MotorType
-      Wheels
+      Course
+      Student
 
