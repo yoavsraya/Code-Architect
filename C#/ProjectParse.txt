@@ -1,6 +1,17 @@
 Project: UserFiles
 
-Folder: Academic_College_Tel_Aviv_Jafo
+Folder: Tel_Aviv_Jafo_College
+File: Administration.cs
+Class: Administration
+  Accessibility: public
+  Belongs to: EXE
+  Dependencies:
+    Aggregations:
+      Course
+      Student
+      Professor
+
+Folder: Tel_Aviv_Jafo_College
 File: Course.cs
 Class: Course
   Accessibility: public
@@ -9,13 +20,18 @@ Class: Course
     Aggregations:
       Student
 
-Folder: Academic_College_Tel_Aviv_Jafo
+Folder: Tel_Aviv_Jafo_College
 File: Professor.cs
 Class: Professor
   Accessibility: public
   Belongs to: EXE
+  Dependencies:
+    Composition:
+      Course
+    Aggregations:
+      Administration
 
-Folder: Academic_College_Tel_Aviv_Jafo
+Folder: Tel_Aviv_Jafo_College
 File: Program.cs
 Class: Program
   Accessibility: public
@@ -25,7 +41,7 @@ Class: Program
       Course
       Student
 
-Folder: Academic_College_Tel_Aviv_Jafo
+Folder: Tel_Aviv_Jafo_College
 File: Student.cs
 Class: Student
   Accessibility: public
@@ -33,25 +49,6 @@ Class: Student
   Dependencies:
     Composition:
       Course
-
-Folder: Academic_College_Tel_Aviv_Jafo
-File: UniversityAdmin.cs
-Class: UniversityAdmin
-  Accessibility: public
-  Belongs to: EXE
-  Dependencies:
-    Composition:
-      UniversityAdmin
-
-Folder: Academic_College_Tel_Aviv_Jafo
-File: UniversityDatabase.cs
-Class: UniversityDatabase
-  Accessibility: public
-  Belongs to: EXE
-  Dependencies:
-    Composition:
-      UniversityDatabase
     Aggregations:
-      Course
-      Student
+      Administration
 

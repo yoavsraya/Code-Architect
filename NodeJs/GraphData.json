@@ -1,6 +1,27 @@
 [
   {
-    "FolderName": "Academic_College_Tel_Aviv_Jafo",
+    "FolderName": "Tel_Aviv_Jafo_College",
+    "ClassName": "Administration",
+    "Accessibility": "public",
+    "InheritsFrom": null,
+    "Compositions": [],
+    "Aggregations": [
+      "Course",
+      "Student",
+      "Professor"
+    ],
+    "NestedClasses": [],
+    "Methods": [
+      "+ AssignStudentToCourse",
+      "+ UpdateStudentGrade",
+      "+ AddCourse",
+      "+ AddStudent"
+    ],
+    "Enums": [],
+    "Usage": []
+  },
+  {
+    "FolderName": "Tel_Aviv_Jafo_College",
     "ClassName": "Course",
     "Accessibility": "public",
     "InheritsFrom": null,
@@ -16,12 +37,16 @@
     "Usage": []
   },
   {
-    "FolderName": "Academic_College_Tel_Aviv_Jafo",
+    "FolderName": "Tel_Aviv_Jafo_College",
     "ClassName": "Professor",
     "Accessibility": "public",
     "InheritsFrom": null,
-    "Compositions": [],
-    "Aggregations": [],
+    "Compositions": [
+      "Course"
+    ],
+    "Aggregations": [
+      "Administration"
+    ],
     "NestedClasses": [],
     "Methods": [
       "+ AssignGrade"
@@ -30,7 +55,7 @@
     "Usage": []
   },
   {
-    "FolderName": "Academic_College_Tel_Aviv_Jafo",
+    "FolderName": "Tel_Aviv_Jafo_College",
     "ClassName": "Program",
     "Accessibility": "public",
     "InheritsFrom": null,
@@ -47,54 +72,19 @@
     ]
   },
   {
-    "FolderName": "Academic_College_Tel_Aviv_Jafo",
+    "FolderName": "Tel_Aviv_Jafo_College",
     "ClassName": "Student",
     "Accessibility": "public",
     "InheritsFrom": null,
     "Compositions": [
       "Course"
     ],
-    "Aggregations": [],
+    "Aggregations": [
+      "Administration"
+    ],
     "NestedClasses": [],
     "Methods": [
       "+ SetID"
-    ],
-    "Enums": [],
-    "Usage": []
-  },
-  {
-    "FolderName": "Academic_College_Tel_Aviv_Jafo",
-    "ClassName": "UniversityAdmin",
-    "Accessibility": "public",
-    "InheritsFrom": null,
-    "Compositions": [
-      "UniversityAdmin"
-    ],
-    "Aggregations": [],
-    "NestedClasses": [],
-    "Methods": [
-      "+ PrintAllCourses",
-      "+ AssignStudentToCourse"
-    ],
-    "Enums": [],
-    "Usage": []
-  },
-  {
-    "FolderName": "Academic_College_Tel_Aviv_Jafo",
-    "ClassName": "UniversityDatabase",
-    "Accessibility": "public",
-    "InheritsFrom": null,
-    "Compositions": [
-      "UniversityDatabase"
-    ],
-    "Aggregations": [
-      "Course",
-      "Student"
-    ],
-    "NestedClasses": [],
-    "Methods": [
-      "+ AddCourse",
-      "+ AddStudent"
     ],
     "Enums": [],
     "Usage": []
