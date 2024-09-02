@@ -1,5 +1,19 @@
 [
   {
+    "FolderName": "TUI",
+    "ClassName": "Program",
+    "Accessibility": "public",
+    "InheritsFrom": null,
+    "Compositions": [],
+    "Aggregations": [],
+    "NestedClasses": [],
+    "Methods": [
+      "+ Main"
+    ],
+    "Enums": [],
+    "Usage": []
+  },
+  {
     "FolderName": "Tel_Aviv_Jafo_College",
     "ClassName": "Administration",
     "Accessibility": "public",
@@ -53,23 +67,6 @@
     ],
     "Enums": [],
     "Usage": []
-  },
-  {
-    "FolderName": "Tel_Aviv_Jafo_College",
-    "ClassName": "Program",
-    "Accessibility": "public",
-    "InheritsFrom": null,
-    "Compositions": [],
-    "Aggregations": [],
-    "NestedClasses": [],
-    "Methods": [
-      "+ Main"
-    ],
-    "Enums": [],
-    "Usage": [
-      "Course",
-      "Student"
-    ]
   },
   {
     "FolderName": "Tel_Aviv_Jafo_College",

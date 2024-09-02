@@ -4,7 +4,7 @@ import SmallPanel from './SmallPanel';
 import FlowChartComponent from './FlowChartComponent';
 import MessagePanel from './MessagePanel';
 
-const BigPanel = ({ data, setData }) => {
+const BigPanel = ({ data, setData , aiResult}) => {
   const containerRef = useRef(null);
   const [leftWidth, setLeftWidth] = useState(50);
   const [leftPanelVisible, setLeftPanelVisible] = useState(true);
@@ -64,7 +64,7 @@ const BigPanel = ({ data, setData }) => {
         {rightPanelVisible && (
           <div className="right-panel" style={{ width: leftPanelVisible ? `${100 - leftWidth}%` : '100%' }}>
             <SmallPanel>
-              <MessagePanel />
+              <MessagePanel aiResult={aiResult}/>
             </SmallPanel>
           </div>
         )}

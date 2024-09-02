@@ -1,5 +1,11 @@
 Project: UserFiles
 
+Folder: TUI
+File: Program.cs
+Class: Program
+  Accessibility: public
+  Belongs to: EXE
+
 Folder: Tel_Aviv_Jafo_College
 File: Administration.cs
 Class: Administration
@@ -30,16 +36,6 @@ Class: Professor
       Course
     Aggregations:
       Administration
-
-Folder: Tel_Aviv_Jafo_College
-File: Program.cs
-Class: Program
-  Accessibility: public
-  Belongs to: EXE
-  Dependencies:
-    Usage:
-      Course
-      Student
 
 Folder: Tel_Aviv_Jafo_College
 File: Student.cs

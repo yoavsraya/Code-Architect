@@ -9,8 +9,11 @@ import ReactFlow, {
   useReactFlow,
   ReactFlowProvider,
 } from 'react-flow-renderer';
-import Dropdown from 'react-bootstrap/Dropdown'; // Import the Bootstrap Dropdown component
-import './FlowChartComponent.css'; // Import your CSS styles
+import Dropdown from 'react-bootstrap/Dropdown';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import './FlowChartComponent.css';
 
 // Define colors for each FolderIndex
 const folderColors = ['color-0', 'color-1', 'color-2', 'color-3'];
@@ -20,19 +23,17 @@ const CustomNode = ({ data }) => {
   const [showMethods, setShowMethods] = useState(false);
   const colorClass = folderColors[data.folderIndex % folderColors.length]; // Assign color based on FolderIndex
 
-  // Handle click to toggle method visibility
   const handleClick = () => {
     setShowMethods((prev) => !prev);
   };
 
-  // Attach the click handler to the node data for external triggers
   data.triggerClick = handleClick;
 
   return (
     <div
       onClick={handleClick}
       className={`custom-node ${colorClass}`}
-      style={{ display: 'inline-block', maxWidth: '200px' }} // Ensuring block size adjusts to text
+      style={{ display: 'inline-block', maxWidth: '200px' }}
     >
       <strong style={{ display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
         {data.label}
@@ -55,7 +56,6 @@ const CustomNode = ({ data }) => {
 // Define nodeTypes outside of the component to avoid recreation on each render
 const nodeTypes = { custom: CustomNode };
 
-// Main Flow Chart Component wrapped with ReactFlowProvider
 const FlowChartComponentWrapper = () => {
   return (
     <ReactFlowProvider>
@@ -68,36 +68,71 @@ const FlowChartComponent = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [error, setError] = useState(null);
-  const reactFlowInstance = useReactFlow(); // Use hook to control viewport
+  const [showModal, setShowModal] = useState(false);
+  const [newEdge, setNewEdge] = useState(null);
+  const [edgeLabel, setEdgeLabel] = useState('');
+  const [history, setHistory] = useState([]); // History state to keep track of changes
+  const reactFlowInstance = useReactFlow();
+
+  // Function to save current state to history
+  const saveToHistory = () => {
+    setHistory((prevHistory) => [
+      ...prevHistory,
+      { nodes: [...nodes], edges: [...edges] },
+    ]);
+  };
+
+  // Handle undo by restoring the last state from history
+  const handleUndo = () => {
+    if (history.length > 0) {
+      const previousState = history[history.length - 1];
+      setNodes(previousState.nodes);
+      setEdges(previousState.edges);
+      setHistory(history.slice(0, history.length - 1)); // Remove the last entry from history
+    }
+  };
 
   useEffect(() => {
-    fetch('http://54.243.195.75:3000/api/getGraphData')
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("data nodes:" , data.Vertices);
-        console.log("data Edges", data.Edges);
-        const { transformedNodes, transformedEdges } = transformGraphData(data.Vertices, data.Edges);
-        console.log("transformedNodes nodes:" , transformedNodes);
-        console.log("transformedEdges Edges", transformedEdges);
-        setNodes(transformedNodes);
-        setEdges(transformedEdges);
-      })
-      .catch((err) => {
-        console.log('Error fetching data', err);
-        setError(err);
-      });
+    // Load nodes and edges from local storage if available
+    const savedNodes = JSON.parse(localStorage.getItem('flowchart-nodes')) || [];
+    const savedEdges = JSON.parse(localStorage.getItem('flowchart-edges')) || [];
+
+    if (savedNodes.length > 0) {
+      setNodes(savedNodes);
+      setEdges(savedEdges);
+    } else {
+      // Fetch nodes and edges from the server if not available in local storage
+      fetch('http://54.243.195.75:3000/api/getGraphData')
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          const { transformedNodes, transformedEdges } = transformGraphData(data.Vertices, data.Edges);
+          setNodes(transformedNodes);
+          setEdges(transformedEdges);
+        })
+        .catch((err) => {
+          setError(err);
+        });
+    }
   }, []);
 
-  // Function to transform vertices and edges into React Flow format
+  useEffect(() => {
+    // Save nodes and edges to local storage whenever they change
+    localStorage.setItem('flowchart-nodes', JSON.stringify(nodes));
+    localStorage.setItem('flowchart-edges', JSON.stringify(edges));
+  }, [nodes, edges]);
+
   const transformGraphData = (vertices, edges) => {
-    const xSpacing = 350;
-    const ySpacing = 150;
-    const maxNodesPerColumn = 4;
+    const xSpacing = 150; // Horizontal spacing between nodes
+    const ySpacing = 100; // Vertical spacing between rows
+    const folderWidth = 300; // Width of the rectangle for each folder
+    const folderHeight = 400; // Height of the rectangle for each folder
+    const nodePadding = 30; // Minimum distance between nodes (padding)
+    const maxNodesPerRow = vertices.length / 3; // Maximum number of nodes per row for better horizontal spread
 
     const groupedNodes = {};
     vertices.forEach((vertex) => {
@@ -107,15 +142,23 @@ const FlowChartComponent = () => {
     });
 
     const transformedNodes = [];
-    Object.keys(groupedNodes).forEach((folderIndex) => {
-      groupedNodes[folderIndex].forEach((vertex, index) => {
-        const column = Math.floor(index / maxNodesPerColumn);
-        const row = index % maxNodesPerColumn;
+    Object.keys(groupedNodes).forEach((folderIndex, folderIdx) => {
+      const nodesInFolder = groupedNodes[folderIndex];
+      const folderStartX = folderIdx * (folderWidth + xSpacing); // Calculate starting x position for this folder
+      const folderStartY = 0; // Starting y position for the folder
 
+      nodesInFolder.forEach((vertex, index) => {
+        // Calculate x, y positions within the rectangle
+        const column = index % maxNodesPerRow; // Arrange nodes within the max nodes per row
+        const row = Math.floor(index / maxNodesPerRow); // Move to the next row after maxNodesPerRow
+
+        // Set position within the defined rectangle for the folder with minimum spacing
+        const x = folderStartX + column * (xSpacing + nodePadding); // Distribute nodes horizontally with spacing
+        const y = folderStartY + row * (ySpacing + nodePadding); // Distribute nodes vertically with spacing
 
         const methodAndEnum = [
           ...(Array.isArray(vertex.methods) ? vertex.methods : []),
-          ...(Array.isArray(vertex.enum) ? vertex.enum : [])
+          ...(Array.isArray(vertex.enum) ? vertex.enum : []),
         ];
 
         transformedNodes.push({
@@ -125,12 +168,9 @@ const FlowChartComponent = () => {
             label: vertex.Label,
             methods: methodAndEnum,
             folderIndex: vertex.FolderIndex,
-            triggerClick: null, // Placeholder for triggering clicks externally
+            triggerClick: null,
           },
-          position: {
-            x: folderIndex * xSpacing + column * xSpacing,
-            y: row * ySpacing,
-          },
+          position: { x, y },
           draggable: true,
         });
       });
@@ -147,32 +187,53 @@ const FlowChartComponent = () => {
       labelStyle: { fontSize: 12 },
     }));
 
-    console.log('Node IDs:', transformedNodes.map(node => node.id));
-    console.log('Edge IDs:', transformedEdges.map(edge => ({ source: edge.source, target: edge.target })));
-
     return { transformedNodes, transformedEdges };
   };
 
-  const onConnect = (params) => setEdges((eds) => addEdge(params, eds));
+  const onConnect = (params) => {
+    setNewEdge(params);
+    setShowModal(true);
+  };
+
+  const handleSave = () => {
+    if (!edgeLabel) return;
+    const newEdgeWithLabel = {
+      ...newEdge,
+      label: edgeLabel,
+      type: 'smoothstep',
+      animated: false,
+      style: { stroke: '#000', strokeWidth: 1.7 },
+      labelStyle: { fontSize: 12 },
+    };
+
+    saveToHistory(); // Save current state before adding a new edge
+
+    setEdges((eds) => addEdge(newEdgeWithLabel, eds));
+    setShowModal(false);
+    setEdgeLabel('');
+  };
 
   // Handle class search and zoom to selected node
   const handleSearch = (className) => {
-    // Find the node by label (id) and zoom to it
     const node = nodes.find((node) => node.id === className);
     if (node) {
-      const yOffset = 150; // Adjust this value to set the node higher or lower
-
+      const yOffset = 150;
       reactFlowInstance.setCenter(node.position.x, node.position.y + yOffset, {
         zoom: 1.5,
         duration: 800,
       });
-
-      // Simulate a click on the node after zooming
       setTimeout(() => {
         if (node.data.triggerClick) {
-          node.data.triggerClick(); // Trigger the click function to open the method list
+          node.data.triggerClick();
         }
-      }, 850); // Delay to ensure zoom completes before clicking
+      }, 850);
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      handleSave();
     }
   };
 
@@ -182,38 +243,65 @@ const FlowChartComponent = () => {
         <p>Error loading graph: {error.message}</p>
       ) : (
         <>
-            <Dropdown data-bs-theme="dark"  className="mt-2" variant="secondary">
-              <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-                Select a Class
-              </Dropdown.Toggle>
+          <Dropdown data-bs-theme="dark" className="mt-2" variant="secondary">
+            <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+              Select a Class
+            </Dropdown.Toggle>
 
-              <Dropdown.Menu menuVariant="dark">
-              
-                {nodes.map((node) => (
-                  <Dropdown.Item
-                    key={node.id}
-                    onClick={() => handleSearch(node.id)}
-                  >
-                    {node.id}
-                  </Dropdown.Item>
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
+            <Dropdown.Menu menuVariant="dark">
+              {nodes.map((node) => (
+                <Dropdown.Item key={node.id} onClick={() => handleSearch(node.id)}>
+                  {node.id}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Menu>
+          </Dropdown>
 
           <ReactFlow
             nodes={nodes}
             edges={edges}
-            onNodesChange={onNodesChange}
+            onNodesChange={(changes) => {
+              onNodesChange(changes);
+              saveToHistory();
+            }}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             nodeTypes={nodeTypes}
             fitView
             nodesDraggable={true}
-            defaultViewport={{ x: 0, y: 0, zoom: 0.1 }} // Set the initial zoom level here
+            defaultViewport={{ x: 0, y: 0, zoom: 0.1 }}
           >
             <Background variant="none" />
             <Controls />
           </ReactFlow>
+
+          <Modal show={showModal} onHide={() => setShowModal(false)} backdrop="static" keyboard={false} className="dark-modal">
+            <Modal.Header closeButton>
+              <Modal.Title>Enter Edge Label</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form>
+                <Form.Group controlId="formEdgeLabel">
+                  <Form.Label>Label</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={edgeLabel}
+                    onChange={(e) => setEdgeLabel(e.target.value)}
+                    onKeyDown={handleKeyPress}
+                    placeholder="Enter label for the edge"
+                  />
+                </Form.Group>
+              </Form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => setShowModal(false)}>
+                Cancel
+              </Button>
+              <Button variant="primary" onClick={handleSave}>
+                Save
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </>
       )}
     </div>

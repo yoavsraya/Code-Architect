@@ -15,6 +15,7 @@ function App() {
   const [data, setData] = useState(null);
   const [selectedRepo, setSelectedRepo] = useState('');
   const [socket, setSocket] = useState(null);
+  const [aiResult, setAiResult] = useState(null); // State to hold AI result
 
   const initializeWebSocket = () => {
     const ws = new WebSocket('ws://54.243.195.75:3000');
@@ -25,9 +26,15 @@ function App() {
     ws.onmessage = (event) => {
       console.log('WebSocket message received:', event.data);
       const message = JSON.parse(event.data);
-      if (message.GraphJason) {
-        console.log("Login finished, fetching repo list");
-        setIsLoading(false); // Stop loading when message received
+      if (message.GraphJason)
+      {
+        console.log("c# build is done, contacting AI");
+        contactAI();
+      }
+      else if (message.runAI)
+      {
+        console.log("AI finished");
+        setIsLoading(false);
         ws.close();
       }
     };
@@ -44,7 +51,8 @@ function App() {
   };
 
   async function fetchAndBuildProject(i_selectedRepo) {
-    try {
+    try 
+    {
       initializeWebSocket();
       const response = await fetch(`http://54.243.195.75:3000/api/fetchSelectedRepo?selectedRepo=${encodeURIComponent(i_selectedRepo)}`);
       //const socket = new WebSocket('ws://54.243.195.75:3000');
@@ -54,19 +62,42 @@ function App() {
         setFinishFetchRepo(true);
         console.log('Selected repository data fetched successfully');
       }
-    } catch (error) {
+    }
+    catch (error)
+    {
       console.error('Error fetching selected repository data:', error);
     }
 
-    try {
+    try
+    {
       const response = await fetch(`http://54.243.195.75:3000/api/buildProject`);
       if (!response.ok) {
         console.error('Failed to build the project');
       } else {
         console.log('Project built successfully');
       }
-    } catch (error) {
-      console.error('Error building the project:', error);
+    }
+    catch (error)
+    {
+     console.error('Error building the project:', error);
+    }
+
+  }
+
+  async function contactAI()
+  {
+    try
+    {
+      const response = await fetch('http://54.243.195.75:3000/api/runAI');
+        if (!response.ok)
+        {
+          throw new Error('Failed to fetch AI response');
+        }
+        setAiResult(await response.json());
+    }
+    catch (error)
+    {
+      console.error('Error getting AI result', error);
     }
   }
 
@@ -142,7 +173,7 @@ function App() {
                   isLoading ? ( // Show loading screen if loading is true
                     <LoadingScreen />
                   ) : (
-                    <BigPanel data={data} setData={setData} />
+                    <BigPanel data={data} setData={setData} aiResult={aiResult}/>
                   )
                 ) : (
                   <Navigate to="/login" />

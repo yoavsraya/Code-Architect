@@ -3,8 +3,8 @@ import './MessagePanel.css';
 import LoadingScreenAI from './LoadingScreenAI'; // Import the LoadingScreen component
 
 
-const MessagePanel = () => {
-
+const MessagePanel = ({ aiResult }) => {
+  console.log("air result is", aiResult);
   const initialMessages = [
     { type: 'from-system', text: "Hello! I'm your architect AI Assistance!" },
     { type: 'from-system', text: "I went over your code and I have some suggestions for you." },
@@ -32,12 +32,7 @@ const MessagePanel = () => {
     ws.onmessage = (event) => {
       console.log('WebSocket message received:', event.data);
       const message = JSON.parse(event.data);
-      if (message.runAI)
-      {
-        console.log("AI finished");
-        setIsLoading(false); // Stop loading when message received
-      }
-      else if (message.ExtandAI)
+      if (message.ExtandAI)
       {
         console.log("extand finished");
         setIsLoading(false); // Stop loading when message received
@@ -57,29 +52,17 @@ const MessagePanel = () => {
   };
 
   useEffect(() => {
-    const fetchAIResponse = async () => {
-      setIsLoading(true);
-      console.log("Fetching initial AI response...");
-      try {
-        initializeWebSocket();
-        const response = await fetch('http://54.243.195.75:3000/api/runAI');
-        if (!response.ok) {
-          throw new Error('Failed to fetch AI response');
-        }
-        const aiData = await response.json();
-        console.log('Initial AI response received:', aiData);
-
-        // Only set the fetched AI data without adding initialMessages
-        setInitialData(aiData.content);
-      } catch (error) {
-        console.error('Error fetching initial AI response:', error);
-      }
-    };
-
-    fetchAIResponse();
-  }, []);
+    const savedAIResult = localStorage.getItem('aiResult');
+    if (savedAIResult) {
+      setInitialData(JSON.parse(savedAIResult).content);
+    } else if (aiResult) {
+      setInitialData(aiResult.content);
+      localStorage.setItem('aiResult', JSON.stringify(aiResult));
+    }
+  }, [aiResult]);
 
   const handleExpand = async (topic, index, sectionTitle) => {
+    initializeWebSocket();
     setIsLoading(true);
     if (!isClickable) return; // Prevent clicks if not clickable
 
