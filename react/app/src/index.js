@@ -15,3 +15,10 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
+<link
+  rel="stylesheet"
+  href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+  integrity="sha384-r4Ny2Iblkij+vZmI2ud1np98DwbTkx+dyP7XKk2rv+Tw5I2j53ZvjycEx1xSBhXR"
+  crossorigin="anonymous"
+/>

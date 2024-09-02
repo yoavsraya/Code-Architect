@@ -148,6 +148,8 @@ function App() {
     setFinishFetchRepo(false);
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('selectedRepo');
+    localStorage.removeItem('flowchart-nodes');
+    localStorage.removeItem('flowchart-edges');
   };
 
   return (
