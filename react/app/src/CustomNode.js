@@ -6,7 +6,6 @@ const folderColors = ['color-0', 'color-1', 'color-2', 'color-3'];
 
 const CustomNode = ({ data }) => {
   const [showMethods, setShowMethods] = useState(false);
-
   // Assign color based on FolderIndex
   const colorClass = folderColors[data.folderIndex % folderColors.length];
 
@@ -35,6 +34,8 @@ const CustomNode = ({ data }) => {
           ))}
         </ul>
       )}
+     <Handle type="source" position="right" id="a" /> {/* Add a unique handle ID */}
+     <Handle type="target" position="left" id="b" /> {/* Add a unique handle ID */}
     </div>
   );
 };

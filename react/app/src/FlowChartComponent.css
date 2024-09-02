@@ -43,21 +43,7 @@
   }
   
   /* Edge label styles */
-  .react-flow__edge-text {
-    fill: #333; /* Text color */
-    font-size: 12px; /* Font size */
-    font-family: Arial, sans-serif; /* Font family */
-    background-color: rgba(255, 255, 255, 0.8); /* Add background for readability */
-    padding: 2px 5px; /* Padding around text */
-    border-radius: 4px; /* Rounded corners */
-    white-space: nowrap; /* Prevent text wrapping */
-    box-sizing: border-box; /* Include padding in the total width */
-    user-select: none; /* Prevent text selection */
-    pointer-events: none; /* Prevent interaction with the label */
-    max-width: none; /* Allow the label to expand with text */
-    overflow: visible; /* Let the text be fully visible */
-    text-overflow: clip; /* Remove ellipsis, show full text */
-  }
+  
 
   .floatingedges {
   flex-direction: column;
@@ -70,6 +56,21 @@
   opacity: 0;
 }
 
-  
+.react-flow__edge-text {
+  fill: #333; /* Text color */
+  font-size: 12px; /* Font size */
+  font-family: Arial, sans-serif; /* Font family */
+  background-color: rgba(255, 255, 255, 0.8); /* Background color for readability */
+  padding: 2px 5px; /* Padding around the text */
+  border-radius: 4px; /* Rounded corners */
+  white-space: nowrap; /* Prevent text wrapping */
+  box-sizing: content-box; /* Ensure the padding and border are outside the text */
+  user-select: none; /* Prevent text selection */
+  pointer-events: none; /* Prevent interaction with the label */
+  display: inline; /* Keep background size to fit text */
+  max-width: 100%; /* Prevent expanding beyond the text */
+  overflow: hidden; /* Hide overflow */
+  text-overflow: ellipsis; /* Add ellipsis if text is too long */
+}
 
   

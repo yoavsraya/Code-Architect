@@ -21,6 +21,9 @@ import './FlowChartComponent.css';
 const edgeTypes = {floating: FloatingEdge};
 const nodeTypes = { custom: CustomNode };
 
+const LOCAL_STORAGE_KEY_NODES = 'flowchart-nodes';
+const LOCAL_STORAGE_KEY_EDGES = 'flowchart-edges';
+
 const fetchGraphData = async () => {
   console.log("calling graphdata api")
   const response = await fetch('http://54.243.195.75:3000/api/getGraphData');
@@ -44,19 +47,33 @@ const FlowChartComponent = () => {
 
   // Fetch data and initialize nodes and edges on component mount
   useEffect(() => {
-    fetchGraphData()
-      .then((data) => {
-        const { transformedNodes, transformedEdges } = createNodesAndEdges(data.Vertices, data.Edges);
-        console.log(transformedNodes);
-        console.log(transformedEdges);
-        setNodes(transformedNodes);
-        setEdges(transformedEdges);
-      })
-      .catch((err) => {
-        setError(err);
-        console.error('Error fetching graph data:', err);
-      });
+    // Load nodes and edges from localStorage if available
+    const savedNodes = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_NODES)) || [];
+    const savedEdges = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_EDGES)) || [];
+
+    if (savedNodes.length > 0) {
+      setNodes(savedNodes);
+      setEdges(savedEdges);
+    } else {
+      fetchGraphData()
+        .then((data) => {
+          const { transformedNodes, transformedEdges } = createNodesAndEdges(data.Vertices, data.Edges);
+          console.log(transformedNodes);
+          console.log(transformedEdges);
+          setNodes(transformedNodes);
+          setEdges(transformedEdges);
+        })
+        .catch((err) => {
+          setError(err);
+          console.error('Error fetching graph data:', err);
+        });
+    }
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY_NODES, JSON.stringify(nodes));
+    localStorage.setItem(LOCAL_STORAGE_KEY_EDGES, JSON.stringify(edges));
+  }, [nodes, edges]);
     
   const onConnect = useCallback(
     (params) =>
@@ -76,7 +93,7 @@ const FlowChartComponent = () => {
   const handleSearch = (className) => {
     const node = nodes.find((node) => node.id === className);
     if (node) {
-      const yOffset = 150;
+      const yOffset = 130;
       reactFlowInstance.setCenter(node.position.x, node.position.y + yOffset, {
         zoom: 1.5,
         duration: 800,
@@ -115,6 +132,7 @@ const FlowChartComponent = () => {
         edgeTypes={edgeTypes}
         nodeTypes={nodeTypes}
         connectionLineComponent={FloatingConnectionLine}
+        style={{ width: '100%', height: '100%' }} 
       >
         <Background />
       </ReactFlow>
