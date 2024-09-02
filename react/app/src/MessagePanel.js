@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './MessagePanel.css';
+import LoadingScreenAI from './LoadingScreenAI'; // Import the LoadingScreen component
+
 
 const MessagePanel = () => {
+
   const initialMessages = [
     { type: 'from-system', text: "Hello! I'm your architect AI Assistance!" },
     { type: 'from-system', text: "I went over your code and I have some suggestions for you." },
@@ -9,17 +12,56 @@ const MessagePanel = () => {
 
   const [expandedContent, setExpandedContent] = useState('');
   const [initialData, setInitialData] = useState([]);
-  const [additionalMessages, setAdditionalMessages] = useState([]); // State for additional messages
   const [removedButtons, setRemovedButtons] = useState([]);
   const [selectedMessage, setSelectedMessage] = useState('');
-  const [selectedMessageIndex, setSelectedMessageIndex] = useState(null); // Track selected message index
   const [isExpandedView, setIsExpandedView] = useState(false); // Track if we are in the expanded view
   const [isClickable, setIsClickable] = useState(true); // Track whether messages are clickable
+  const [isLoading, setIsLoading] = useState(false); // Set loading to false initially
+  const [socket, setSocket] = useState(null);
+  let ws;
+
+  const initializeWebSocket = () => {
+    if(ws == null)
+      {
+        ws = new WebSocket('ws://54.243.195.75:3000');
+      }
+    ws.onopen = () => {
+      console.log('WebSocket message connection established');
+    };
+
+    ws.onmessage = (event) => {
+      console.log('WebSocket message received:', event.data);
+      const message = JSON.parse(event.data);
+      if (message.runAI)
+      {
+        console.log("AI finished");
+        setIsLoading(false); // Stop loading when message received
+      }
+      else if (message.ExtandAI)
+      {
+        console.log("extand finished");
+        setIsLoading(false); // Stop loading when message received
+      }
+    };
+
+    ws.onclose = () => {
+      console.log('WebSocket message connection closed.');
+      ws = null;
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    setSocket(ws); // Save the WebSocket instance in the state
+  };
 
   useEffect(() => {
     const fetchAIResponse = async () => {
+      setIsLoading(true);
       console.log("Fetching initial AI response...");
       try {
+        initializeWebSocket();
         const response = await fetch('http://54.243.195.75:3000/api/runAI');
         if (!response.ok) {
           throw new Error('Failed to fetch AI response');
@@ -27,6 +69,7 @@ const MessagePanel = () => {
         const aiData = await response.json();
         console.log('Initial AI response received:', aiData);
 
+        // Only set the fetched AI data without adding initialMessages
         setInitialData(aiData.content);
       } catch (error) {
         console.error('Error fetching initial AI response:', error);
@@ -37,28 +80,19 @@ const MessagePanel = () => {
   }, []);
 
   const handleExpand = async (topic, index, sectionTitle) => {
+    setIsLoading(true);
     if (!isClickable) return; // Prevent clicks if not clickable
 
     // Remove all '**' occurrences in the topic
     const cleanedTopic = topic.replace(/\*\*(.*?)\*\*/g, '$1');
 
-    // Create additional messages and append them to the existing messages
-    const newMessages = [
-      { type: 'from-me', text: "Please add more information about this:" },
-      { type: 'from-me', text: cleanedTopic }
-    ];
-
-    // Update state with new additional messages
-    setAdditionalMessages((prevMessages) => {
-      const updatedMessages = [...prevMessages, ...newMessages];
-      console.log('Updated additional messages:', updatedMessages);
-      return updatedMessages;
-    });
+    // Create the additional message
+    const additionalMessage = "Give me more information about this subject";
 
     // Set the selected message with the title and texts
     setSelectedMessage({
-      sectionTitle,
-      texts: [cleanedTopic],
+        sectionTitle, // Pass the section title
+        texts: [additionalMessage, cleanedTopic], // Store both messages
     });
 
     setIsExpandedView(true); // Set to expanded view
@@ -69,7 +103,7 @@ const MessagePanel = () => {
     let match;
 
     while ((match = regex.exec(topic)) !== null) {
-      filesSet.add(match[1]);
+        filesSet.add(match[1]);
     }
 
     const files = Array.from(filesSet);
@@ -78,61 +112,48 @@ const MessagePanel = () => {
     console.log('Files to fetch:', files);
 
     try {
-      const response = await fetch('http://54.243.195.75:3000/api/expand', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          topic,
-          files,
-        }),
-      });
-      const expandedData = await response.json();
-      console.log('Expanded data received:', expandedData);
+        const response = await fetch('http://54.243.195.75:3000/api/expand', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                topic,
+                files,
+            }),
+        });
+        const expandedData = await response.json();
+        console.log('Expanded data received:', expandedData);
 
-      if (Array.isArray(expandedData.content)) {
-        const content = expandedData.content.join('\n');
-        setExpandedContent(content); // Update with new expanded content
-      } else {
-        setExpandedContent(expandedData.content); // Update with new expanded content
-      }
+        if (Array.isArray(expandedData.content)) {
+            const content = expandedData.content.join('\n');
+            setExpandedContent(content); // Update with new expanded content
+        } else {
+            setExpandedContent(expandedData.content); // Update with new expanded content
+        }
 
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
+        // Scroll to the top after content is fully rendered
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
 
     } catch (error) {
-      console.error('Error expanding topic:', error);
+        console.error('Error expanding topic:', error);
     }
+};
+
+
+  const handleRemoveButton = (index) => {
+    setRemovedButtons([...removedButtons, index]);
   };
 
   const handleBack = () => {
     setIsExpandedView(false); // Return to the initial view
     setSelectedMessage(''); // Clear the selected message
     setExpandedContent(''); // Clear expanded content
-    setSelectedMessageIndex(null); // Clear selected message index
-    setAdditionalMessages([]); // Clear additional messages
     setIsClickable(true); // Re-enable clicks on messages
-  };
-
-  const renderExpandedContent = (content) => {
-    const lines = content.split('\n').filter(paragraph => paragraph.trim() !== '');
-    const firstLine = lines[0]?.replace(/^###\s*/, ''); // Remove "###" from the start of the first line
-    return (
-      <>
-        {firstLine && <h3Y>{firstLine}</h3Y>}
-        {lines.slice(1).map((paragraph, index) => (
-          <button key={index} className="from-them">
-            {paragraph.split('**').map((part, i) => (
-              i % 2 === 1 ? <strong key={i}>{part}</strong> : part
-            ))}
-          </button>
-        ))}
-      </>
-    );
-  };
+};
 
   const parseContent = (content) => {
     if (Array.isArray(content)) {
@@ -150,7 +171,7 @@ const MessagePanel = () => {
         const [title, ...bullets] = section.split('\n').filter(line => line.trim());
         return {
           title: title.trim(),
-          bullets: bullets.map(bullet => bullet.trim()).filter(bullet => bullet.startsWith('- ') && bullet.trim().length > 0),
+          bullets: bullets.map(bullet => bullet.trim()).filter(bullet => bullet.startsWith('- '))
         };
       });
 
@@ -160,7 +181,7 @@ const MessagePanel = () => {
   const renderButtons = (sections) => {
     return sections.map((section, sectionIndex) => (
       <div key={sectionIndex}>
-        {!isExpandedView && <h3>{section.title}</h3>}
+        {!isExpandedView && <h3>{section.title}</h3>} {/* Only render the title if not in expanded view */}
         {section.bullets.map((bullet, bulletIndex) => {
           const index = `${sectionIndex}-${bulletIndex}`;
           if (removedButtons.includes(index)) {
@@ -172,14 +193,18 @@ const MessagePanel = () => {
               onClick={() => handleExpand(bullet, index, section.title)}
               className="from-them"
               key={index}
-              disabled={!isClickable}
+              disabled={!isClickable} // Disable button if not clickable
             >
-              {bulletParts[0].split('**').map((part, i) => (
-                i % 2 === 1 ? <strong key={i}>{part}</strong> : part
-              ))}
-              {bulletParts[1] && bulletParts[1].split('**').map((part, i) => (
-                i % 2 === 1 ? <strong key={i}>{part}</strong> : part
-              ))}
+              {bulletParts[0]}{bulletParts[1]}
+              <span 
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent the expand action from triggering
+                  handleRemoveButton(index);
+                }}
+                className="remove-button2"
+              >
+                &#10006;
+              </span>
             </button>
           );
         })}
@@ -188,29 +213,41 @@ const MessagePanel = () => {
   };
 
   return (
-    <div className="imessage">
-      {isExpandedView ? (
-        <>
-          <button className="back-button" onClick={handleBack}>Back</button>
-          <h3>{selectedMessage.sectionTitle}</h3>
-          {renderExpandedContent(expandedContent)}
-        </>
-      ) : (
-        <>
-          {initialMessages.map((msg, index) => (
-            <button key={index} className={msg.type}>
-              {msg.text}
-            </button>
-          ))}
-          {initialData && renderButtons(parseContent(initialData))}
-          {additionalMessages.map((msg, index) => (
-            <button key={index} className={msg.type}>
-              {msg.text}
-            </button>
-          ))}
-        </>
-      )}
-    </div>
+    isLoading ? ( // Show loading screen if loading is true
+      <LoadingScreenAI />
+    ) :
+    (
+      <div className="imessage">
+        {isExpandedView && (
+          <>
+            <button className="back-button" onClick={handleBack}>Back</button>
+            {selectedMessage && (
+              <>
+                <h3>{selectedMessage.sectionTitle}</h3> {/* Title appears before the messages */}
+                <button className="from-me">
+                  {selectedMessage.texts[0]}
+                </button>
+                <button className="from-me">
+                  {selectedMessage.texts[1]}
+                </button>
+              </>
+            )}
+          </>
+        )}
+        {expandedContent && isExpandedView ? (
+          renderButtons(parseContent(expandedContent))
+        ) : (
+          <>
+            {initialMessages.map((msg, index) => (
+              <button key={index} className={msg.type}>
+                {msg.text}
+              </button>
+            ))}
+            {initialData && renderButtons(parseContent(initialData))}
+          </>
+        )}
+      </div>
+    )
   );
 };
 

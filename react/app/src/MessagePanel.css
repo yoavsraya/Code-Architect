@@ -27,6 +27,18 @@
   margin-bottom: 10px;
 }
 
+.remove-button2 {
+  position: absolute;
+  top: 5px; /* Adjust as needed */
+  right: 5px; /* Adjust as needed */
+  background: none;
+  border: none;
+  color: #000000;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+
 /* Back button styling */
 .back-button {
   display: inline-block;

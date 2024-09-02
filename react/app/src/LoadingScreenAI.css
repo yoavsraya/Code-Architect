@@ -1,0 +1,25 @@
+/* loadingScreenAI.css */
+
+.loading-screenAI {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: transparent; /* Remove background */
+  }
+  
+  .loading-graphicAI {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 20px;
+    background-image: url('./loadingAI.gif'); /* Replace with your graphic path */
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  
+  .loading-textAI {
+    font-size: 1.5rem;
+    color: #cbedcd;
+  }
+  

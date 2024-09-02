@@ -114,7 +114,11 @@ app.get('/api/runAI', async (req, res) => {
   try {
     const aiResult = await OpenAIApi.RunAI();
     console.log('AI Result:', aiResult);
-
+    wss.clients.forEach(client => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify({ runAI: true }));
+      }
+    });
     res.send({ content: aiResult });
   } catch (error) {
     console.error('Error running AI:', error);
@@ -153,7 +157,11 @@ app.post('/api/expand', async (req, res) => {
   try {
     const expandedMessage = await OpenAIApi.ExpandTopic(topic, fileContents);
     console.log(`Expanded message: ${expandedMessage}`);
-    
+    wss.clients.forEach(client => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify({ ExtandAI: true }));
+      }
+    });
     res.json({ content: expandedMessage });
   } catch (error) {
     console.error('Error expanding topic:', error);

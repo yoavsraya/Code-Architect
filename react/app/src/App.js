@@ -47,7 +47,7 @@ function App() {
     try {
       initializeWebSocket();
       const response = await fetch(`http://54.243.195.75:3000/api/fetchSelectedRepo?selectedRepo=${encodeURIComponent(i_selectedRepo)}`);
-      const socket = new WebSocket('ws://54.243.195.75:3000');
+      //const socket = new WebSocket('ws://54.243.195.75:3000');
       if (!response.ok) {
         console.error('Failed to fetch selected repository data');
       } else {
@@ -82,12 +82,12 @@ function App() {
       setData({ repo: savedSelectedRepo });
 
       // Start loading when checking saved authentication
-      setIsLoading(true);
-      try {
-        fetchAndBuildProject(savedSelectedRepo);
-      } catch (error) {
-        console.error('Error fetching selected repository data:', error);
-      }
+      // setIsLoading(true);
+      // try {
+      //   fetchAndBuildProject(savedSelectedRepo);
+      // } catch (error) {
+      //   console.error('Error fetching selected repository data:', error);
+      // }
     }
   }, []);
 
@@ -95,6 +95,7 @@ function App() {
     console.log("handle login");
     setIsAuthenticated(true);
     localStorage.setItem('isAuthenticated', 'true');
+    localStorage.setItem('selectedRepo', selectedRepo); // Persist selected repo
     setSelectedRepo(selectedRepo);
     setData({ repo: selectedRepo });
     setIsLoading(true); // Start loading when login starts
