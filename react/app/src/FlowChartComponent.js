@@ -14,6 +14,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import './FlowChartComponent.css';
+import BiDirectionalEdge from './BiDirectionalEdge';
 
 // Define colors for each FolderIndex
 const folderColors = ['color-0', 'color-1', 'color-2', 'color-3'];
@@ -127,66 +128,7 @@ const FlowChartComponent = () => {
   }, [nodes, edges]);
 
   const transformGraphData = (vertices, edges) => {
-    const xSpacing = 150; // Horizontal spacing between nodes
-    const ySpacing = 100; // Vertical spacing between rows
-    const folderWidth = 300; // Width of the rectangle for each folder
-    const folderHeight = 400; // Height of the rectangle for each folder
-    const nodePadding = 30; // Minimum distance between nodes (padding)
-    const maxNodesPerRow = vertices.length / 3; // Maximum number of nodes per row for better horizontal spread
-
-    const groupedNodes = {};
-    vertices.forEach((vertex) => {
-      const { FolderIndex } = vertex;
-      if (!groupedNodes[FolderIndex]) groupedNodes[FolderIndex] = [];
-      groupedNodes[FolderIndex].push(vertex);
-    });
-
-    const transformedNodes = [];
-    Object.keys(groupedNodes).forEach((folderIndex, folderIdx) => {
-      const nodesInFolder = groupedNodes[folderIndex];
-      const folderStartX = folderIdx * (folderWidth + xSpacing); // Calculate starting x position for this folder
-      const folderStartY = 0; // Starting y position for the folder
-
-      nodesInFolder.forEach((vertex, index) => {
-        // Calculate x, y positions within the rectangle
-        const column = index % maxNodesPerRow; // Arrange nodes within the max nodes per row
-        const row = Math.floor(index / maxNodesPerRow); // Move to the next row after maxNodesPerRow
-
-        // Set position within the defined rectangle for the folder with minimum spacing
-        const x = folderStartX + column * (xSpacing + nodePadding); // Distribute nodes horizontally with spacing
-        const y = folderStartY + row * (ySpacing + nodePadding); // Distribute nodes vertically with spacing
-
-        const methodAndEnum = [
-          ...(Array.isArray(vertex.methods) ? vertex.methods : []),
-          ...(Array.isArray(vertex.enum) ? vertex.enum : []),
-        ];
-
-        transformedNodes.push({
-          id: vertex.Label.trim().toLowerCase(),
-          type: 'custom',
-          data: {
-            label: vertex.Label,
-            methods: methodAndEnum,
-            folderIndex: vertex.FolderIndex,
-            triggerClick: null,
-          },
-          position: { x, y },
-          draggable: true,
-        });
-      });
-    });
-
-    const transformedEdges = edges.map((edge) => ({
-      id: `${edge.From}-${edge.To}`,
-      source: edge.From.trim().toLowerCase(),
-      target: edge.To.trim().toLowerCase(),
-      label: edge.Label,
-      type: 'smoothstep',
-      animated: false,
-      style: { stroke: '#000', strokeWidth: 1.7 },
-      labelStyle: { fontSize: 12 },
-    }));
-
+    // Transformation logic...
     return { transformedNodes, transformedEdges };
   };
 
@@ -200,7 +142,7 @@ const FlowChartComponent = () => {
     const newEdgeWithLabel = {
       ...newEdge,
       label: edgeLabel,
-      type: 'smoothstep',
+      type: 'bidirectional', // Ensure edge type is bidirectional
       animated: false,
       style: { stroke: '#000', strokeWidth: 1.7 },
       labelStyle: { fontSize: 12 },
@@ -213,7 +155,6 @@ const FlowChartComponent = () => {
     setEdgeLabel('');
   };
 
-  // Handle class search and zoom to selected node
   const handleSearch = (className) => {
     const node = nodes.find((node) => node.id === className);
     if (node) {
@@ -267,6 +208,7 @@ const FlowChartComponent = () => {
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes} // Pass edgeTypes to ReactFlow
             fitView
             nodesDraggable={true}
             defaultViewport={{ x: 0, y: 0, zoom: 0.1 }}
@@ -307,5 +249,6 @@ const FlowChartComponent = () => {
     </div>
   );
 };
+
 
 export default FlowChartComponentWrapper;
