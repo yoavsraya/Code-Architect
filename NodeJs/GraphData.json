@@ -1,6 +1,108 @@
 [
   {
-    "FolderName": "Ex03.ConsoleUI",
+    "FolderName": "Hospital_Example",
+    "ClassName": "Doctor",
+    "Accessibility": "public",
+    "InheritsFrom": "Person",
+    "Compositions": [],
+    "Aggregations": [],
+    "NestedClasses": [],
+    "Methods": [
+      "+ Diagnose"
+    ],
+    "Enums": [],
+    "Usage": []
+  },
+  {
+    "FolderName": "Hospital_Example",
+    "ClassName": "Hospital",
+    "Accessibility": "public",
+    "InheritsFrom": "Doctor",
+    "Compositions": [],
+    "Aggregations": [
+      "Nurse",
+      "Receptionist"
+    ],
+    "NestedClasses": [],
+    "Methods": [
+      "+ AccessMedicalRecord",
+      "+ Operate"
+    ],
+    "Enums": [],
+    "Usage": []
+  },
+  {
+    "FolderName": "Hospital_Example",
+    "ClassName": "MedicalRecord",
+    "Accessibility": "public",
+    "InheritsFrom": null,
+    "Compositions": [],
+    "Aggregations": [],
+    "NestedClasses": [],
+    "Methods": [
+      "+ DisplayRecord"
+    ],
+    "Enums": [],
+    "Usage": []
+  },
+  {
+    "FolderName": "Hospital_Example",
+    "ClassName": "Nurse",
+    "Accessibility": "public",
+    "InheritsFrom": "Person",
+    "Compositions": [],
+    "Aggregations": [],
+    "NestedClasses": [],
+    "Methods": [
+      "+ Assist"
+    ],
+    "Enums": [],
+    "Usage": []
+  },
+  {
+    "FolderName": "Hospital_Example",
+    "ClassName": "Patient",
+    "Accessibility": "public",
+    "InheritsFrom": "Person",
+    "Compositions": [],
+    "Aggregations": [],
+    "NestedClasses": [],
+    "Methods": [
+      "+ ReceiveTreatment"
+    ],
+    "Enums": [],
+    "Usage": []
+  },
+  {
+    "FolderName": "Hospital_Example",
+    "ClassName": "Person",
+    "Accessibility": "public",
+    "InheritsFrom": null,
+    "Compositions": [],
+    "Aggregations": [],
+    "NestedClasses": [],
+    "Methods": [
+      "+ DisplayInfo"
+    ],
+    "Enums": [],
+    "Usage": []
+  },
+  {
+    "FolderName": "Hospital_Example",
+    "ClassName": "Receptionist",
+    "Accessibility": "public",
+    "InheritsFrom": "Person",
+    "Compositions": [],
+    "Aggregations": [],
+    "NestedClasses": [],
+    "Methods": [
+      "+ CheckInPatient"
+    ],
+    "Enums": [],
+    "Usage": []
+  },
+  {
+    "FolderName": "Program",
     "ClassName": "Program",
     "Accessibility": "public",
     "InheritsFrom": null,
@@ -8,297 +110,15 @@
     "Aggregations": [],
     "NestedClasses": [],
     "Methods": [
-      "+ Main"
+      "- Main"
     ],
     "Enums": [],
     "Usage": [
-      "TUI"
+      "Nurse",
+      "Receptionist",
+      "Hospital",
+      "Patient",
+      "MedicalRecord"
     ]
-  },
-  {
-    "FolderName": "Ex03.ConsoleUI",
-    "ClassName": "TUI",
-    "Accessibility": "public",
-    "InheritsFrom": null,
-    "Compositions": [
-      "GarageManager",
-      "CreatingObject"
-    ],
-    "Aggregations": [],
-    "NestedClasses": [],
-    "Methods": [
-      "+ RunGarage",
-      "- getFullDetailsOnVehicle",
-      "- fillElectric",
-      "- fillGas",
-      "- fillAirToMax",
-      "- changeVehicleCondition",
-      "- getListOfVehiclesByFilter",
-      "- getUserChoiceFromMenu",
-      "- welcoming",
-      "- putVehicleInGarage",
-      "- putDetailsOfVehicleAndClient",
-      "- putFlatVehicleInGarage",
-      "- userInputForClientInfoRequirements",
-      "- userInputForVehicleRequirements",
-      "- printListOfString"
-    ],
-    "Enums": [
-      "eChoiceFromMenu"
-    ],
-    "Usage": []
-  },
-  {
-    "FolderName": "Ex03.GarageLogic",
-    "ClassName": "Car",
-    "Accessibility": "internal",
-    "InheritsFrom": "Vehicle",
-    "Compositions": [
-      "eNumOfDoors",
-      "eCarColor"
-    ],
-    "Aggregations": [],
-    "NestedClasses": [],
-    "Methods": [
-      "+ RequirementsList",
-      "+ BuildVehicle",
-      "+ VehicleDetails",
-      "# UpdateEnergyDetails",
-      "# UpdateFuelType"
-    ],
-    "Enums": [
-      "eNumOfDoors",
-      "eCarColor",
-      "eRequirements"
-    ],
-    "Usage": []
-  },
-  {
-    "FolderName": "Ex03.GarageLogic",
-    "ClassName": "CarExistException",
-    "Accessibility": "public",
-    "InheritsFrom": "Exception",
-    "Compositions": [],
-    "Aggregations": [],
-    "NestedClasses": [],
-    "Methods": [],
-    "Enums": [],
-    "Usage": []
-  },
-  {
-    "FolderName": "Ex03.GarageLogic",
-    "ClassName": "ClientInfo",
-    "Accessibility": "internal",
-    "InheritsFrom": null,
-    "Compositions": [
-      "Vehicle"
-    ],
-    "Aggregations": [
-      "eClientStatus"
-    ],
-    "NestedClasses": [],
-    "Methods": [
-      "+ GetVehiclePlateNumber",
-      "+ FillWheelsAirToMax",
-      "+ FillEnergyInVehicle",
-      "+ GetInfo"
-    ],
-    "Enums": [
-      "eClientStatus"
-    ],
-    "Usage": []
-  },
-  {
-    "FolderName": "Ex03.GarageLogic",
-    "ClassName": "CreatingObject",
-    "Accessibility": "public",
-    "InheritsFrom": null,
-    "Compositions": [
-      "Vehicle"
-    ],
-    "Aggregations": [],
-    "NestedClasses": [],
-    "Methods": [
-      "+ CreateNewVehicle",
-      "+ MyVehicleRequirements",
-      "+ MyClientInfoRequirements",
-      "+ CreateMyClientInfoCard",
-      "+ IsGarageEmpty"
-    ],
-    "Enums": [
-      "eVehiclesType"
-    ],
-    "Usage": []
-  },
-  {
-    "FolderName": "Ex03.GarageLogic",
-    "ClassName": "ElectricMotor",
-    "Accessibility": "internal",
-    "InheritsFrom": "MotorType",
-    "Compositions": [],
-    "Aggregations": [],
-    "NestedClasses": [],
-    "Methods": [
-      "+ ReFill",
-      "+ ToString"
-    ],
-    "Enums": [],
-    "Usage": []
-  },
-  {
-    "FolderName": "Ex03.GarageLogic",
-    "ClassName": "GarageManeger",
-    "Accessibility": "public",
-    "InheritsFrom": null,
-    "Compositions": [
-      "eClientStatus"
-    ],
-    "Aggregations": [],
-    "NestedClasses": [],
-    "Methods": [
-      "+ IsVehicleExist",
-      "- findClientByPlateNumber",
-      "+ ReturnListOfPlatesByFilter",
-      "+ UpdateClientStatus",
-      "- updateListOfClients",
-      "+ FillWheelsToMax",
-      "+ FillEnergyInVehicle",
-      "+ GetVehicleInfo",
-      "+ GetVehicleRequirement",
-      "+ GetClientRequirement",
-      "+ DetailsToAddClient",
-      "+ GetGasTypeList",
-      "+ GetVehicleOptions",
-      "+ IsGasType"
-    ],
-    "Enums": [],
-    "Usage": []
-  },
-  {
-    "FolderName": "Ex03.GarageLogic",
-    "ClassName": "GasMotor",
-    "Accessibility": "internal",
-    "InheritsFrom": "MotorType",
-    "Compositions": [],
-    "Aggregations": [],
-    "NestedClasses": [],
-    "Methods": [
-      "+ ReFill",
-      "+ ToString"
-    ],
-    "Enums": [],
-    "Usage": []
-  },
-  {
-    "FolderName": "Ex03.GarageLogic",
-    "ClassName": "MotorBike",
-    "Accessibility": "internal",
-    "InheritsFrom": "Vehicle",
-    "Compositions": [
-      "eLicenseType"
-    ],
-    "Aggregations": [],
-    "NestedClasses": [],
-    "Methods": [
-      "+ RequirementsList",
-      "+ BuildVehicle",
-      "+ VehicleDetails",
-      "# UpdateEnergyDetails",
-      "# UpdateFuelType"
-    ],
-    "Enums": [
-      "eLicenseType",
-      "eRequirements"
-    ],
-    "Usage": []
-  },
-  {
-    "FolderName": "Ex03.GarageLogic",
-    "ClassName": "MotorType",
-    "Accessibility": "public",
-    "InheritsFrom": null,
-    "Compositions": [
-      "eEnergyType"
-    ],
-    "Aggregations": [],
-    "NestedClasses": [],
-    "Methods": [
-      "+ ReFill",
-      "+ CalculateMeterPercent"
-    ],
-    "Enums": [
-      "eEnergyType"
-    ],
-    "Usage": []
-  },
-  {
-    "FolderName": "Ex03.GarageLogic",
-    "ClassName": "Track",
-    "Accessibility": "internal",
-    "InheritsFrom": "Vehicle",
-    "Compositions": [],
-    "Aggregations": [],
-    "NestedClasses": [],
-    "Methods": [
-      "+ RequirementsList",
-      "+ BuildVehicle",
-      "+ VehicleDetails",
-      "# UpdateEnergyDetails",
-      "# UpdateFuelType"
-    ],
-    "Enums": [
-      "eRequirements"
-    ],
-    "Usage": []
-  },
-  {
-    "FolderName": "Ex03.GarageLogic",
-    "ClassName": "ValueOutOfRangeException",
-    "Accessibility": "internal",
-    "InheritsFrom": "Exception",
-    "Compositions": [],
-    "Aggregations": [],
-    "NestedClasses": [],
-    "Methods": [],
-    "Enums": [],
-    "Usage": []
-  },
-  {
-    "FolderName": "Ex03.GarageLogic",
-    "ClassName": "Wheels",
-    "Accessibility": "public",
-    "InheritsFrom": null,
-    "Compositions": [],
-    "Aggregations": [],
-    "NestedClasses": [],
-    "Methods": [
-      "~ UpdateWheelDetails"
-    ],
-    "Enums": [],
-    "Usage": []
-  },
-  {
-    "FolderName": "Ex03.GarageLogic",
-    "ClassName": "vehicle",
-    "Accessibility": "public",
-    "InheritsFrom": null,
-    "Compositions": [
-      "MotorType",
-      "Wheels"
-    ],
-    "Aggregations": [],
-    "NestedClasses": [],
-    "Methods": [
-      "+ ReFillVehicle",
-      "+ FillWheelsAirToMax",
-      "+ RequirementsList",
-      "+ BuildVehicle",
-      "# CreateEngine",
-      "+ VehicleDetails",
-      "# UpdateEnergyDetails",
-      "# UpdateFuelType"
-    ],
-    "Enums": [],
-    "Usage": []
   }
 ]

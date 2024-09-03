@@ -1,143 +1,75 @@
 Project: UserFiles
 
-Folder: Ex03.ConsoleUI
+Folder: Hospital_Example
+File: Doctor.cs
+Class: Doctor
+  Accessibility: public
+  Belongs to: EXE
+  Dependencies:
+    Inheritance:
+      Inherits from: Person
+
+Folder: Hospital_Example
+File: Hospital.cs
+Class: Hospital
+  Accessibility: public
+  Belongs to: EXE
+  Dependencies:
+    Inheritance:
+      Inherits from: Doctor
+    Aggregations:
+      Nurse
+      Receptionist
+
+Folder: Hospital_Example
+File: MedicalRecord.cs
+Class: MedicalRecord
+  Accessibility: public
+  Belongs to: EXE
+
+Folder: Hospital_Example
+File: Nurse.cs
+Class: Nurse
+  Accessibility: public
+  Belongs to: EXE
+  Dependencies:
+    Inheritance:
+      Inherits from: Person
+
+Folder: Hospital_Example
+File: Patient.cs
+Class: Patient
+  Accessibility: public
+  Belongs to: EXE
+  Dependencies:
+    Inheritance:
+      Inherits from: Person
+
+Folder: Hospital_Example
+File: Person.cs
+Class: Person
+  Accessibility: public
+  Belongs to: EXE
+
+Folder: Hospital_Example
+File: Receptionist.cs
+Class: Receptionist
+  Accessibility: public
+  Belongs to: EXE
+  Dependencies:
+    Inheritance:
+      Inherits from: Person
+
+Folder: Program
 File: Program.cs
 Class: Program
   Accessibility: public
   Belongs to: EXE
   Dependencies:
     Usage:
-      TUI
-
-Folder: Ex03.ConsoleUI
-File: TUI.cs
-Class: TUI
-  Accessibility: public
-  Belongs to: EXE
-  Dependencies:
-    Composition:
-      GarageManager
-      CreatingObject
-
-Folder: Ex03.GarageLogic
-File: Car.cs
-Class: Car
-  Accessibility: internal
-  Belongs to: DLL
-  Dependencies:
-    Inheritance:
-      Inherits from: Vehicle
-    Composition:
-      eNumOfDoors
-      eCarColor
-
-Folder: Ex03.GarageLogic
-File: CarExistException.cs
-Class: CarExistException
-  Accessibility: public
-  Belongs to: DLL
-  Dependencies:
-    Inheritance:
-      Inherits from: Exception
-
-Folder: Ex03.GarageLogic
-File: ClientInfo.cs
-Class: ClientInfo
-  Accessibility: internal
-  Belongs to: DLL
-  Dependencies:
-    Composition:
-      Vehicle
-    Aggregations:
-      eClientStatus
-
-Folder: Ex03.GarageLogic
-File: CreatingObject.cs
-Class: CreatingObject
-  Accessibility: public
-  Belongs to: DLL
-  Dependencies:
-    Composition:
-      Vehicle
-
-Folder: Ex03.GarageLogic
-File: ElectricMotor.cs
-Class: ElectricMotor
-  Accessibility: internal
-  Belongs to: DLL
-  Dependencies:
-    Inheritance:
-      Inherits from: MotorType
-
-Folder: Ex03.GarageLogic
-File: GarageManeger.cs
-Class: GarageManeger
-  Accessibility: public
-  Belongs to: DLL
-  Dependencies:
-    Composition:
-      eClientStatus
-
-Folder: Ex03.GarageLogic
-File: GasMotor.cs
-Class: GasMotor
-  Accessibility: internal
-  Belongs to: DLL
-  Dependencies:
-    Inheritance:
-      Inherits from: MotorType
-
-Folder: Ex03.GarageLogic
-File: MotorBike.cs
-Class: MotorBike
-  Accessibility: internal
-  Belongs to: DLL
-  Dependencies:
-    Inheritance:
-      Inherits from: Vehicle
-    Composition:
-      eLicenseType
-
-Folder: Ex03.GarageLogic
-File: MotorType.cs
-Class: MotorType
-  Accessibility: public
-  Belongs to: DLL
-  Dependencies:
-    Composition:
-      eEnergyType
-
-Folder: Ex03.GarageLogic
-File: Track.cs
-Class: Track
-  Accessibility: internal
-  Belongs to: DLL
-  Dependencies:
-    Inheritance:
-      Inherits from: Vehicle
-
-Folder: Ex03.GarageLogic
-File: ValueOutOfRangeException.cs
-Class: ValueOutOfRangeException
-  Accessibility: internal
-  Belongs to: DLL
-  Dependencies:
-    Inheritance:
-      Inherits from: Exception
-
-Folder: Ex03.GarageLogic
-File: Wheels.cs
-Class: Wheels
-  Accessibility: public
-  Belongs to: DLL
-
-Folder: Ex03.GarageLogic
-File: vehicle.cs
-Class: vehicle
-  Accessibility: public
-  Belongs to: DLL
-  Dependencies:
-    Composition:
-      MotorType
-      Wheels
+      Nurse
+      Receptionist
+      Hospital
+      Patient
+      MedicalRecord
 
