@@ -20,9 +20,11 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          verify_host: false
           port: 22 # Default port
           script: |
-            cd Code-Analyzer
+            set -x
+            cd Code-Architect
             rm .env
             echo 'CALLBACK_URL = ${{ secrets.CALLBACK_URL }}' >> .env
             echo 'SSH_HOST = ${{ secrets.SSH_HOST }}' >> .env
