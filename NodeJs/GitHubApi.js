@@ -45,6 +45,27 @@ async function createFolder(directory) {
     });
 }
 
+async function createWebhookForRepo(owner, repo, webhookUrl) {
+    try {
+        const response = await octokit.rest.repos.createWebhook({
+            owner,
+            repo,
+            config: {
+                url: webhookUrl,
+                content_type: 'json',
+                secret: process.env.GITHUB_WEBHOOK_SECRET, // Optional: Set a secret for verifying payloads
+            },
+            events: ['push'], // Only listen for push events
+        });
+
+        console.log(`Webhook created successfully for repository: ${repo}`);
+        return response.data;
+    } catch (error) {
+        console.error(`Error creating webhook for repository ${repo}:`, error.message);
+        throw error;
+    }
+}
+
 function getRepoByName(repoName) {
     return UserData.repositories.find(repo => repo.name === repoName);
 }
@@ -106,6 +127,8 @@ async function cloneSelectedRepo(selectedRepo) {
       }
       console.log(`Repository cloned successfully: ${stdout}`);
   });
+
+  createWebhookForRepo(UserData.selectedRepo.owner,)
 
   console.log("END cloneSelectedRepo function");
 }
