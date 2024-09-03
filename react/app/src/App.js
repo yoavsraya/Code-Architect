@@ -5,7 +5,9 @@ import LoginPage from './LoginPage';
 import Header from './Header';
 import BigPanel from './BigPanel';
 import LoadingScreen from './LoadingScreen'; // Import the LoadingScreen component
+import AboutPage from './AboutPage'; // Import the AboutPage component
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 function App() {
   const [finishFetchRepo, setFinishFetchRepo] = useState(false);
@@ -182,6 +184,7 @@ function App() {
                 )
               }
             />
+          <Route path="/about" element={<AboutPage />} />
           </Routes>
         </div>
       </div>

@@ -2,8 +2,8 @@ import React from 'react';
 import Select from 'react-select';
 
 const customStyles = {
-  control: (styles) => ({ ...styles, backgroundColor: 'white', width: '200px' }),
-  menu: (styles) => ({ ...styles, backgroundColor: '#7d8c8a' }), // This line sets the background color of the menu
+  control: (styles) => ({ ...styles, backgroundColor: 'white', width: '15rem' ,height: '2.9rem' }),
+  menu: (styles) => ({ ...styles, backgroundColor: '#DFE6E0' }), // This line sets the background color of the menu
   option: (styles, { isDisabled, isFocused, isSelected }) => {
     return {
       ...styles,
@@ -32,7 +32,7 @@ const customStyles = {
     };
   },
   input: (styles) => ({ ...styles }),
-  placeholder: (styles) => ({ ...styles, color: '#999', fontStyle: 'italic' }), // Add custom styles for the placeholder
+  placeholder: (styles) => ({ ...styles, color: '#282c34', fontStyle: 'italic' }), // Add custom styles for the placeholder
   singleValue: (styles) => ({ ...styles }),
 };
 

@@ -16,7 +16,7 @@ body, html {
   justify-content: space-between; /* Space between the left and right sections */
   align-items: center;
   padding: 4px 20px; /* Reduced padding for a smaller banner */
-  background-color: #26402e; /* Background color */
+  background-color: #3b644f; /* Background color */
   width: 100%;
   z-index: 1000;
   position: fixed; /* Fixed position to stay at the top */
@@ -32,7 +32,7 @@ body, html {
 }
 
 .logo {
-  height: 45px; /* Adjust the height as needed */
+  height: 65px; /* Adjust the height as needed */
   width: auto; /* Maintain aspect ratio */
   margin-right: 5px; /* Reduced margin between the logos */
 }

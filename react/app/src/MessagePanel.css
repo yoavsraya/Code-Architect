@@ -40,27 +40,25 @@
 
 
 /* Back button styling */
-.back-button {
-  display: inline-block;
-  background-color: transparent;
-  color: #4CAF50;
-  border: none;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  padding: 5px 10px;
-  position: absolute;
-  top: 10px;
-  left: 0px;
-  border-radius: 5px;
-  text-align: center;
+.imessage .back-button2 {
+  display: inline-flex !important; /* Ensures button sizing matches content */
+  align-items: center !important; /* Vertically aligns content */
+  justify-content: center !important; /* Centers content horizontally */
+  background-color: #5a9879 !important; /* Force the correct background color */
+  color: #ffffff !important; /* Ensures text color is white */
+  font-size: 14px !important;
+  font-weight: bold !important;
+  cursor: pointer !important;
+  position: relative !important; /* Makes button follow normal document flow */
+  padding: 5px 10px !important; /* Padding around text */
+  border: none !important;
+  border-radius: 5px !important;
+  white-space: nowrap !important; /* Prevents text wrapping */
+  width: 4.8rem !important; /* Matches button width to content */
+  max-width: fit-content !important; /* Limits button width to content size */
+  box-sizing: border-box !important; /* Includes padding in width calculation */
 }
 
-.back-button::before {
-  content: '←';
-  margin-right: 5px;
-  font-weight: bold;
-}
 
 /* Section header styling */
 h3Y {

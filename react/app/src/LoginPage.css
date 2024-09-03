@@ -19,8 +19,8 @@
 .login-image {
   width: 250px; /* Adjusted width */
   height: auto; /* Maintain aspect ratio */
-  margin-bottom: 30px; /* Add some space between the image and the button */
-  margin-top: -200px; /* Adjusted margin */
+  margin-bottom: 2rem; /* Add some space between the image and the button */
+  margin-top: -2rem; /* Adjusted margin */
   border-radius: 50%; /* Make the image circular */
   object-fit: cover; /* Ensure the image covers the entire circle */
 }
@@ -33,8 +33,8 @@
 
 /* Adjust the button styling */
 .integrate-git-button {
-  background-color: #227b3b;
-  color: #ffffff;
+  background-color: #469d70;
+  color: #bcbcbc;
   padding: 20px 35px;
   border: none;
   border-radius: 10px;
@@ -65,7 +65,7 @@
   border: 2px solid #ccc;
   border-radius: 4px;
   background-color: #f9f9f9;
-  color: #333;
+  color: #212121;
   appearance: none; /* Remove default arrow */
   -moz-appearance: none; /* Remove default arrow for Firefox */
 }
@@ -74,13 +74,13 @@
 .repo-list option {
   padding: 9px;
   font-size: 14px;
-  background-color: #fff;
-  color: #333;
+  background-color: #DFE6E0;
+  color: #000000;
 }
 
 /* Style the confirm button */
 .repo-list button {
-  background-color: #2ea44f;
+  background-color: #5a8e73;
   color: #ffffff;
   padding: 13px 20px;
   border: none;

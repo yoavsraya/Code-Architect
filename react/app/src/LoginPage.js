@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import IntegrateGitButton from './IntegrateGitButton';
 import CustomSelect from './CustomSelect';
 import './LoginPage.css';
-import loginImage from './login-bg.png';
+import loginImage from './logoAndPic/login logo.svg';
 import Header from './Header';
 
 const LoginPage = ({ onLogin, setData }) => {

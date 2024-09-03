@@ -21,5 +21,7 @@
   .loading-text {
     font-size: 1.5rem;
     color: #cbedcd;
+    text-decoration: none;
+    border: none;
   }
   

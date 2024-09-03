@@ -8,6 +8,10 @@ const SmallPanel = React.memo(({ children }) => {
       {children}
     </div>
   );
-});
+}, areEqual);
+
+function areEqual(prevProps, nextProps) {
+  return prevProps.children === nextProps.children;
+}
 
 export default SmallPanel;

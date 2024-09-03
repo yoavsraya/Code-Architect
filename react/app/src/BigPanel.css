@@ -21,7 +21,7 @@
 .toggle-button {
   margin: 5px;
   padding: 10px 20px;
-  background-color: #4CAF50;
+  background-color: #79BC9A;
   border: none;
   color: white;
   cursor: pointer;
@@ -31,7 +31,7 @@
 }
 
 .toggle-button.active {
-  background-color: #45a049;
+  background-color: #448263;
 }
 
 .toggle-button:not(.active) {

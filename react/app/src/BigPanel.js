@@ -1,10 +1,10 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState, useCallback, useMemo } from 'react';
 import './BigPanel.css';
 import SmallPanel from './SmallPanel';
 import FlowChartComponent from './FlowChartComponent';
 import MessagePanel from './MessagePanel';
 
-const BigPanel = ({ data, setData , aiResult}) => {
+const BigPanel = ({ data, setData, aiResult }) => {
   const containerRef = useRef(null);
   const [leftWidth, setLeftWidth] = useState(50);
   const [leftPanelVisible, setLeftPanelVisible] = useState(true);
@@ -46,6 +46,19 @@ const BigPanel = ({ data, setData , aiResult}) => {
     }
   }, [leftPanelVisible, rightPanelVisible]);
 
+  // Memoize the FlowChart and MessagePanel components
+  const memoizedFlowChartComponent = useMemo(() => (
+    <SmallPanel>
+      <FlowChartComponent data={data} />
+    </SmallPanel>
+  ), [data]); // Only re-create if `data` changes
+
+  const memoizedMessagePanel = useMemo(() => (
+    <SmallPanel>
+      <MessagePanel aiResult={aiResult} />
+    </SmallPanel>
+  ), [aiResult]); // Only re-create if `aiResult` changes
+
   return (
     <div className="big-panel-container">
       <div className="button-container">
@@ -55,17 +68,13 @@ const BigPanel = ({ data, setData , aiResult}) => {
       <div className="big-panel" ref={containerRef}>
         {leftPanelVisible && (
           <div className="left-panel" style={{ width: rightPanelVisible ? `${leftWidth}%` : '100%' }}>
-            <SmallPanel>
-              <FlowChartComponent data={data} />
-            </SmallPanel>
+            {memoizedFlowChartComponent}
           </div>
         )}
         {leftPanelVisible && rightPanelVisible && <div className="resizer" onMouseDown={handleMouseDown} />}
         {rightPanelVisible && (
           <div className="right-panel" style={{ width: leftPanelVisible ? `${100 - leftWidth}%` : '100%' }}>
-            <SmallPanel>
-              <MessagePanel aiResult={aiResult}/>
-            </SmallPanel>
+            {memoizedMessagePanel}
           </div>
         )}
       </div>

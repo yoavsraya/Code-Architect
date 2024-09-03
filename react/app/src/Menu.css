@@ -5,7 +5,7 @@
   top: 50px; /* Adjust to be below the header */
   right: 0;
   width: 200px;
-  background-color: #333333;
+  background-color: #264032;
   padding: 10px;
   display: none;
   flex-direction: column;
@@ -17,14 +17,23 @@
   display: flex;
 }
 
-.menu a {
-  color: white;
+.menu button {
+  color: rgb(255, 255, 255); /* Text color */
   padding: 10px;
-  text-decoration: none;
   text-align: center;
   width: 100%;
+  background-color: #3b644f; /* Transparent background */
+  border: 1.5px solid #8e8e8e; ; /* Subtle border for stroke effect */
+  cursor: pointer; /* Pointer cursor */
+  border-radius: 4px; /* Rounded corners for buttons */
+  margin-bottom: 5px; /* Spacing between buttons */
+  font-weight: bold; /* Bold text */
+  font-size: 14px; /* Font size */
+  transition: background-color 0.3s, transform 0.2s; /* Smooth transition for hover effects */
 }
 
-.menu a:hover {
-  background-color: #3d4c40;
+/* Hover effect for buttons */
+.menu button:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Light transparent background on hover */
+  border-color: #3d4c40; /* Slightly change border color on hover */
 }

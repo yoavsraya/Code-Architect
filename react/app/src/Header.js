@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Header.css';
 import logo from './logo3.png';
 import logo2 from './logo4.png';
-import logo3 from './logo5.png';
+import bannerLogo from './logoAndPic/bannerLogo.png';
 import githubLogo from './github-logo-white.png'; // Add your GitHub logo image
 import Menu from './Menu'; // Import the Menu component
 
@@ -14,10 +14,14 @@ const Header = ({ onLogout }) => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <header className="header">
       <div className="left-section">
-        <img src={logo3} alt="Logo 3" className="logo" />
+        <img src={bannerLogo} alt="Logo 3" className="logo" />
       </div>
       <div className="right-section">
         <a href="https://github.com/yoavsraya/Code-Analyzer" target="_blank" rel="noopener noreferrer">
@@ -31,7 +35,7 @@ const Header = ({ onLogout }) => {
           </svg>
         </div>
       </div>
-      <Menu isOpen={isMenuOpen} onLogout={onLogout} />
+      <Menu isOpen={isMenuOpen} onLogout={onLogout} onClose={closeMenu}/>
     </header>
   );
 };
