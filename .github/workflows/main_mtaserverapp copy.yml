@@ -48,6 +48,6 @@ jobs:
             then
               pm2 restart React
             else
-              pm2 start npm --name "React" -- run start
+              pm2 start npm --name "React" -- run start --watch --ignore-watch="node_modules logs tmp"
             fi
 
