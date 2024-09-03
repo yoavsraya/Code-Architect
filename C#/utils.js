@@ -1,6 +1,6 @@
 const { execSync } = require('child_process');
 const path = require('path');
-const targetDirectory = path.join('/home/ec2-user/Code-Analyzer/C#');
+const targetDirectory = path.join('/home/ec2-user/Code-Architect/C#');
 
 // Function to build the .NET project
 async function csRunBuild() {
@@ -21,7 +21,7 @@ async function csRunBuild() {
 
 // Function to run the .NET project
 async function csRun(projectPath) {
-  execSync('dotnet run -- /home/ec2-user/Code-Analyzer/UserFiles', (error, stdout, stderr) => {
+  execSync('dotnet run -- /home/ec2-user/Code-Architect/UserFiles', (error, stdout, stderr) => {
         if (error) {
             console.error(`Run error: ${error.message}`);
             return;

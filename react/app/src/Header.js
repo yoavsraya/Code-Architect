@@ -24,7 +24,7 @@ const Header = ({ onLogout }) => {
         <img src={bannerLogo} alt="Logo 3" className="logo" />
       </div>
       <div className="right-section">
-        <a href="https://github.com/yoavsraya/Code-Analyzer" target="_blank" rel="noopener noreferrer">
+        <a href="https://github.com/yoavsraya/Code-Architect" target="_blank" rel="noopener noreferrer">
           <img src={githubLogo} alt="GitHub" className="github-logo" />
         </a>
         <div className="hamburger-menu" onClick={toggleMenu}>

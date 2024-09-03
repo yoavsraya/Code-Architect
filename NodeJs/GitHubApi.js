@@ -12,8 +12,8 @@ let UserAuto;
 let octokit;
 const CLIENT_ID = process.env.GIT_HUB_CLIENT_ID;
 const CLIENT_SECRET = process.env.GIT_HUB_CLIENT_SECRET;
-const localPath = '/home/ec2-user/Code-Analyzer/UserFiles'; 
-const projectPath = '/home/ec2-user/Code-Analyzer/C#'; // Path to the C# project
+const localPath = '/home/ec2-user/Code-Architect/UserFiles'; 
+const projectPath = '/home/ec2-user/Code-Architect/C#'; // Path to the C# project
 
 class User {
     constructor(accessToken, userName, repositories, userPicture) {

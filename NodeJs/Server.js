@@ -89,7 +89,7 @@ app.get('/api/fetchSelectedRepo', async (req, res) => {
 app.get('/api/buildProject', async (req, res) => {
        // After cloning, run dotnet build
        console.log('Running dotnet build...');
-       exec(`dotnet build /home/ec2-user/Code-Analyzer/C#`, (buildError, buildStdout, buildStderr) => {
+       exec(`dotnet build /home/ec2-user/Code-Architect/C#`, (buildError, buildStdout, buildStderr) => {
            if (buildError) {
                console.error(`Error during build: ${buildStderr}`);
                return;
@@ -98,7 +98,7 @@ app.get('/api/buildProject', async (req, res) => {
  
            // After building, run the dotnet application
            console.log('Running dotnet application...');
-           exec(`dotnet run --project /home/ec2-user/Code-Analyzer/C# /home/ec2-user/Code-Analyzer/UserFiles`, (runError, runStdout, runStderr) => {
+           exec(`dotnet run --project /home/ec2-user/Code-Architect/C# /home/ec2-user/Code-Architect/UserFiles`, (runError, runStdout, runStderr) => {
                if (runError) {
                    console.error(`Error running application: ${runStderr}`);
                    return;
@@ -139,7 +139,7 @@ app.post('/api/expand', async (req, res) => {
     }
     const folder = filePathMapping[file];
     if (folder) {
-      const filePath = path.join('/home/ec2-user/Code-Analyzer/UserFiles', folder, file);
+      const filePath = path.join('/home/ec2-user/Code-Architect/UserFiles', folder, file);
       console.log(`Checking file: ${filePath}`);
       if (fs.existsSync(filePath)) {
         console.log(`File found: ${filePath}`);

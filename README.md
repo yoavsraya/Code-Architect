@@ -1,7 +1,7 @@
 <h1 align="center">MTA fina project Code Analazer</h1>
 <h3 align="center">Yoav Sraya & Yonatan Brooker</h3>
 
-- Our Proposal Document [https://github.com/yoavsraya/Code-Analyzer/blob/main/Project%20Documents/Proposal%20Document.pdf](https://github.com/yoavsraya/Code-Analyzer/blob/main/Project%20Documents/Proposal%20Document.pdf)
+- Our Proposal Document [https://github.com/yoavsraya/Code-Architect/blob/main/Project%20Documents/Proposal%20Document.pdf](https://github.com/yoavsraya/Code-Architect/blob/main/Project%20Documents/Proposal%20Document.pdf)
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">

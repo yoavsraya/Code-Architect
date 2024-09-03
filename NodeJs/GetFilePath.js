@@ -24,7 +24,7 @@ const parseProjectStructure = (filePath) => {
 };
 
 const getProjectFilePathMapping = () => {
-  const projectFilePath = path.join('/home/ec2-user/Code-Analyzer/C#', 'ProjectParse.txt');
+  const projectFilePath = path.join('/home/ec2-user/Code-Architect/C#', 'ProjectParse.txt');
   return parseProjectStructure(projectFilePath);
 };
 

@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const filePath = '/home/ec2-user/Code-Analyzer/C#/ProjectParse.txt';
+const filePath = '/home/ec2-user/Code-Architect/C#/ProjectParse.txt';
 const UserProjectStructure = fs.readFileSync(filePath, 'utf-8');
 
 const InitAIConversation = [
