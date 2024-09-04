@@ -32,7 +32,8 @@ function App() {
     ws.onmessage = (event) => {
       console.log('WebSocket message received:', event.data);
       const message = JSON.parse(event.data);
-      onsole.log('WebSocket message after parsing:', message);
+      console.log('WebSocket message after parsing:', message);      
+
       if (message.GraphJason)
       {
         console.log("c# build is done, contacting AI");
@@ -40,7 +41,7 @@ function App() {
       }
       else if (message.runAI)
       {
-        console.log("AI finished");
+        console.log("AI finished",message.content);
         setAiResult(message.content);
         setIsLoading(false);
         ws.close();

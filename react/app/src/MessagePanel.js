@@ -48,7 +48,7 @@ const MessagePanel = ({ aiResult }) => {
   }, []);
 
   useEffect(() => {
-    console.log("Ai is render")
+    console.log("AI Component rendered with aiResult:", aiResult);
     const savedAIResult = localStorage.getItem('aiResult');
     if (savedAIResult)
     {
@@ -57,8 +57,8 @@ const MessagePanel = ({ aiResult }) => {
     }
     else if (aiResult) 
     {
-      console.log("fetching aiResult", aiResult.content);
-      setInitialData(aiResult.content);
+      console.log("fetching aiResult", aiResult);
+      setInitialData(aiResult);
       localStorage.setItem('aiResult', JSON.stringify(aiResult));
     }
   }, [aiResult]);
