@@ -20,6 +20,7 @@
     border-radius: 5px;
     cursor: pointer;
     margin-left: 0.9rem;
+    width: auto;
   }
   
   .image-container {

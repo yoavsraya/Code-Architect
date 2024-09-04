@@ -53,7 +53,8 @@ const MessagePanel = ({ aiResult }) => {
     if (savedAIResult)
     {
       console.log("AI data is exist")
-      setInitialData(JSON.parse(savedAIResult).content);
+      console.log(savedAIResult);
+      setInitialData(JSON.parse(savedAIResult));
     }
     else if (aiResult) 
     {

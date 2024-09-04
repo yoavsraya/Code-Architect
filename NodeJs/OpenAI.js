@@ -3,6 +3,7 @@ const path = require('path');
 let conversationHistory = require('./InitAIConversation');
 let tempAIResponseGarageManager = require('./TempAIResponseGarageManager');
 let tempAIResponseExpandFactoryPattern = require('./TempAIResponseExpandFactoryPattern');
+let conversation;
 
 try {
   const dotenvPath = path.join(__dirname, '../.env');
@@ -14,7 +15,7 @@ try {
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 async function RunAI() {
-  const conversation = await conversationHistory.buildConversion();
+  conversation = await conversationHistory.buildConversion();
   const completion = await openai.chat.completions.create({
      model: "gpt-4",
      messages: conversation
@@ -35,7 +36,9 @@ async function RunAI() {
   return assistantMessage;
 }
 
-async function ExpandTopic(topic, fileContents) {
+async function ExpandTopic(topic, fileContents)
+{
+  console.log(conversation);
   console.log(`Expanding topic: ${topic}`);
   console.log(`File contents length: ${fileContents.length}`);
 
