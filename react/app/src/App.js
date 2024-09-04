@@ -20,7 +20,7 @@ function App() {
   const [aiResult, setAiResult] = useState(null); // State to hold AI result
 
   const initializeWebSocket = () => {
-    const ws = new WebSocket('ws://54.243.195.75:3000');
+    const ws = new WebSocket('ws://184.73.72.205:3000');
     ws.onopen = () => {
       console.log('WebSocket connection established');
     };
@@ -56,8 +56,8 @@ function App() {
     try 
     {
       initializeWebSocket();
-      const response = await fetch(`http://54.243.195.75:3000/api/fetchSelectedRepo?selectedRepo=${encodeURIComponent(i_selectedRepo)}`);
-      //const socket = new WebSocket('ws://54.243.195.75:3000');
+      const response = await fetch(`http://184.73.72.205:3000/api/fetchSelectedRepo?selectedRepo=${encodeURIComponent(i_selectedRepo)}`);
+      //const socket = new WebSocket('ws://184.73.72.205:3000');
       if (!response.ok) {
         console.error('Failed to fetch selected repository data');
       } else {
@@ -72,7 +72,7 @@ function App() {
 
     try
     {
-      const response = await fetch(`http://54.243.195.75:3000/api/buildProject`);
+      const response = await fetch(`http://184.73.72.205:3000/api/buildProject`);
       if (!response.ok) {
         console.error('Failed to build the project');
       } else {
@@ -90,7 +90,7 @@ function App() {
   {
     try
     {
-      const response = await fetch('http://54.243.195.75:3000/api/runAI');
+      const response = await fetch('http://184.73.72.205:3000/api/runAI');
         if (!response.ok)
         {
           throw new Error('Failed to fetch AI response');

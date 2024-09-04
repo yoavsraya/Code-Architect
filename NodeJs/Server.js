@@ -45,6 +45,7 @@ try {
 app.get('/', (req, res) => res.send('Hello World!'));
 
 app.get('/LogIn', (req, res) => {
+  console.log("/LogIn");
   const loginUrl = GitHubApi.getLoginUrl();
   res.redirect(loginUrl);
 });
@@ -57,7 +58,7 @@ app.get(`/webhook`, async (req, res) => {
 app.get(`/callback`, async (req, res) => {
   const code = req.query.code;
   try {
-    console.log(' GET callback');
+    console.log('GET callback');
     await GitHubApi.GetUserData(code);
     repoList = await GitHubApi.getRepositories();
     wss.clients.forEach(client => {

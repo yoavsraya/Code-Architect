@@ -26,7 +26,7 @@ const LOCAL_STORAGE_KEY_EDGES = 'flowchart-edges';
 
 const fetchGraphData = async () => {
   console.log("calling graphdata api")
-  const response = await fetch('http://54.243.195.75:3000/api/getGraphData');
+  const response = await fetch('http://184.73.72.205:3000/api/getGraphData');
   const data = await response.json();
   return data;
 };

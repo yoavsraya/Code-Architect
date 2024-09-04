@@ -20,7 +20,7 @@ const MessagePanel = ({ aiResult }) => {
 
   const initializeWebSocket = useCallback(() => {
     if (!ws) {
-      ws = new WebSocket('ws://54.243.195.75:3000');
+      ws = new WebSocket('ws://184.73.72.205:3000');
     }
     ws.onopen = () => {
       console.log('WebSocket message connection established');
@@ -84,7 +84,7 @@ const MessagePanel = ({ aiResult }) => {
     const files = Array.from(filesSet);
 
     try {
-      const response = await fetch('http://54.243.195.75:3000/api/expand', {
+      const response = await fetch('http://184.73.72.205:3000/api/expand', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

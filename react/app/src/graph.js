@@ -108,7 +108,7 @@ const FlowChartComponent = () => {
       setEdges(savedEdges);
     } else {
       // Fetch nodes and edges from the server if not available in local storage
-      fetch('http://54.243.195.75:3000/api/getGraphData')
+      fetch('http://184.73.72.205:3000/api/getGraphData')
         .then((response) => {
           if (!response.ok) {
             throw new Error('Network response was not ok');

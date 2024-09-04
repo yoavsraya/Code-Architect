@@ -10,7 +10,7 @@ const IntegrateGitButton = ({ setData, onSuccess, onFail }) => {
     const loginWindow = window.open('/Login/integration', '_blank');
 
     // Connect to the WebSocket server
-    const socket = new WebSocket('ws://54.243.195.75:3000');
+    const socket = new WebSocket('ws://184.73.72.205:3000');
 /////
     socket.onopen = () => {
       console.log('WebSocket connection established');
@@ -24,13 +24,13 @@ const IntegrateGitButton = ({ setData, onSuccess, onFail }) => {
 
         // Fetch the repo list and user picture
         Promise.all([
-          fetch('http://54.243.195.75:3000/api/repoList').then(response => {
+          fetch('http://184.73.72.205:3000/api/repoList').then(response => {
             if (!response.ok) {
               throw new Error('Network response was not ok');
             }
             return response.json();
           }),
-          fetch('http://54.243.195.75:3000/api/getUserPic').then(response => {
+          fetch('http://184.73.72.205:3000/api/getUserPic').then(response => {
             if (!response.ok) {
               throw new Error('Network response was not ok');
             }
