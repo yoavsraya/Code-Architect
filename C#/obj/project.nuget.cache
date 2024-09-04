@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "KEm3YGs/yn9PB+d5UwKlBdPoP6YkVW62jRLXHuC6EDhTHUFLW4bsYHssn6C/Oq9B5WE2l+sJWqU0hTUORZxvkA==",
+  "dgSpecHash": "1NSKzCLRZkAqttKGabwTqCeDBSfRzwXa9U9clBIYQxkmpfa6lWXX/nmSOPwfEWuLU3hTTIyVlZJyhidtsvMp3g==",
   "success": true,
-  "projectFilePath": "/home/ec2-user/Code-Analyzer/C#/CodeAnalyzer.csproj",
+  "projectFilePath": "/home/ec2-user/Code-Architect/C#/CodeAnalyzer.csproj",
   "expectedPackageFiles": [
     "/home/ec2-user/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/home/ec2-user/.nuget/packages/microsoft.build/17.3.2/microsoft.build.17.3.2.nupkg.sha512",

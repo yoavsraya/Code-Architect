@@ -5,6 +5,7 @@ const fs = require('fs');
 const { exec } = require('child_process');
 const dotenvPath = path.join(__dirname, '../.env');
 require('dotenv').config({ path: dotenvPath });
+const fetch = require('node-fetch');
 
 
 let UserData;
@@ -100,7 +101,7 @@ async function exchangeCodeForToken(code) {
 async function GetUserData(code) {
     try {
         const accessToken = await exchangeCodeForToken(code);
-        octokit = await new Octokit({ auth: accessToken });
+        octokit = new Octokit({ auth: accessToken, request: { fetch } });
         const { data: user } = await octokit.rest.users.getAuthenticated();
         UserAuto = user;
         UserData = new User(accessToken, user.login, [], user.avatar_url);

@@ -95,7 +95,11 @@ function App() {
         {
           throw new Error('Failed to fetch AI response');
         }
-        setAiResult(await response.json());
+        else
+        {
+          console.log("Ai return OK")
+          setAiResult(await response.json());
+        }
     }
     catch (error)
     {

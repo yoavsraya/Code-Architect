@@ -16,19 +16,40 @@ const app = express();
 app.use(cors()); 
 app.use(express.json());
 
+console.log("socket");
 const server = http.createServer(app);
+console.log('Initializing WebSocket server...');
 const wss = new WebSocket.Server({ server });
 
 let isLoggedIn = false;
 let repoList;
 
 const port = process.env.SERVER_PORT;
-
 const filePathMapping = getProjectFilePathMapping(); // Initialize filePathMapping
 
-wss.on('connection', ws => {
-  console.log('Client connected');
-  ws.on('close', () => console.log('Client disconnected'));
+
+
+wss.on('connection', (ws, req) => {
+  // Log when a new client connects
+  console.log(`Client connected from ${req.socket.remoteAddress}`);
+
+  // Log the URL being used for the WebSocket connection
+  console.log(`WebSocket connection URL: ${req.url}`);
+
+  ws.on('message', (message) => {
+    // Log received messages from clients
+    console.log(`Received message from client: ${message}`);
+  });
+
+  ws.on('close', () => {
+    // Log when a client disconnects
+    console.log('Client disconnected');
+  });
+});
+
+wss.on('error', (error) => {
+  // Log any errors that occur on the WebSocket server
+  console.error('WebSocket Server Error:', error);
 });
 
 app.get('/login-status', (req, res) => {
@@ -88,28 +109,32 @@ app.get('/api/fetchSelectedRepo', async (req, res) => {
 });
 
 app.get('/api/buildProject', async (req, res) => {
-       // After cloning, run dotnet build
-       console.log('Running dotnet build...');
-       exec(`dotnet build /home/ec2-user/Code-Architect/C#`, (buildError, buildStdout, buildStderr) => {
-           if (buildError) {
-               console.error(`Error during build: ${buildStderr}`);
-               return;
-           }
-           console.log(`Build output: ${buildStdout}`);
- 
-           // After building, run the dotnet application
-           console.log('Running dotnet application...');
-           exec(`dotnet run --project /home/ec2-user/Code-Architect/C# /home/ec2-user/Code-Architect/UserFiles`, (runError, runStdout, runStderr) => {
-               if (runError) {
-                   console.error(`Error running application: ${runStderr}`);
-                   return;
-               }
-               console.log(`Run output: ${runStdout}`);
-              });
+  const dotnetPath = '/usr/local/share/dotnet'; // Path to dotnet binary
+  
+  console.log('Running dotnet build...');
+  exec(`dotnet build /home/ec2-user/Code-Architect/C#`, {
+      env: { ...process.env, PATH: `${process.env.PATH}:${dotnetPath}` }
+  }, (buildError, buildStdout, buildStderr) => {
+      if (buildError) {
+          console.error(`Error during build: ${buildStderr}`);
+          return;
+      }
+      console.log(`Build output: ${buildStdout}`);
 
-       });
-
+      // After building, run the dotnet application
+      console.log('Running dotnet application...');
+      exec(`dotnet run --project /home/ec2-user/Code-Architect/C# /home/ec2-user/Code-Architect/UserFiles`, {
+          env: { ...process.env, PATH: `${process.env.PATH}:${dotnetPath}` }
+      }, (runError, runStdout, runStderr) => {
+          if (runError) {
+              console.error(`Error running application: ${runStderr}`);
+              return;
+          }
+          console.log(`Run output: ${runStdout}`);
+      });
+  });
 });
+
 
 app.get('/api/runAI', async (req, res) => {
   try {
@@ -196,7 +221,7 @@ app.get('/api/jasonParsing', async (req, res) => {
       console.log("notife react");
       client.send(JSON.stringify({ GraphJason: true }));
     }
-   });
+  });
    res.status(200).send();
 });
 
