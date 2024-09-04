@@ -142,10 +142,10 @@ app.get('/api/runAI', async (req, res) => {
     console.log('AI Result:', aiResult);
     wss.clients.forEach(client => {
       if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify({ runAI: true }));
+        client.send(JSON.stringify({ runAI: true  , content: aiResult}));
       }
     });
-    res.send({ content: aiResult });
+    res.status(200);
   } catch (error) {
     console.error('Error running AI:', error);
     res.status(500).send('Error running AI');

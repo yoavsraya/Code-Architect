@@ -18,9 +18,13 @@ function App() {
   const [selectedRepo, setSelectedRepo] = useState('');
   const [socket, setSocket] = useState(null);
   const [aiResult, setAiResult] = useState(null); // State to hold AI result
+  var ws;
 
   const initializeWebSocket = () => {
-    const ws = new WebSocket('ws://184.73.72.205:3000');
+    if(ws == null)
+    {
+      ws = new WebSocket('ws://184.73.72.205:3000');
+    }
     ws.onopen = () => {
       console.log('WebSocket connection established');
     };
@@ -28,6 +32,7 @@ function App() {
     ws.onmessage = (event) => {
       console.log('WebSocket message received:', event.data);
       const message = JSON.parse(event.data);
+      onsole.log('WebSocket message after parsing:', message);
       if (message.GraphJason)
       {
         console.log("c# build is done, contacting AI");
@@ -36,6 +41,7 @@ function App() {
       else if (message.runAI)
       {
         console.log("AI finished");
+        setAiResult(message.content);
         setIsLoading(false);
         ws.close();
       }
@@ -97,8 +103,8 @@ function App() {
         }
         else
         {
-          console.log("Ai return OK")
-          setAiResult(await response.json());
+          console.log("Ai return OK");
+          console.log("responde is",response);
         }
     }
     catch (error)
@@ -148,6 +154,7 @@ function App() {
   };
 
   const handleLogout = () => {
+    console.log("logout is going");
     setIsAuthenticated(false);
     setData(null);
     setSelectedRepo('');
@@ -156,6 +163,7 @@ function App() {
     localStorage.removeItem('selectedRepo');
     localStorage.removeItem('flowchart-nodes');
     localStorage.removeItem('flowchart-edges');
+    localStorage.removeItem('aiResult');
   };
 
   return (

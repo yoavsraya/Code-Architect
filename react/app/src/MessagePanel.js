@@ -48,10 +48,16 @@ const MessagePanel = ({ aiResult }) => {
   }, []);
 
   useEffect(() => {
+    console.log("Ai is render")
     const savedAIResult = localStorage.getItem('aiResult');
-    if (savedAIResult) {
+    if (savedAIResult)
+    {
+      console.log("AI data is exist")
       setInitialData(JSON.parse(savedAIResult).content);
-    } else if (aiResult) {
+    }
+    else if (aiResult) 
+    {
+      console.log("fetching aiResult", aiResult.content);
       setInitialData(aiResult.content);
       localStorage.setItem('aiResult', JSON.stringify(aiResult));
     }

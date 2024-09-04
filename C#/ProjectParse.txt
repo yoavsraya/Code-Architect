@@ -1,75 +1,73 @@
 Project: UserFiles
 
-Folder: Hospital_Example
-File: Doctor.cs
-Class: Doctor
+Folder: GUI
+File: GameMainForm.cs
+Class: GameMainForm
+  Accessibility: internal
+  Belongs to: EXE
+  Dependencies:
+    Inheritance:
+      Inherits from: Form
+    Composition:
+      Game
+      GameSettingsForm
+      
+      Player
+      Label
+      FlowLayoutPanel
+      DialogResult
+
+Folder: GUI
+File: GameSettingsForm.cs
+Class: GameSettingsForm
   Accessibility: public
   Belongs to: EXE
   Dependencies:
     Inheritance:
-      Inherits from: Person
+      Inherits from: Form
+    Composition:
+      Label
+      TextBox
+      CheckBox
+      NumericUpDown
+      Button
 
-Folder: Hospital_Example
-File: Hospital.cs
-Class: Hospital
-  Accessibility: public
-  Belongs to: EXE
-  Dependencies:
-    Inheritance:
-      Inherits from: Doctor
-    Aggregations:
-      Nurse
-      Receptionist
-
-Folder: Hospital_Example
-File: MedicalRecord.cs
-Class: MedicalRecord
-  Accessibility: public
-  Belongs to: EXE
-
-Folder: Hospital_Example
-File: Nurse.cs
-Class: Nurse
-  Accessibility: public
-  Belongs to: EXE
-  Dependencies:
-    Inheritance:
-      Inherits from: Person
-
-Folder: Hospital_Example
-File: Patient.cs
-Class: Patient
-  Accessibility: public
-  Belongs to: EXE
-  Dependencies:
-    Inheritance:
-      Inherits from: Person
-
-Folder: Hospital_Example
-File: Person.cs
-Class: Person
-  Accessibility: public
-  Belongs to: EXE
-
-Folder: Hospital_Example
-File: Receptionist.cs
-Class: Receptionist
-  Accessibility: public
-  Belongs to: EXE
-  Dependencies:
-    Inheritance:
-      Inherits from: Person
-
-Folder: Program
+Folder: GUI
 File: Program.cs
 Class: Program
   Accessibility: public
   Belongs to: EXE
   Dependencies:
     Usage:
-      Nurse
-      Receptionist
-      Hospital
-      Patient
-      MedicalRecord
+      GameMainForm
+
+Folder: XO logics
+File: Board.cs
+Class: Board
+  Accessibility: public
+  Belongs to: DLL
+  Dependencies:
+    Composition:
+      
+
+Folder: XO logics
+File: Game.cs
+Class: Game
+  Accessibility: public
+  Belongs to: DLL
+  Dependencies:
+    Composition:
+      Board
+      Player
+    Aggregations:
+      eGameStatus
+
+Folder: XO logics
+File: Player.cs
+Class: Player
+  Accessibility: public
+  Belongs to: DLL
+  Dependencies:
+    Aggregations:
+      eBoardShape
 
