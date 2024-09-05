@@ -52,7 +52,6 @@ const MessagePanel = ({ aiResult }) => {
     const savedAIResult = localStorage.getItem('aiResult');
     if (savedAIResult) {
       console.log("AI data is exist");
-      console.log(savedAIResult);
       setInitialData(JSON.parse(savedAIResult));
     } else if (aiResult) {
       console.log("fetching aiResult", aiResult);
@@ -100,8 +99,8 @@ const MessagePanel = ({ aiResult }) => {
   
       // Combine the expanded data into a single string
       const content = Array.isArray(expandedData.content) 
-        ? expandedData.content.join('\n') 
-        : expandedData.content;
+      ? expandedData.content.join('<br /><br />') // If it's an array, join with <br /> tags
+      : expandedData.content.replace(/\n/g, '<br />'); // Replace newlines with <br />  
   
       setExpandedContent(content);
   
@@ -220,9 +219,7 @@ const MessagePanel = ({ aiResult }) => {
             )}
             {/* Render the entire expanded content in a single button */}
             {expandedContent && (
-              <button className="expanded-content-button">
-                {expandedContent}
-              </button>
+              <button className="from-them" dangerouslySetInnerHTML={{ __html: expandedContent }} />
             )}
           </>
         ) : (

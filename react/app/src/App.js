@@ -7,8 +7,6 @@ import BigPanel from './BigPanel';
 import LoadingScreen from './LoadingScreen'; // Import the LoadingScreen component
 import AboutPage from './AboutPage'; // Import the AboutPage component
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Game from './LoadingWithGame'
-import ChromeDinoGame from 'react-chrome-dino';
 
 function App() {
   const [finishFetchRepo, setFinishFetchRepo] = useState(false);
@@ -46,6 +44,12 @@ function App() {
         setAiResult(message.content);
         setIsLoading(false);
         ws.close();
+      }
+      else if(message.push)
+      {
+        console.log("push has happend");
+        fetchAndBuildProject(selectedRepo);
+        window.location.reload();
       }
     };
 

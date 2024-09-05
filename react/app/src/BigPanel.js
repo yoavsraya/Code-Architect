@@ -3,7 +3,7 @@ import './BigPanel.css';
 import SmallPanel from './SmallPanel';
 import FlowChartComponent from './FlowChartComponent';
 import MessagePanel from './MessagePanel';
-const stop = true;
+const stop = false;
 
 const BigPanel = ({ data, setData, aiResult }) => {
   const containerRef = useRef(null);

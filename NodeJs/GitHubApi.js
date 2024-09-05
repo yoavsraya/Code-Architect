@@ -16,6 +16,7 @@ const CLIENT_SECRET = process.env.GIT_HUB_CLIENT_SECRET;
 const localPath = '/home/ec2-user/Code-Architect/UserFiles'; 
 const projectPath = '/home/ec2-user/Code-Architect/C#'; // Path to the C# project
 
+
 class User {
     constructor(accessToken, userName, repositories, userPicture) {
         this.accessToken = accessToken;
@@ -23,6 +24,27 @@ class User {
         this.repositories = repositories;
         this.selectedRepo = null;
         this.userPic = userPicture;
+    }
+}
+
+async function createWebhookForRepo(owner, repo) {
+    try {
+        const response = await octokit.rest.repos.createWebhook({
+            owner,
+            repo,
+            config: {
+                url: 'http://184.73.72.205:3000/webhook',
+                content_type: 'json',
+                secret: process.env.GIT_HUB_WEBHOOK_SECRET, 
+            },
+            events: ['push'], // Specify which events to listen to
+        });
+
+        console.log(`Webhook created successfully for repository: ${repo}`);
+        return response.data;
+    } catch (error) {
+        console.error(`Error creating webhook for repository ${repo}:`, error.message);
+        throw error;
     }
 }
 
@@ -44,27 +66,6 @@ async function createFolder(directory) {
         }
         console.log(`Directory created successfully: ${stdout}`);
     });
-}
-
-async function createWebhookForRepo(owner, repo, webhookUrl) {
-    try {
-        const response = await octokit.rest.repos.createWebhook({
-            owner,
-            repo,
-            config: {
-                url: webhookUrl,
-                content_type: 'json',
-                secret: process.env.GITHUB_WEBHOOK_SECRET, // Optional: Set a secret for verifying payloads
-            },
-            events: ['push'], // Only listen for push events
-        });
-
-        console.log(`Webhook created successfully for repository: ${repo}`);
-        return response.data;
-    } catch (error) {
-        console.error(`Error creating webhook for repository ${repo}:`, error.message);
-        throw error;
-    }
 }
 
 function getRepoByName(repoName) {
@@ -129,54 +130,11 @@ async function cloneSelectedRepo(selectedRepo) {
       console.log(`Repository cloned successfully: ${stdout}`);
   });
 
-  //createWebhookForRepo(UserData.selectedRepo.owner,UserData.selectedRepo.name,'http://184.73.72.205:3000/webhook');
+  await createWebhookForRepo(serData.selectedRepo.owner,UserData.selectedRepo.name);
 
   console.log("END cloneSelectedRepo function");
 }
 
-
-async function PullSelectedRepo() {
-    UserData.selectedRepo = UserData.repositories[3];
-    try {
-        console.log(`Selected repository: ${UserData.selectedRepo.owner}/${UserData.selectedRepo.name}`);
-        const { data: content } = await octokit.rest.repos.getContent({
-            owner: UserData.selectedRepo.owner,
-            repo: UserData.selectedRepo.name,
-            path: '', // Get the root directory
-        });
-        console.log(`repository content:`);
-        console.log(content);
-
-        const csFiles = content.filter(file => file.type === 'file' && file.path.endsWith('.cs'));
-        console.log(`cs files: ${csFiles}`);
-        
-        csFiles.forEach(file => {
-            octokit.rest.repos.getContent({
-                owner: UserData.selectedRepo.owner,
-                repo: UserData.selectedRepo.name,
-                path: file.path,
-            }).then(({ data }) => {
-                const fileContent = Buffer.from(data.content, 'base64').toString('utf8');
-                console.log(`file content: ${fileContent}`);
-                
-                fs.writeFile(`${localPath}/${file.name}`, fileContent, 'utf8', (err) => {
-                    if (err) {
-                        console.error(`Error writing file ${file.name}:`, err);
-                        throw err;
-                    } else {
-                        console.log(`File ${file.name} has been saved.`);
-                    }
-                });
-            }).catch(error => {
-                console.error(`Error getting content of ${file.path}:`, error);
-                throw error;
-            });
-        });
-    } catch (error) {
-        console.error('Error pulling selected repository:', error);
-        throw error;
-    }
-}
 
 async function getRepositories() {
     try {
@@ -204,7 +162,6 @@ module.exports = {
     getLoginUrl,
     cloneSelectedRepo,
     exchangeCodeForToken,
-    PullSelectedRepo,
     getRepositories,
     GetUserData,
     GetUserPic,

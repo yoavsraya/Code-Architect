@@ -13,6 +13,7 @@
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "chroma-js": "^2.4.2",
+    "dompurify": "^3.1.6",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
     "react": "^18.3.1",

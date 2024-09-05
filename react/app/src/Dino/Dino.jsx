@@ -1,17 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Dino.css";
 
-function Dino({ gameStarted, onGameOver }) {
+function Dino({ gameStarted, onGameOver, onRestart }) {
   const dinoRef = useRef();
   const cactusRef = useRef();
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
 
   const jump = () => {
-    if (!!dinoRef.current && !dinoRef.current.classList.contains("jump") && !gameOver) {
+    if (dinoRef.current && !dinoRef.current.classList.contains("jump") && !gameOver) {
       dinoRef.current.classList.add("jump");
-      setTimeout(function () {
-        dinoRef.current.classList.remove("jump");
+      setTimeout(() => {
+        if (dinoRef.current) { // Ensure dinoRef is still defined
+          dinoRef.current.classList.remove("jump");
+        }
       }, 300);
     }
   };
@@ -19,44 +21,63 @@ function Dino({ gameStarted, onGameOver }) {
   useEffect(() => {
     let isAlive;
     if (gameStarted) {
-      isAlive = setInterval(function () {
-        if (!gameOver) {
-          const dinoTop = parseInt(getComputedStyle(dinoRef.current).getPropertyValue("top"));
+      if (cactusRef.current) {
+        cactusRef.current.style.animation = "block 1s infinite linear"; // Start cactus animation
+      }
+
+      isAlive = setInterval(() => {
+        if (gameOver) return; // Stop processing if the game is over
+
+        if (dinoRef.current && cactusRef.current) { // Ensure both refs are defined
+          const dinoTop = parseInt(getComputedStyle(dinoRef.current).getPropertyValue("bottom"));
           const cactusLeft = parseInt(getComputedStyle(cactusRef.current).getPropertyValue("left"));
 
-          if (cactusLeft < 40 && cactusLeft > 0 && dinoTop >= 140) {
+          if (cactusLeft < 60 && cactusLeft > 0 && dinoTop <= 75) {
             setGameOver(true);
             setScore(0);
             onGameOver();
+            if (cactusRef.current) {
+              cactusRef.current.style.animation = "none"; // Stop cactus animation
+            }
           } else {
-            setScore(prevScore => prevScore + 1);
+            setScore((prevScore) => prevScore + 1);
           }
         }
       }, 10);
 
       document.addEventListener("keydown", jump);
+    } else {
+      // Ensure cactus is not moving before the game starts
+      if (cactusRef.current) {
+        cactusRef.current.style.animation = "none";
+      }
     }
+
+    // Restart the game with the space key
+    const handleSpaceKey = (event) => {
+      if (event.code === "Space" && gameOver) {
+        onRestart();
+        setGameOver(false);
+        setScore(0);
+        if (cactusRef.current) {
+          cactusRef.current.style.animation = "block 1s infinite linear"; // Restart cactus animation
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleSpaceKey);
 
     return () => {
       clearInterval(isAlive);
       document.removeEventListener("keydown", jump);
+      document.removeEventListener("keydown", handleSpaceKey);
     };
-  }, [gameStarted, gameOver, onGameOver]);
-
-  const handleRestart = () => {
-    setGameOver(false);
-    setScore(0);
-    cactusRef.current.style.left = '580px';
-  };
+  }, [gameStarted, gameOver, onGameOver, onRestart]);
 
   return (
     <div className="game">
       <div className="score">Score: {score}</div>
-      {gameOver && (
-        <div className="game-over">
-          Game Over! Your Score: {score}
-        </div>
-      )}
+      {gameOver && <div className="game-over">Game Over! Press Space to Restart</div>}
       <div id="dino" ref={dinoRef}></div>
       <div id="cactus" ref={cactusRef}></div>
     </div>

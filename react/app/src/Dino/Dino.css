@@ -1,64 +1,91 @@
 .game {
-    width: 600px;
-    height: 225px;
-    border: 5px solid rgb(250, 250, 250);
-    margin: auto;
+  width: 600px;
+  height: 225px;
+  border: 5px solid rgb(250, 250, 250);
+  margin: 20px auto; /* Add margin to control spacing */
+  position: relative;
+}
+
+#dino {
+  width: 60px;
+  height: 60px;
+  background-image: url(img/trex.png);
+  background-size: 60px 60px;
+  position: absolute;
+  bottom: 75px; /* Align within the game container */
+  left: 50px; /* Adjust the starting position */
+}
+
+#cactus {
+  width: 20px;
+  height: 40px;
+  position: absolute;
+  bottom: 75px;
+  left: 580px;
+  background-image: url("img/cactus.png");
+  background-size: 20px 40px;
+}
+
+.jump {
+  animation: jump 0.3s linear;
+}
+
+@keyframes jump {
+  0% {
+    bottom: 75px;
   }
-  
-  #dino {
-    width: 50px;
-    height: 50px;
-    background-image: url(img/trex.png);
-    background-size: 50px 50px;
-    position: relative;
-    top: 150px;
+  30% {
+    bottom: 95px;
   }
-  
-  .jump {
-    animation: jump 0.3s linear;
+  50% {
+    bottom: 145px;
   }
-  
-  @keyframes jump {
-    0% {
-      top: 150px;
-    }
-  
-    30% {
-      top: 130px;
-    }
-  
-    50% {
-      top: 80px;
-    }
-  
-    80% {
-      top: 130px;
-    }
-  
-    100% {
-      top: 150px;
-    }
+  80% {
+    bottom: 95px;
   }
-  
-  #cactus {
-    width: 20px;
-    height: 40px;
-    position: relative;
-    top: 110px;
+  100% {
+    bottom: 75px;
+  }
+}
+
+@keyframes block {
+  0% {
     left: 580px;
-  
-    background-image: url("img/cactus.png");
-    background-size: 20px 40px;
-  
-    animation: block 1s infinite linear;
   }
-  
-  @keyframes block {
-    0% {
-      left: 580px;
-    }
-  
-    100% {
-      left: -5px;
-    }
+  100% {
+    left: -20px; /* Move off screen */
   }
+}
+
+/* Add animation to the cactus */
+#cactus {
+  animation: block 1s infinite linear;
+}
+
+.game-over {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  color: #1f493a;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 24px;
+  text-align: center;
+  z-index: 10;
+  border: 4px #588e72;
+}
+
+/* Styling the score text */
+.score {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 18px;
+  color: white;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px #000;
+  z-index: 10;
+}

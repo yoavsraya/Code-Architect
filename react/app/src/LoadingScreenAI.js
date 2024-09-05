@@ -5,7 +5,7 @@ const LoadingScreenAI = () => {
   return (
     <div className="loading-screenAI">
       <div className="loading-graphicAI"></div> {/* Graphic above the text */}
-      <h2 className="loading-textAI">AI is checking your code</h2>
+      <h2 className="loading-textAI">The AI ​​expands is analysis on the specific topic you requested</h2>
     </div>
   );
 };

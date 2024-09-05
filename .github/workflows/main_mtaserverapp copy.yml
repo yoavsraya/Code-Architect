@@ -33,6 +33,7 @@ jobs:
             echo 'OPENAI_API_KEY = "${{ secrets.OPENAI_API_KEY }}"' >> .env
             echo 'REACT_PORT = "${{ secrets.REACT_PORT }}"' >> .env
             echo 'SERVER_PORT = "${{ secrets.SERVER_PORT }}"' >> .env
+            echo 'GIT_HUB_WEBHOOK_SECRET = "${{ secrets.GIT_HUB_WEBHOOK_SECRET }}"' >> .env
             git reset --hard
             git clean -fd
             git pull
