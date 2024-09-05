@@ -42,7 +42,9 @@ async function ExpandTopic(topic, fileContents)
 
   const userMessage = {
     role: "user",
-    content: `Please expand with exactly the same instructions on the following topic: ${topic}\nHere are the related file's contents:\n${fileContents}`
+    content: fileContents.length === 0
+      ? `Please expand with exactly the same instructions on the following topic: ${topic}`
+      : `Please expand with exactly the same instructions on the following topic: ${topic}\nHere are the related file's contents:\n${fileContents}`
   };
 
   await conversationHistory.updateConversion(userMessage);
