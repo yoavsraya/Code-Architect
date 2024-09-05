@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "description": "JavaScript server written with Express.js",
-  "main": "Server.js",
+  "main": "Server.mjs",
   "scripts": {
     "start": "node NodeJs/Server.mjs",
     "csBuild": "cs build",
