@@ -3,6 +3,7 @@ import './BigPanel.css';
 import SmallPanel from './SmallPanel';
 import FlowChartComponent from './FlowChartComponent';
 import MessagePanel from './MessagePanel';
+const stop = true;
 
 const BigPanel = ({ data, setData, aiResult }) => {
   const containerRef = useRef(null);
@@ -55,9 +56,17 @@ const BigPanel = ({ data, setData, aiResult }) => {
 
   const memoizedMessagePanel = useMemo(() => (
     <SmallPanel>
-      <MessagePanel aiResult={aiResult} />
+      {
+        stop ? (
+          // Content to display when `stop` is true
+          null // or any other content you want to render
+        ) : (
+          // Content to display when `stop` is false
+          <MessagePanel aiResult={aiResult} />
+        )
+      }
     </SmallPanel>
-  ), [aiResult]); // Only re-create if `aiResult` changes
+  ), [aiResult, stop]);
 
   return (
     <div className="big-panel-container">
