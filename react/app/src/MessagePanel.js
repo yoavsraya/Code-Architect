@@ -11,7 +11,7 @@ const MessagePanel = ({ aiResult }) => {
   const [expandedContent, setExpandedContent] = useState('');
   const [initialData, setInitialData] = useState([]);
   const [removedButtons, setRemovedButtons] = useState([]);
-  const [selectedMessage, setSelectedMessage] = useState('');
+  const [selectedMessage, setSelectedMessage] = useState(null);
   const [isExpandedView, setIsExpandedView] = useState(false);
   const [isClickable, setIsClickable] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +30,7 @@ const MessagePanel = ({ aiResult }) => {
       console.log('WebSocket message received:', event.data);
       const message = JSON.parse(event.data);
       if (message.ExtandAI) {
-        console.log('extand finished');
+        console.log('expand finished');
         setIsLoading(false);
       }
     };
@@ -50,14 +50,11 @@ const MessagePanel = ({ aiResult }) => {
   useEffect(() => {
     console.log("AI Component rendered with aiResult:", aiResult);
     const savedAIResult = localStorage.getItem('aiResult');
-    if (savedAIResult)
-    {
-      console.log("AI data is exist")
+    if (savedAIResult) {
+      console.log("AI data is exist");
       console.log(savedAIResult);
       setInitialData(JSON.parse(savedAIResult));
-    }
-    else if (aiResult) 
-    {
+    } else if (aiResult) {
       console.log("fetching aiResult", aiResult);
       setInitialData(aiResult);
       localStorage.setItem('aiResult', JSON.stringify(aiResult));
@@ -68,28 +65,28 @@ const MessagePanel = ({ aiResult }) => {
     initializeWebSocket();
     setIsLoading(true);
     if (!isClickable) return;
-
+  
     const cleanedTopic = topic.replace(/\*\*(.*?)\*\*/g, '$1');
     const additionalMessage = "Give me more information about this subject";
-
+  
     setSelectedMessage({
       sectionTitle,
       texts: [additionalMessage, cleanedTopic],
     });
-
+  
     setIsExpandedView(true);
     setIsClickable(false);
-
+  
     const filesSet = new Set();
     const regex = /'([^']*)'/g;
     let match;
-
+  
     while ((match = regex.exec(topic)) !== null) {
       filesSet.add(match[1]);
     }
-
+  
     const files = Array.from(filesSet);
-
+  
     try {
       const response = await fetch('http://184.73.72.205:3000/api/expand', {
         method: 'POST',
@@ -100,19 +97,25 @@ const MessagePanel = ({ aiResult }) => {
       });
       const expandedData = await response.json();
       console.log('Expanded data received:', expandedData);
-
-      if (Array.isArray(expandedData.content)) {
-        setExpandedContent(expandedData.content.join('\n'));
-      } else {
-        setExpandedContent(expandedData.content);
-      }
-
+  
+      // Combine the expanded data into a single string
+      const content = Array.isArray(expandedData.content) 
+        ? expandedData.content.join('\n') 
+        : expandedData.content;
+  
+      setExpandedContent(content);
+  
       window.scrollTo({ top: 0, behavior: 'smooth' });
-
+  
+      setIsLoading(false);
+      setIsClickable(true);
     } catch (error) {
       console.error('Error expanding topic:', error);
+      setIsLoading(false);
     }
-  }, [initializeWebSocket, isClickable]);
+  }, [initializeWebSocket, isClickable]);  
+
+
 
   const handleRemoveButton = useCallback((index) => {
     setRemovedButtons((prevButtons) => [...prevButtons, index]);
@@ -120,7 +123,7 @@ const MessagePanel = ({ aiResult }) => {
 
   const handleBack = useCallback(() => {
     setIsExpandedView(false);
-    setSelectedMessage('');
+    setSelectedMessage(null);
     setExpandedContent('');
     setIsClickable(true);
   }, []);
@@ -182,12 +185,26 @@ const MessagePanel = ({ aiResult }) => {
     ));
   }, [handleExpand, isClickable, isExpandedView, removedButtons]);
 
+  const renderExpandedMessages = useCallback((sections) => {
+    return sections.map((section, sectionIndex) => (
+      <div key={sectionIndex}>
+        <h3>{section.title}</h3>
+        {section.bullets.map((bullet, bulletIndex) => (
+          <button key={`${sectionIndex}-${bulletIndex}`} className="from-them">
+            {bullet.replace(/^- \*\*/, '')}
+          </button>
+        ))}
+      </div>
+    ));
+  }, []);
+
   return (
     isLoading ? (
       <LoadingScreenAI />
     ) : (
       <div className="imessage">
-        {isExpandedView && (
+        {/* If in expanded view, render expanded content */}
+        {isExpandedView ? (
           <>
             <button className="back-button2" onClick={handleBack}>Back</button>
             {selectedMessage && (
@@ -201,23 +218,28 @@ const MessagePanel = ({ aiResult }) => {
                 </button>
               </>
             )}
+            {/* Render the entire expanded content in a single button */}
+            {expandedContent && (
+              <button className="expanded-content-button">
+                {expandedContent}
+              </button>
+            )}
           </>
-        )}
-        {expandedContent && isExpandedView ? (
-          renderButtons(parseContent(expandedContent))
         ) : (
           <>
+            {/* Render initial messages */}
             {initialMessages.map((msg, index) => (
               <button key={index} className={msg.type}>
                 {msg.text}
               </button>
             ))}
+            {/* Render initial topic buttons */}
             {initialData && renderButtons(parseContent(initialData))}
           </>
         )}
       </div>
     )
-  );
+  );  
 };
 
 export default MessagePanel;

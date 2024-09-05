@@ -1,11 +1,12 @@
 const fs = require('fs');
 const filePath = '/home/ec2-user/Code-Architect/C#/ProjectParse.txt';
+let InitAIConversation =[];
 
 async function buildConversion()
 { 
   const UserProjectStructure = fs.readFileSync(filePath, 'utf-8');
   console.log('AI parsing message', UserProjectStructure);
-  const InitAIConversation = [
+  InitAIConversation = [
     { "role": "system", "content": "code Architect" },
     {
       "role": "user",
@@ -192,4 +193,19 @@ async function buildConversion()
 
   return InitAIConversation;
 }
-module.exports = {buildConversion};
+
+async function updateConversion(message)
+{
+  InitAIConversation.push(message);
+}
+
+async function getConversion()
+{
+  return InitAIConversation;
+}
+module.exports = 
+{
+  buildConversion,
+  updateConversion,
+  getConversion,
+};
