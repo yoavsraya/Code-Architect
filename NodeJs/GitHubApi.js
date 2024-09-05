@@ -27,26 +27,6 @@ class User {
     }
 }
 
-async function createWebhookForRepo(owner, repo) {
-    try {
-        const response = await octokit.rest.repos.createWebhook({
-            owner,
-            repo,
-            config: {
-                url: 'http://184.73.72.205:3000/webhook',
-                content_type: 'json',
-                secret: process.env.GIT_HUB_WEBHOOK_SECRET, 
-            },
-            events: ['push'], // Specify which events to listen to
-        });
-
-        console.log(`Webhook created successfully for repository: ${repo}`);
-        return response.data;
-    } catch (error) {
-        console.error(`Error creating webhook for repository ${repo}:`, error.message);
-        throw error;
-    }
-}
 
 async function deleteFolder(directory) {
     await exec(`rm -rf ${directory}`, (error, stdout, stderr) => {
@@ -130,7 +110,6 @@ async function cloneSelectedRepo(selectedRepo) {
       console.log(`Repository cloned successfully: ${stdout}`);
   });
 
-  await createWebhookForRepo(serData.selectedRepo.owner,UserData.selectedRepo.name);
 
   console.log("END cloneSelectedRepo function");
 }
