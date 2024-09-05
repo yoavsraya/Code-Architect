@@ -1,11 +1,17 @@
-const axios = require('axios');
-const path = require('path');
-const { Octokit } = require("@octokit/rest");
-const fs = require('fs');
-const { exec } = require('child_process');
+import axios from 'axios';
+import path from 'path';
+import { Octokit } from "@octokit/rest";
+import fs from 'fs';
+import { exec } from 'child_process';
+import dotenv from 'dotenv';
+import fetch from 'node-fetch';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const dotenvPath = path.join(__dirname, '../.env');
-require('dotenv').config({ path: dotenvPath });
-const fetch = require('node-fetch');
+dotenv.config({ path: dotenvPath });
 
 
 let UserData;
@@ -158,7 +164,7 @@ async function GetUserPic() {
     }
 }
 
-module.exports = {
+export {
     getLoginUrl,
     cloneSelectedRepo,
     exchangeCodeForToken,

@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 const filePath = path.join(__dirname, 'GraphData.json');
 
@@ -156,6 +156,6 @@ async function createGraphFromData() {
   return { Vertices, Edges};
 }
 
-module.exports = {
+export {
   createGraphFromData,
 };

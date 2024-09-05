@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 const parseProjectStructure = (filePath) => {
   const projectStructure = fs.readFileSync(filePath, 'utf-8');
@@ -28,4 +28,7 @@ const getProjectFilePathMapping = () => {
   return parseProjectStructure(projectFilePath);
 };
 
-module.exports = getProjectFilePathMapping;
+export 
+{
+  getProjectFilePathMapping
+} 

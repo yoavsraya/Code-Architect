@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'fs';
 const filePath = '/home/ec2-user/Code-Architect/C#/ProjectParse.txt';
 let InitAIConversation =[];
 
@@ -203,7 +203,8 @@ async function getConversion()
 {
   return InitAIConversation;
 }
-module.exports = 
+
+export 
 {
   buildConversion,
   updateConversion,

@@ -1,6 +1,6 @@
-const OpenAI = require("openai");
-const path = require('path');
-let conversationHistory = require('./InitAIConversation');
+import OpenAI from 'openai';
+import path from 'path';
+import conversationHistory from './InitAIConversation.js';
 let tempAIResponseGarageManager = require('./TempAIResponseGarageManager');
 let tempAIResponseExpandFactoryPattern = require('./TempAIResponseExpandFactoryPattern');
 
@@ -74,7 +74,7 @@ async function ExpandTopic(topic, fileContents)
   return assistantMessage;
 }
 
-module.exports = {
+export {
   RunAI,
   ExpandTopic,
 };

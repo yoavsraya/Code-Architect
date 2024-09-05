@@ -1,22 +1,24 @@
-const fs = require('fs');
-const path = require('path');
-const http = require('http');
-const express = require('express');
-const WebSocket = require('ws');
-const GitHubApi = require('./GitHubApi');
-const OpenAIApi = require('./OpenAI');
-const CsUtiles = require('../C#/utils');
-const cors = require('cors'); 
-const GraphData = require('./GraphData.js');
-const getProjectFilePathMapping = require('./GetFilePath');
-const { exec } = require('child_process');
+import fs from 'fs';
+import path from 'path';
+import http from 'http';
+import express from 'express';
+import WebSocket from 'ws';
+import GitHubApi from './GitHubApi.js';
+import OpenAIApi from './OpenAI.js';
+import CsUtiles from '../C#/utils.js';
+import cors from 'cors';
+import GraphData from './GraphData.js';
+import getProjectFilePathMapping from './GetFilePath.js';
+import { exec } from 'child_process';
+import dotenv from 'dotenv';
+import { Webhooks, createNodeMiddleware } from '@octokit/webhooks';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const dotenvPath = path.join(__dirname, '../.env');
-require('dotenv').config({ path: dotenvPath });
-
-async function init() {
-  // Dynamically import the ES module
-  const { Webhooks } = await import('@octokit/webhooks');
-
+dotenv.config({ path: dotenvPath });
 
 const app = express();
 app.use(cors()); 
@@ -242,5 +244,3 @@ app.get('/api/jasonParsing', async (req, res) => {
 
 server.listen(port, () => console.log(`Server listening on port ${port}!`));
 
-}
-init().catch(console.error);
