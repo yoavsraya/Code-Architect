@@ -1,6 +1,7 @@
 {
   "name": "js-server",
   "version": "1.0.0",
+  "type": "module",
   "description": "JavaScript server written with Express.js",
   "main": "Server.js",
   "scripts": {
