@@ -7,7 +7,7 @@ import BigPanel from './BigPanel';
 import LoadingScreen from './LoadingScreen'; // Import the LoadingScreen component
 import AboutPage from './AboutPage'; // Import the AboutPage component
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import Game from './WhereIsTheBallGame'
 
 function App() {
   const [finishFetchRepo, setFinishFetchRepo] = useState(false);
@@ -188,7 +188,7 @@ function App() {
               element={
                 isAuthenticated ? (
                   isLoading ? ( // Show loading screen if loading is true
-                    <LoadingScreen />
+                    <Game />
                   ) : (
                     <BigPanel data={data} setData={setData} aiResult={aiResult}/>
                   )

@@ -1,0 +1,23 @@
+/* WhereIsTheBallGame.css */
+.game-container {
+    text-align: center;
+    margin: 20px;
+  }
+  
+  .cups {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .cup {
+    font-size: 50px;
+    cursor: pointer;
+    margin: 0 10px;
+    transition: transform 0.3s;
+  }
+  
+  .cup.guessed {
+    transform: scale(1.2);
+  }
+  
