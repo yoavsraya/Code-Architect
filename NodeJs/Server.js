@@ -13,41 +13,20 @@ const { exec } = require('child_process');
 const dotenvPath = path.join(__dirname, '../.env');
 require('dotenv').config({ path: dotenvPath });
 
-async function init() {
-  // Dynamically import the ES module
-  const { Webhooks } = await import('@octokit/webhooks');
-
-
 const app = express();
 app.use(cors()); 
 app.use(express.json());
-
-const webhooks = new Webhooks({
-  secret: process.env.GIT_HUB_WEBHOOK_SECRET, 
-});
-
-app.use(webhooks.middleware);
 
 console.log("socket");
 const server = http.createServer(app);
 console.log('Initializing WebSocket server...');
 const wss = new WebSocket.Server({ server });
 
-webhooks.on('push', ({ id, name, payload }) => {
-  wss.clients.forEach(client => {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(JSON.stringify({ push: true }));
-    }
-  })   
-});
-
-
 let isLoggedIn = false;
 let repoList;
 
 const port = process.env.SERVER_PORT;
 const filePathMapping = getProjectFilePathMapping(); // Initialize filePathMapping
-
 
 
 wss.on('connection', (ws, req) => {
@@ -76,7 +55,6 @@ wss.on('error', (error) => {
 app.get('/login-status', (req, res) => {
   res.json({ loggedIn: isLoggedIn });
 });
-
 
 app.get('/', (req, res) => res.send('Hello World!'));
 
@@ -241,6 +219,3 @@ app.get('/api/jasonParsing', async (req, res) => {
 });
 
 server.listen(port, () => console.log(`Server listening on port ${port}!`));
-
-}
-init().catch(console.error);
