@@ -5,7 +5,7 @@
   "description": "JavaScript server written with Express.js",
   "main": "Server.js",
   "scripts": {
-    "start": "node NodeJs/Server.js",
+    "start": "node NodeJs/Server.mjs",
     "csBuild": "cs build",
     "csRun": "cs run"
   },
