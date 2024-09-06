@@ -1,68 +1,6 @@
 [
   {
-    "FolderName": "GUI",
-    "ClassName": "GameMainForm",
-    "Accessibility": "internal",
-    "InheritsFrom": "Form",
-    "Compositions": [
-      "Game",
-      "GameSettingsForm",
-      "",
-      "Player",
-      "Label",
-      "FlowLayoutPanel",
-      "DialogResult"
-    ],
-    "Aggregations": [],
-    "NestedClasses": [],
-    "Methods": [
-      "- InitializeComponent",
-      "- M_LabelnumOfPoints_TextChanged",
-      "- locateLabels",
-      "- creatingButtonBoard",
-      "- bottomTable_Click",
-      "- updateMove",
-      "- switchPlayer",
-      "- createGame",
-      "- M_XOLogics_gameEndedAction",
-      "- clearGame",
-      "- createPlayers"
-    ],
-    "Enums": [],
-    "Usage": []
-  },
-  {
-    "FolderName": "GUI",
-    "ClassName": "GameSettingsForm",
-    "Accessibility": "public",
-    "InheritsFrom": "Form",
-    "Compositions": [
-      "Label",
-      "TextBox",
-      "CheckBox",
-      "NumericUpDown",
-      "Button"
-    ],
-    "Aggregations": [],
-    "NestedClasses": [],
-    "Methods": [
-      "- InitializeComponent",
-      "- GameSettingsForm_FormClosing",
-      "- M_UpDownNumOfCols_ValueChanged",
-      "- m_UpDownNumOfRow_ValueChanged",
-      "- m_TextBoxPlayer2Name_TextChanged",
-      "- M_TextBoxPlayer1Name_TextChanged",
-      "- checkBoxPlayer2_CheckedChanged",
-      "- buttomStart_clicked",
-      "- checkValidion",
-      "- updateUDMinAndMax",
-      "+ ReturnFormData"
-    ],
-    "Enums": [],
-    "Usage": []
-  },
-  {
-    "FolderName": "GUI",
+    "FolderName": "TUI",
     "ClassName": "Program",
     "Accessibility": "public",
     "InheritsFrom": null,
@@ -73,80 +11,78 @@
       "+ Main"
     ],
     "Enums": [],
-    "Usage": [
-      "GameMainForm"
-    ]
-  },
-  {
-    "FolderName": "XO logics",
-    "ClassName": "Board",
-    "Accessibility": "public",
-    "InheritsFrom": null,
-    "Compositions": [
-      ""
-    ],
-    "Aggregations": [],
-    "NestedClasses": [],
-    "Methods": [
-      "+ FlipSign",
-      "- checkDataRange",
-      "+ GetShapeFromMatrix",
-      "+ MarkBoard",
-      "+ LookForLoser",
-      "- straightRow",
-      "- straightCol",
-      "- straightDiagonal",
-      "- straightSecondaryDiagonal",
-      "+ ClearBoard",
-      "- maxTurnPossible",
-      "+ CheckIfEmpty",
-      "+ BestMove",
-      "- checkIfAIPlayerLoser",
-      "- minimax"
-    ],
-    "Enums": [
-      "ePossibleLine"
-    ],
     "Usage": []
   },
   {
-    "FolderName": "XO logics",
-    "ClassName": "Game",
+    "FolderName": "Tel_Aviv_Jafo_College",
+    "ClassName": "Administration",
     "Accessibility": "public",
     "InheritsFrom": null,
-    "Compositions": [
-      "Board",
-      "Player"
-    ],
+    "Compositions": [],
     "Aggregations": [
-      "eGameStatus"
+      "Course",
+      "Student",
+      "Professor"
     ],
     "NestedClasses": [],
     "Methods": [
-      "+ CreatePlayer",
-      "+ IfRoundEnded",
-      "+ PlayPlayerMove",
-      "+ CreateBoard",
-      "+ ClearBoard",
-      "+ GetRandomMove",
-      "+ MinBoardSize",
-      "+ MaxBoardSize",
-      "- onScoreChanged"
+      "+ AssignStudentToCourse",
+      "+ UpdateStudentGrade",
+      "+ AddCourse",
+      "+ AddStudent"
     ],
     "Enums": [],
     "Usage": []
   },
   {
-    "FolderName": "XO logics",
-    "ClassName": "Player",
+    "FolderName": "Tel_Aviv_Jafo_College",
+    "ClassName": "Course",
     "Accessibility": "public",
     "InheritsFrom": null,
     "Compositions": [],
     "Aggregations": [
-      "eBoardShape"
+      "Student"
     ],
     "NestedClasses": [],
-    "Methods": [],
+    "Methods": [
+      "+ AddStudent"
+    ],
+    "Enums": [],
+    "Usage": []
+  },
+  {
+    "FolderName": "Tel_Aviv_Jafo_College",
+    "ClassName": "Professor",
+    "Accessibility": "public",
+    "InheritsFrom": null,
+    "Compositions": [
+      "Course"
+    ],
+    "Aggregations": [
+      "Administration"
+    ],
+    "NestedClasses": [],
+    "Methods": [
+      "+ AssignGrade"
+    ],
+    "Enums": [],
+    "Usage": []
+  },
+  {
+    "FolderName": "Tel_Aviv_Jafo_College",
+    "ClassName": "Student",
+    "Accessibility": "public",
+    "InheritsFrom": null,
+    "Compositions": [
+      "Course"
+    ],
+    "Aggregations": [
+      "Administration"
+    ],
+    "NestedClasses": [],
+    "Methods": [
+      "+ SetID"
+    ],
     "Enums": [],
     "Usage": []
   }

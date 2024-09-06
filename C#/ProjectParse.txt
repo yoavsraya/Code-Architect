@@ -1,73 +1,50 @@
 Project: UserFiles
 
-Folder: GUI
-File: GameMainForm.cs
-Class: GameMainForm
-  Accessibility: internal
-  Belongs to: EXE
-  Dependencies:
-    Inheritance:
-      Inherits from: Form
-    Composition:
-      Game
-      GameSettingsForm
-      
-      Player
-      Label
-      FlowLayoutPanel
-      DialogResult
-
-Folder: GUI
-File: GameSettingsForm.cs
-Class: GameSettingsForm
-  Accessibility: public
-  Belongs to: EXE
-  Dependencies:
-    Inheritance:
-      Inherits from: Form
-    Composition:
-      Label
-      TextBox
-      CheckBox
-      NumericUpDown
-      Button
-
-Folder: GUI
+Folder: TUI
 File: Program.cs
 Class: Program
   Accessibility: public
   Belongs to: EXE
-  Dependencies:
-    Usage:
-      GameMainForm
 
-Folder: XO logics
-File: Board.cs
-Class: Board
+Folder: Tel_Aviv_Jafo_College
+File: Administration.cs
+Class: Administration
   Accessibility: public
-  Belongs to: DLL
-  Dependencies:
-    Composition:
-      
-
-Folder: XO logics
-File: Game.cs
-Class: Game
-  Accessibility: public
-  Belongs to: DLL
-  Dependencies:
-    Composition:
-      Board
-      Player
-    Aggregations:
-      eGameStatus
-
-Folder: XO logics
-File: Player.cs
-Class: Player
-  Accessibility: public
-  Belongs to: DLL
+  Belongs to: EXE
   Dependencies:
     Aggregations:
-      eBoardShape
+      Course
+      Student
+      Professor
+
+Folder: Tel_Aviv_Jafo_College
+File: Course.cs
+Class: Course
+  Accessibility: public
+  Belongs to: EXE
+  Dependencies:
+    Aggregations:
+      Student
+
+Folder: Tel_Aviv_Jafo_College
+File: Professor.cs
+Class: Professor
+  Accessibility: public
+  Belongs to: EXE
+  Dependencies:
+    Composition:
+      Course
+    Aggregations:
+      Administration
+
+Folder: Tel_Aviv_Jafo_College
+File: Student.cs
+Class: Student
+  Accessibility: public
+  Belongs to: EXE
+  Dependencies:
+    Composition:
+      Course
+    Aggregations:
+      Administration
 
