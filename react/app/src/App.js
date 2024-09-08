@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
-import LoginPage from './LoginPage';
-import Header from './Header';
-import BigPanel from './BigPanel';
-import LoadingScreen from './LoadingScreen'; // Import the LoadingScreen component
-import AboutPage from './AboutPage'; // Import the AboutPage component
+import LoginPage from './MidPages/Login/LoginPage';
+import Header from './MidPages/HeaderMenu/Header';
+import BigPanel from './Pages/BigPanel/BigPanel';
+import LoadingScreen from './MidPages/Loading/LoadingScreen'; // Import the LoadingScreen component
+import AboutPage from './MidPages/HeaderMenu/About/AboutPage'; // Import the AboutPage component
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {

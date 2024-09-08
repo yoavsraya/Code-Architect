@@ -1,6 +1,6 @@
 import React from 'react';
 import './IntegrateGitButton.css';
-import gitHubLogo from './github-logo-white.png';
+import gitHubLogo from '../../Utiles/logoAndPic/github-logo-white.png';
 
 const IntegrateGitButton = ({ setData, onSuccess, onFail }) => {
   const handleClick = () => {

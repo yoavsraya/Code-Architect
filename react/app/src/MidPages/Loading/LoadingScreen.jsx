@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './LoadingScreen.css';
-import Dino from "./Dino/Dino";
+import Dino from "../../Utiles/Dino/Dino";
 
 const LoadingScreen = () => {
   const [gameStarted, setGameStarted] = useState(false); // Initialize to false to wait for user input

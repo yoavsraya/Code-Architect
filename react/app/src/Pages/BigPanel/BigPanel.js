@@ -1,8 +1,8 @@
 import React, { useRef, useState, useCallback, useMemo } from 'react';
 import './BigPanel.css';
-import SmallPanel from './SmallPanel';
-import FlowChartComponent from './FlowChartComponent';
-import MessagePanel from './MessagePanel';
+import SmallPanel from '../SmallPanel/SmallPanel';
+import FlowChartComponent from '../React-Flow-grpah/FlowChartComponent';
+import MessagePanel from '../Chat/MessagePanel';
 const stop = false;
 
 const BigPanel = ({ data, setData, aiResult }) => {

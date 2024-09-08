@@ -1,7 +1,7 @@
 import React from 'react';
 import './AboutPage.css';
 import { useNavigate } from 'react-router-dom';
-import aboutUspic from './logoAndPic/aboutUS.svg';
+import aboutUspic from '../../../Utiles/logoAndPic/aboutUS.svg';
 
 const AboutPage = () => {
     const navigate = useNavigate(); // Hook to navigate programmatically

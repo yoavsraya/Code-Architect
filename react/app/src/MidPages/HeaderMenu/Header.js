@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import './Header.css';
-import logo from './logo3.png';
-import logo2 from './logo4.png';
-import bannerLogo from './logoAndPic/bannerLogo.png';
-import githubLogo from './github-logo-white.png'; // Add your GitHub logo image
-import Menu from './Menu'; // Import the Menu component
+import bannerLogo from '../../Utiles/logoAndPic/bannerLogo.png';
+import githubLogo from '../../Utiles/logoAndPic/github-logo-white.png';
+import Menu from './Menu';
 
 
 const Header = ({ onLogout }) => {

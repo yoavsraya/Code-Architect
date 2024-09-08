@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import './MessagePanel.css';
-import LoadingScreenAI from './LoadingScreenAI';
+import LoadingScreenAI from '../../MidPages/Loading/LoadingScreenAI';
 
 const MessagePanel = ({ aiResult }) => {
   const initialMessages = useMemo(() => [
