@@ -165,11 +165,7 @@ function App() {
     setData(null);
     setSelectedRepo('');
     setFinishFetchRepo(false);
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('selectedRepo');
-    localStorage.removeItem('flowchart-nodes');
-    localStorage.removeItem('flowchart-edges');
-    localStorage.removeItem('aiResult');
+    localStorage.clear();
   };
 
   return (
