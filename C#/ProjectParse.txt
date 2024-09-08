@@ -1,50 +1,67 @@
 Project: UserFiles
 
-Folder: TUI
+Folder: Garage_Example
+File: Car.cs
+Class: Car
+  Accessibility: public
+  Belongs to: EXE
+  Dependencies:
+    Inheritance:
+      Inherits from: Vehicle
+    Aggregations:
+      Engine
+      Tires
+
+Folder: Garage_Example
+File: Engine.cs
+Class: Engine
+  Accessibility: public
+  Belongs to: EXE
+
+Folder: Garage_Example
+File: Garage.cs
+Class: Garage
+  Accessibility: public
+  Belongs to: EXE
+  Dependencies:
+    Aggregations:
+      Car
+      Motorcycle
+
+Folder: Garage_Example
+File: Motorcycle.cs
+Class: Motorcycle
+  Accessibility: public
+  Belongs to: EXE
+  Dependencies:
+    Inheritance:
+      Inherits from: Vehicle
+    Aggregations:
+      Engine
+      Tires
+
+Folder: Garage_Example
+File: Tires.cs
+Class: Tires
+  Accessibility: public
+  Belongs to: EXE
+
+Folder: Garage_Example
+File: Vehicle.cs
+Class: Vehicle
+  Accessibility: public
+  Belongs to: EXE
+
+Folder: Program
 File: Program.cs
 Class: Program
   Accessibility: public
   Belongs to: EXE
-
-Folder: Tel_Aviv_Jafo_College
-File: Administration.cs
-Class: Administration
-  Accessibility: public
-  Belongs to: EXE
   Dependencies:
-    Aggregations:
-      Course
-      Student
-      Professor
-
-Folder: Tel_Aviv_Jafo_College
-File: Course.cs
-Class: Course
-  Accessibility: public
-  Belongs to: EXE
-  Dependencies:
-    Aggregations:
-      Student
-
-Folder: Tel_Aviv_Jafo_College
-File: Professor.cs
-Class: Professor
-  Accessibility: public
-  Belongs to: EXE
-  Dependencies:
-    Composition:
-      Course
-    Aggregations:
-      Administration
-
-Folder: Tel_Aviv_Jafo_College
-File: Student.cs
-Class: Student
-  Accessibility: public
-  Belongs to: EXE
-  Dependencies:
-    Composition:
-      Course
-    Aggregations:
-      Administration
+    Usage:
+      Engine
+      Tires
+      Car
+      Motorcycle
+      Garage
 

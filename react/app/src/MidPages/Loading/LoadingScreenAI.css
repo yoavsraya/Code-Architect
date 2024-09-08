@@ -13,7 +13,7 @@
     width: 100px;
     height: 100px;
     margin-bottom: 20px;
-    background-image: url('./loadingAI.gif'); /* Replace with your graphic path */
+    background-image: url('../../Utiles/GIFS/loadingAI.gif'); /* Replace with your graphic path */
     background-size: cover;
     background-repeat: no-repeat;
   }

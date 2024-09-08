@@ -11,7 +11,7 @@
   width: 2rem;
   height: 2rem;
   margin-left: 10px;
-  background-image: url('./loadingDataGif.gif'); /* Replace with your graphic path */
+  background-image: url('../../Utiles/GIFS/loadingDataGif.gif'); /* Replace with your graphic path */
   background-size: cover;
   background-repeat: no-repeat;
 }

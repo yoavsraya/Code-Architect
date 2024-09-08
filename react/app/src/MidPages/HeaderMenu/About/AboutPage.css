@@ -10,17 +10,17 @@
     padding: 20px;
   }
   
-  .back-button {
+  .back-button-about {
     position: absolute;
-    top: 20px;
-    left: 20px;
-    background-color: #4CAF50;
+    top: 1rem;
+    left: 1rem;
+    background-color: #639b7f;
     color: rgb(255, 255, 255);
     border: none;
     border-radius: 5px;
     cursor: pointer;
     margin-left: 0.9rem;
-    width: auto;
+    width: 3rem;
   }
   
   .image-container {

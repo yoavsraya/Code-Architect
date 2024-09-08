@@ -12,7 +12,7 @@ const AboutPage = () => {
   
     return (
         <div className="about-page">
-          <button className="back-button" onClick={handleBack}>Back</button>
+          <button className="back-button-about" onClick={handleBack}>Back</button>
           <div className="image-container">
         <img src={aboutUspic} alt="About Us" className="about-image" />
       </div>

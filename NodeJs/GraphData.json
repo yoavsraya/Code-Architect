@@ -1,6 +1,99 @@
 [
   {
-    "FolderName": "TUI",
+    "FolderName": "Garage_Example",
+    "ClassName": "Car",
+    "Accessibility": "public",
+    "InheritsFrom": "Vehicle",
+    "Compositions": [],
+    "Aggregations": [
+      "Engine",
+      "Tires"
+    ],
+    "NestedClasses": [],
+    "Methods": [
+      "+ StartCar"
+    ],
+    "Enums": [],
+    "Usage": []
+  },
+  {
+    "FolderName": "Garage_Example",
+    "ClassName": "Engine",
+    "Accessibility": "public",
+    "InheritsFrom": null,
+    "Compositions": [],
+    "Aggregations": [],
+    "NestedClasses": [],
+    "Methods": [
+      "+ Start"
+    ],
+    "Enums": [],
+    "Usage": []
+  },
+  {
+    "FolderName": "Garage_Example",
+    "ClassName": "Garage",
+    "Accessibility": "public",
+    "InheritsFrom": null,
+    "Compositions": [],
+    "Aggregations": [
+      "Car",
+      "Motorcycle"
+    ],
+    "NestedClasses": [],
+    "Methods": [
+      "+ StartVehicles"
+    ],
+    "Enums": [],
+    "Usage": []
+  },
+  {
+    "FolderName": "Garage_Example",
+    "ClassName": "Motorcycle",
+    "Accessibility": "public",
+    "InheritsFrom": "Vehicle",
+    "Compositions": [],
+    "Aggregations": [
+      "Engine",
+      "Tires"
+    ],
+    "NestedClasses": [],
+    "Methods": [
+      "+ StartMotorcycle"
+    ],
+    "Enums": [],
+    "Usage": []
+  },
+  {
+    "FolderName": "Garage_Example",
+    "ClassName": "Tires",
+    "Accessibility": "public",
+    "InheritsFrom": null,
+    "Compositions": [],
+    "Aggregations": [],
+    "NestedClasses": [],
+    "Methods": [
+      "+ Inflate"
+    ],
+    "Enums": [],
+    "Usage": []
+  },
+  {
+    "FolderName": "Garage_Example",
+    "ClassName": "Vehicle",
+    "Accessibility": "public",
+    "InheritsFrom": null,
+    "Compositions": [],
+    "Aggregations": [],
+    "NestedClasses": [],
+    "Methods": [
+      "+ DisplayInfo"
+    ],
+    "Enums": [],
+    "Usage": []
+  },
+  {
+    "FolderName": "Program",
     "ClassName": "Program",
     "Accessibility": "public",
     "InheritsFrom": null,
@@ -8,82 +101,15 @@
     "Aggregations": [],
     "NestedClasses": [],
     "Methods": [
-      "+ Main"
+      "- Main"
     ],
     "Enums": [],
-    "Usage": []
-  },
-  {
-    "FolderName": "Tel_Aviv_Jafo_College",
-    "ClassName": "Administration",
-    "Accessibility": "public",
-    "InheritsFrom": null,
-    "Compositions": [],
-    "Aggregations": [
-      "Course",
-      "Student",
-      "Professor"
-    ],
-    "NestedClasses": [],
-    "Methods": [
-      "+ AssignStudentToCourse",
-      "+ UpdateStudentGrade",
-      "+ AddCourse",
-      "+ AddStudent"
-    ],
-    "Enums": [],
-    "Usage": []
-  },
-  {
-    "FolderName": "Tel_Aviv_Jafo_College",
-    "ClassName": "Course",
-    "Accessibility": "public",
-    "InheritsFrom": null,
-    "Compositions": [],
-    "Aggregations": [
-      "Student"
-    ],
-    "NestedClasses": [],
-    "Methods": [
-      "+ AddStudent"
-    ],
-    "Enums": [],
-    "Usage": []
-  },
-  {
-    "FolderName": "Tel_Aviv_Jafo_College",
-    "ClassName": "Professor",
-    "Accessibility": "public",
-    "InheritsFrom": null,
-    "Compositions": [
-      "Course"
-    ],
-    "Aggregations": [
-      "Administration"
-    ],
-    "NestedClasses": [],
-    "Methods": [
-      "+ AssignGrade"
-    ],
-    "Enums": [],
-    "Usage": []
-  },
-  {
-    "FolderName": "Tel_Aviv_Jafo_College",
-    "ClassName": "Student",
-    "Accessibility": "public",
-    "InheritsFrom": null,
-    "Compositions": [
-      "Course"
-    ],
-    "Aggregations": [
-      "Administration"
-    ],
-    "NestedClasses": [],
-    "Methods": [
-      "+ SetID"
-    ],
-    "Enums": [],
-    "Usage": []
+    "Usage": [
+      "Engine",
+      "Tires",
+      "Car",
+      "Motorcycle",
+      "Garage"
+    ]
   }
 ]
