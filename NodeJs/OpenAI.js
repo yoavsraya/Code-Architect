@@ -10,7 +10,7 @@ try {
 } catch (error) {
   console.error('Error loading .env file:', error);
 }
-
+///
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 async function RunAI() {
