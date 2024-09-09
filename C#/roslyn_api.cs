@@ -92,134 +92,143 @@ class Program
     }
 
     static void AnalyzeMainMethod(IMethodSymbol mainMethod, ClassInfo classInfo, SemanticModel semanticModel)
-{
-    var mainSyntax = mainMethod.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() as MethodDeclarationSyntax;
-    if (mainSyntax == null)
-        return;
-
-    var objectCreations = mainSyntax.DescendantNodes().OfType<ObjectCreationExpressionSyntax>();
-
-    foreach (var creation in objectCreations)
     {
-        var typeInfo = semanticModel.GetTypeInfo(creation);
-        var createdClassName = typeInfo.Type.Name;
+        var mainSyntax = mainMethod.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() as MethodDeclarationSyntax;
+        if (mainSyntax == null)
+            return;
 
-        if (!string.IsNullOrEmpty(createdClassName))
+        var objectCreations = mainSyntax.DescendantNodes().OfType<ObjectCreationExpressionSyntax>();
+
+        foreach (var creation in objectCreations)
         {
-            classInfo.Usage.Add(createdClassName);
-        }
-    }
-}
+            var typeInfo = semanticModel.GetTypeInfo(creation);
+            var createdClassName = typeInfo.Type.Name;
 
-static void AnalyzeClass(ClassDeclarationSyntax classNode, SemanticModel semanticModel, ClassInfo classInfo, string nestedPrefix = "")
-{
-    var classSymbol = semanticModel.GetDeclaredSymbol(classNode) as INamedTypeSymbol;
-    string className = nestedPrefix + classSymbol.Name;
-
-    classInfo.Accessibility = GetAccessModifier(classSymbol);
-
-    // Inheritance
-    var baseType = classSymbol.BaseType;
-    if (baseType != null && baseType.Name != "Object")
-    {
-        classInfo.InheritsFrom = baseType.Name;
-    }
-
-    foreach (var member in classSymbol.GetMembers().OfType<IMethodSymbol>())
-    {
-        if (member.MethodKind == MethodKind.Ordinary) // Only ordinary methods, not constructors or properties
-        {
-            classInfo.Methods.Add(new MethodInfo
+            if (!string.IsNullOrEmpty(createdClassName))
             {
-                Name = member.Name,
-                Accessibility = GetAccessModifier(member)
-            });
-
-            if (member.Name == "Main")
-            {
-                AnalyzeMainMethod(member, classInfo, semanticModel);
+                classInfo.Composition.Add(createdClassName);
             }
         }
     }
 
-    foreach (var enumNode in classNode.Members.OfType<EnumDeclarationSyntax>())
+    static void AnalyzeClass(ClassDeclarationSyntax classNode, SemanticModel semanticModel, ClassInfo classInfo, string nestedPrefix = "")
     {
-        classInfo.Enums.Add(enumNode.Identifier.Text);
-    }
+        var classSymbol = semanticModel.GetDeclaredSymbol(classNode) as INamedTypeSymbol;
+        string className = nestedPrefix + classSymbol.Name;
 
-    // Composition and Aggregation (fields and properties)
-    var compositionCandidates = new HashSet<string>();
-    var aggregationCandidates = new HashSet<string>();
+        classInfo.Accessibility = GetAccessModifier(classSymbol);
 
-    foreach (var member in classSymbol.GetMembers().OfType<IFieldSymbol>())
-    {
-        if (member.Type != null && !IsPrimitiveType(member.Type.Name))
+        // Inheritance
+        var baseType = classSymbol.BaseType;
+        if (baseType != null && baseType.Name != "Object")
         {
-            var typeName = GetElementTypeName(member.Type);
-            if (IsCompositionField(member))
+            classInfo.InheritsFrom = baseType.Name;
+        }
+
+        //Interfaces
+        foreach (var interfaceType in classSymbol.Interfaces)
+        {
+            classInfo.Interfaces.Add(interfaceType.Name);
+        }
+
+        foreach (var member in classSymbol.GetMembers().OfType<IMethodSymbol>())
+        {
+            if (member.MethodKind == MethodKind.Ordinary || 
+                member.MethodKind == MethodKind.PropertyGet || 
+                member.MethodKind == MethodKind.PropertySet)
             {
-                compositionCandidates.Add(typeName);
-                Console.WriteLine($"Field {member.Name} ({typeName}) is classified as Composition.");
+                // Add only ordinary methods and property methods to the methods section
+                classInfo.Methods.Add(new MethodInfo
+                {
+                    Name = member.Name,
+                    Accessibility = GetAccessModifier(member)
+                });
+            }
+
+            // Analyze constructors separately for object creation (e.g., new Course())
+            if (member.MethodKind == MethodKind.Constructor || member.MethodKind == MethodKind.Ordinary)
+            {
+                // Analyze both ordinary methods and constructors for object creation
+                AnalyzeMainMethod(member, classInfo, semanticModel);  // This checks for new keyword (e.g., new Course())
+            }
+        }
+
+
+        foreach (var enumNode in classNode.Members.OfType<EnumDeclarationSyntax>())
+        {
+            classInfo.Enums.Add(enumNode.Identifier.Text);
+        }
+
+        // Composition and Aggregation (fields and properties, collections-specific logic)
+        var compositionCandidates = new HashSet<string>();
+        var aggregationCandidates = new HashSet<string>();
+
+        // Analyze fields
+        foreach (var member in classSymbol.GetMembers().OfType<IFieldSymbol>())
+        {
+            if (member.Type != null && !IsPrimitiveType(member.Type.Name))
+            {
+                var typeName = GetElementTypeName(member.Type);
+
+                // Check if the field is a collection and classify accordingly
+                if (IsAggregationField(member, semanticModel))
+                {
+                    aggregationCandidates.Add(typeName);
+                    Console.WriteLine($"Field {member.Name} ({typeName}) is classified as Aggregation.");
+                }
+            }
+        }
+
+        // Analyze properties
+        foreach (var member in classSymbol.GetMembers().OfType<IPropertySymbol>())
+        {
+            if (member.Type != null && !IsPrimitiveType(member.Type.Name))
+            {
+                var typeName = GetElementTypeName(member.Type);
+
+                // Check if the property is a collection and classify accordingly
+                if (IsAggregationProperty(member, semanticModel))
+                {
+                    aggregationCandidates.Add(typeName);
+                    Console.WriteLine($"Property {member.Name} ({typeName}) is classified as Aggregation.");
+                }
+            }
+        }
+
+        // Finalize classification: if a type is in both composition and aggregation candidates, it is classified as aggregation.
+        foreach (var type in compositionCandidates)
+        {
+            if (aggregationCandidates.Contains(type))
+            {
+                classInfo.Aggregations.Add(type);
             }
             else
             {
-                aggregationCandidates.Add(typeName);
-                Console.WriteLine($"Field {member.Name} ({typeName}) is classified as Aggregation.");
+                classInfo.Composition.Add(type);
             }
         }
-    }
 
-    foreach (var member in classSymbol.GetMembers().OfType<IPropertySymbol>())
-    {
-        if (member.Type != null && !IsPrimitiveType(member.Type.Name))
-        {
-            var typeName = GetElementTypeName(member.Type);
-            if (IsCompositionProperty(member))
-            {
-                compositionCandidates.Add(typeName);
-                Console.WriteLine($"Property {member.Name} ({typeName}) is classified as Composition.");
-            }
-            else if (IsAggregationProperty(member, semanticModel))
-            {
-                aggregationCandidates.Add(typeName);
-                Console.WriteLine($"Property {member.Name} ({typeName}) is classified as Aggregation.");
-            }
-        }
-    }
-
-    // Finalize classification: if a type is in both composition and aggregation candidates, it is classified as aggregation.
-    foreach (var type in compositionCandidates)
-    {
-        if (aggregationCandidates.Contains(type))
+        foreach (var type in aggregationCandidates)
         {
             classInfo.Aggregations.Add(type);
         }
-        else
+
+        // Nested Classes
+        var nestedClasses = classNode.Members.OfType<ClassDeclarationSyntax>();
+        foreach (var nestedClass in nestedClasses)
         {
-            classInfo.Composition.Add(type);
+            var nestedClassInfo = new ClassInfo
+            {
+                FolderName = classInfo.FolderName,
+                FileName = classInfo.FileName,
+                ClassName = className + "." + nestedClass.Identifier.Text,
+                ProjectType = classInfo.ProjectType
+            };
+            AnalyzeClass(nestedClass, semanticModel, nestedClassInfo, nestedPrefix + classSymbol.Name + ".");
+            classInfo.NestedClasses.Add(nestedClassInfo);
         }
     }
 
-    foreach (var type in aggregationCandidates)
-    {
-        classInfo.Aggregations.Add(type);
-    }
-
-    // Nested Classes
-    var nestedClasses = classNode.Members.OfType<ClassDeclarationSyntax>();
-    foreach (var nestedClass in nestedClasses)
-    {
-        var nestedClassInfo = new ClassInfo
-        {
-            FolderName = classInfo.FolderName,
-            FileName = classInfo.FileName,
-            ClassName = className + "." + nestedClass.Identifier.Text,
-            ProjectType = classInfo.ProjectType
-        };
-        AnalyzeClass(nestedClass, semanticModel, nestedClassInfo, nestedPrefix + classSymbol.Name + ".");
-        classInfo.NestedClasses.Add(nestedClassInfo);
-    }
-}
 
 
 
@@ -235,21 +244,56 @@ static void AnalyzeClass(ClassDeclarationSyntax classNode, SemanticModel semanti
 
     static bool IsAggregationProperty(IPropertySymbol propertySymbol, SemanticModel semanticModel)
     {
-        if (propertySymbol.SetMethod == null || propertySymbol.SetMethod.DeclaredAccessibility != Accessibility.Public)
+        // Check if the property is a collection (generic type like List<Course>)
+        if (propertySymbol.Type is INamedTypeSymbol namedTypeSymbol && namedTypeSymbol.IsGenericType)
         {
-            return false;
+            // Check if the setter contains `new Course()`
+            var setterMethod = propertySymbol.SetMethod?.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() as AccessorDeclarationSyntax;
+            if (setterMethod != null)
+            {
+                var objectCreations = setterMethod.DescendantNodes().OfType<ObjectCreationExpressionSyntax>();
+                foreach (var creation in objectCreations)
+                {
+                    var typeInfo = semanticModel.GetTypeInfo(creation);
+                    if (typeInfo.Type.Name == "Course")  // Check for `new Course()`
+                    {
+                        return false;  // If `new Course()` is found, it's composition
+                    }
+                }
+            }
+            return true;  // If no `new Course()` is found, it's aggregation
         }
 
-        // Check if the setter contains a 'new' keyword
-        var setterMethod = propertySymbol.SetMethod.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() as AccessorDeclarationSyntax;
-        if (setterMethod != null)
-        {
-            var containsNew = setterMethod.DescendantNodes().OfType<ObjectCreationExpressionSyntax>().Any();
-            return !containsNew;
-        }
-
-        return true;
+        // If not a collection, fallback to the original logic
+        return false;
     }
+
+    static bool IsAggregationField(IFieldSymbol fieldSymbol, SemanticModel semanticModel)
+    {
+        // Check if the field is a collection (generic type like List<Course>)
+        if (fieldSymbol.Type is INamedTypeSymbol namedTypeSymbol && namedTypeSymbol.IsGenericType)
+        {
+            // Check if the initializer contains `new Course()`
+            var syntaxReferences = fieldSymbol.DeclaringSyntaxReferences;
+            foreach (var syntaxReference in syntaxReferences)
+            {
+                var fieldDeclaration = syntaxReference.GetSyntax() as VariableDeclaratorSyntax;
+                if (fieldDeclaration != null)
+                {
+                    var initializer = fieldDeclaration.Initializer?.Value as ObjectCreationExpressionSyntax;
+                    if (initializer != null && semanticModel.GetTypeInfo(initializer).Type.Name == "Course")  // Check for `new Course()`
+                    {
+                        return false;  // If `new Course()` is found, it's composition
+                    }
+                }
+            }
+            return true;  // If no `new Course()` is found, it's aggregation
+        }
+
+        // If not a collection, fallback to the original logic
+        return false;
+    }
+
 
     static string GetElementTypeName(ITypeSymbol typeSymbol)
     {
@@ -380,8 +424,8 @@ static void AnalyzeClass(ClassDeclarationSyntax classNode, SemanticModel semanti
             if (classInfo.InheritsFrom != null || 
                 classInfo.Composition.Any() || 
                 classInfo.Aggregations.Any() || 
-                classInfo.Usage.Any() || 
-                classInfo.NestedClasses.Any())
+                classInfo.NestedClasses.Any() ||
+                classInfo.Interfaces.Any())
             {
                 streamWriter.WriteLine("  Dependencies:");
 
@@ -389,6 +433,15 @@ static void AnalyzeClass(ClassDeclarationSyntax classNode, SemanticModel semanti
                 {
                     streamWriter.WriteLine("    Inheritance:");
                     streamWriter.WriteLine($"      Inherits from: {classInfo.InheritsFrom}");
+                }
+
+                if (classInfo.Interfaces.Any())
+                {
+                    streamWriter.WriteLine("    Interfaces:");
+                    foreach (var iface in classInfo.Interfaces)
+                    {
+                        streamWriter.WriteLine($"      {iface}");
+                    }
                 }
 
                 var nonPrimitiveComponents = classInfo.Composition.Where(c => !IsPrimitiveType(c)).ToList();
@@ -411,15 +464,6 @@ static void AnalyzeClass(ClassDeclarationSyntax classNode, SemanticModel semanti
                     }
                 }
 
-                if (classInfo.Usage.Any())
-                {
-                    streamWriter.WriteLine("    Usage:");
-                    foreach (var usage in classInfo.Usage)
-                    {
-                        streamWriter.WriteLine($"      {usage}");
-                    }
-                }
-
                 if (classInfo.NestedClasses.Any())
                 {
                     streamWriter.WriteLine("    Nested Classes:");
@@ -433,6 +477,7 @@ static void AnalyzeClass(ClassDeclarationSyntax classNode, SemanticModel semanti
             streamWriter.WriteLine();
         }
     }
+
 
 
     static void WriteJsonFile(string jsonOutputPath, List<ClassInfo> classInfos)
@@ -454,12 +499,13 @@ static void AnalyzeClass(ClassDeclarationSyntax classNode, SemanticModel semanti
             NestedClasses = classInfo.NestedClasses,
             Methods = classInfo.Methods.Select(m => $"{GetVisibilitySign(m.Accessibility)} {m.Name}").ToList(),
             Enums = classInfo.Enums,
-            Usage = classInfo.Usage.ToList()
+            Interfaces = classInfo.Interfaces
         }).ToList();
 
         var json = JsonConvert.SerializeObject(classInfosForJson, Formatting.Indented);
         File.WriteAllText(jsonOutputPath, json);
     }
+
 
     static string GetVisibilitySign(string accessibility)
     {
@@ -490,6 +536,7 @@ class ClassInfo
     public List<MethodInfo> Methods { get; set; } = new List<MethodInfo>();
     public List<string> Enums { get; set; } = new List<string>();
     public HashSet<string> Usage { get; set; } = new HashSet<string>();
+    public List<string> Interfaces { get; set; } = new List<string>();
 }
 
 class MethodInfo

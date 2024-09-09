@@ -77,13 +77,18 @@ async function createGraphFromData() {
 
   jsonData.forEach(vertex => {
     const inhertageName = vertex.InheritsFrom;
-    console.log(vertex.ClassName, "is heritage from" , vertex.InheritsFrom);
+    const interface = vertex.Interfaces
     if (inhertageName != null)
     {
-    Edges.push({ From: vertex.ClassName, To: vertex.InheritsFrom, Label: "heritage" });
-    
+      Edges.push({ From: vertex.ClassName, To: vertex.InheritsFrom, Label: "Heritage" });
     }
-
+    if(interface!= null)
+    {
+      interface.forEach(object => {
+        Edges.push({ From: vertex.ClassName, To: vertex.object, Label: "Interface" });
+      });
+    }
+    
     vertex.Compositions.forEach(Composition => {
       isContainer = false;
       if (Composition.startsWith("System.Collections.Generic.")) {
@@ -111,16 +116,6 @@ async function createGraphFromData() {
         NestedClasse = NestedClasse.match(/<(.*)>/)[1];
       }
         Edges.push({ From: vertex.ClassName, To: NestedClasse, Label: SetLabel("Nested") });
-      
-    });
-
-    vertex.Usage.forEach(Usage1 => {
-      isContainer = false;
-      if (Usage1.startsWith("System.Collections.Generic.")) {
-        isContainer = true;
-        Usage1 = Usage.match(/<(.*)>/)[1];
-      }
-        Edges.push({ From: vertex.ClassName, To: Usage1, Label: SetLabel("Usage") });
       
     });
 
