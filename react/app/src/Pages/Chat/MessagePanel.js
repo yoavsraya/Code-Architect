@@ -83,7 +83,7 @@ const MessagePanel = ({ aiResult }) => {
     while ((match = regex.exec(topic)) !== null) {
       filesSet.add(match[1]);
     }
-  
+
     const files = Array.from(filesSet);
   
     try {
