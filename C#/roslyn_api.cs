@@ -170,7 +170,7 @@ class Program
             {
                 var typeName = GetElementTypeName(member.Type);
 
-                // Check if the field is a collection and classify accordingly
+                // Check if the field is a collection or a single instance
                 if (IsAggregationField(member, semanticModel))
                 {
                     aggregationCandidates.Add(typeName);
@@ -179,14 +179,14 @@ class Program
             }
         }
 
-        // Analyze properties
+        // Analyze properties (same logic for properties)
         foreach (var member in classSymbol.GetMembers().OfType<IPropertySymbol>())
         {
             if (member.Type != null && !IsPrimitiveType(member.Type.Name))
             {
                 var typeName = GetElementTypeName(member.Type);
 
-                // Check if the property is a collection and classify accordingly
+                // Check if the property is a collection or a single instance
                 if (IsAggregationProperty(member, semanticModel))
                 {
                     aggregationCandidates.Add(typeName);
@@ -194,6 +194,7 @@ class Program
                 }
             }
         }
+
 
         // Finalize classification: if a type is in both composition and aggregation candidates, it is classified as aggregation.
         foreach (var type in compositionCandidates)
@@ -270,29 +271,49 @@ class Program
 
     static bool IsAggregationField(IFieldSymbol fieldSymbol, SemanticModel semanticModel)
     {
-        // Check if the field is a collection (generic type like List<Course>)
-        if (fieldSymbol.Type is INamedTypeSymbol namedTypeSymbol && namedTypeSymbol.IsGenericType)
+        // Check if the field is a collection (e.g., List<Course>) or a single instance (e.g., Administration)
+        if (fieldSymbol.Type is INamedTypeSymbol namedTypeSymbol)
         {
-            // Check if the initializer contains `new Course()`
-            var syntaxReferences = fieldSymbol.DeclaringSyntaxReferences;
-            foreach (var syntaxReference in syntaxReferences)
+            if (namedTypeSymbol.IsGenericType)
             {
-                var fieldDeclaration = syntaxReference.GetSyntax() as VariableDeclaratorSyntax;
-                if (fieldDeclaration != null)
+                // For collections, check if any item is instantiated (e.g., new Course())
+                var syntaxReferences = fieldSymbol.DeclaringSyntaxReferences;
+                foreach (var syntaxReference in syntaxReferences)
                 {
-                    var initializer = fieldDeclaration.Initializer?.Value as ObjectCreationExpressionSyntax;
-                    if (initializer != null && semanticModel.GetTypeInfo(initializer).Type.Name == "Course")  // Check for `new Course()`
+                    var fieldDeclaration = syntaxReference.GetSyntax() as VariableDeclaratorSyntax;
+                    if (fieldDeclaration != null)
                     {
-                        return false;  // If `new Course()` is found, it's composition
+                        var initializer = fieldDeclaration.Initializer?.Value as ObjectCreationExpressionSyntax;
+                        if (initializer != null && semanticModel.GetTypeInfo(initializer).Type.Name == "Course")  // Check for `new Course()`
+                        {
+                            return false;  // If `new Course()` is found, it's composition
+                        }
                     }
                 }
             }
-            return true;  // If no `new Course()` is found, it's aggregation
+            else
+            {
+                // For single instances, check if the field is directly instantiated (e.g., new Administration())
+                var syntaxReferences = fieldSymbol.DeclaringSyntaxReferences;
+                foreach (var syntaxReference in syntaxReferences)
+                {
+                    var fieldDeclaration = syntaxReference.GetSyntax() as VariableDeclaratorSyntax;
+                    if (fieldDeclaration != null)
+                    {
+                        var initializer = fieldDeclaration.Initializer?.Value as ObjectCreationExpressionSyntax;
+                        if (initializer != null && semanticModel.GetTypeInfo(initializer).Type.Name == fieldSymbol.Type.Name)
+                        {
+                            return false;  // If `new Administration()` is found, it's composition
+                        }
+                    }
+                }
+            }
+            return true;  // If no `new` keyword is found, it's aggregation
         }
 
-        // If not a collection, fallback to the original logic
         return false;
     }
+
 
 
     static string GetElementTypeName(ITypeSymbol typeSymbol)
