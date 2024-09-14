@@ -1,8 +1,7 @@
 const OpenAI = require("openai");
 const path = require('path');
 let conversationHistory = require('./InitAIConversation');
-let tempAIResponseGarageManager = require('./TempAIResponseGarageManager');
-let tempAIResponseExpandFactoryPattern = require('./TempAIResponseExpandFactoryPattern');
+
 
 try {
   const dotenvPath = path.join(__dirname, '../.env');
@@ -21,7 +20,6 @@ async function RunAI() {
    });
 
   const assistantMessage = completion.choices[0].message.content;
-  //const assistantMessage = tempAIResponseGarageManager;
 
   if (!assistantMessage) {
     console.error('Assistant message is null or undefined');
@@ -55,7 +53,6 @@ async function ExpandTopic(topic, fileContents)
    });
 
   const assistantMessage = completion.choices[0].message.content;
-  //const assistantMessage = tempAIResponseExpandFactoryPattern
 
   if (!assistantMessage) {
     console.error('Assistant message is null or undefined');

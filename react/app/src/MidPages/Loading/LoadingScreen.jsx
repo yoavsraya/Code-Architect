@@ -3,7 +3,7 @@ import './LoadingScreen.css';
 import Dino from "../../Utiles/Dino/Dino";
 
 const LoadingScreen = () => {
-  const [gameStarted, setGameStarted] = useState(false); // Initialize to false to wait for user input
+  const [gameStarted, setGameStarted] = useState(false); 
   const [gameOver, setGameOver] = useState(false);
 
   const handleGameOver = () => {
